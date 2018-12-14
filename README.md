@@ -5,7 +5,6 @@ By Sam Neurohack, Loloster, Cocoa
 LICENCE : CC BY
 
 
-
 ![LJ](http://www.teamlaser.fr/thsf/images/fulls/THSF9-33.jpg)
 
 A software server with gui for up to 4 lasers live actions. Think creative like Laser "battles", planetarium,... 
@@ -16,8 +15,9 @@ Needs at least : an etherdream DAC connected to an ILDA laser, RJ 45 IP network 
 
 Nozosc : Semi modular synthetizers from Nozoids can send a lot of their inner sound curves and be displayed in many ways, i.e VCO 1 on X axis and LFO 2 on Y axis.
 
-
 The server approach is based on redis. One process per etherdream is spawn to : retrieve the given point list from redis, warp, resample and manage the given etherdream DAC dialog.
+
+LJ supports Linux and OS X. Windows is unkown but welcome, if someone want to jump in and care about it.
 
 
 #
@@ -30,7 +30,7 @@ The server approach is based on redis. One process per etherdream is spawn to : 
 - Interactive (mouse style) warp correction for each laser.
 - Web ui : In your browser open webui/index.html. Javascript is needed.
 - Status every 0.5 seconds : every etherdream DAC state, number of buffer points sent,...
-- "Optimisation" points automatically added, can be changed live for glitch art. See 
+- "Optimisation" points automatically added, can be changed live for glitch art. Search "resampler" commands.
 
 
 #
@@ -46,9 +46,31 @@ The server approach is based on redis. One process per etherdream is spawn to : 
 #
 
 
-You need to update mainy.conf to your network/etherdreams IPs and Be sure to check command arguments : python mainyservers.py --help
-
 LJ is meant for Live, so a lot of parameters can be changed via OSC/midi, webUI,...
+
+This is *critical and flickering reason #1* if not managed properly : use static network configuration, especially if you move your gear for different venues.
+
+Our "always working solution" :
+
+Our Etherdreams controllers have static IPs defined in their SDcard from 192.168.1.1 to 192.168.1.9. Because wifi will always finally sucks for many reasons, our computers are *gigabits wired connected* with 192.168.1.10 and after. Don't trust end user gear marketing on wifi. 
+
+We have a big *laser dedicated gigabit switch*. We provide Internet through wifi on a different network address like 192.168.2.x
+
+Even if etherdreams are 100 Mbits, use gigabits gear. Use gigabits gear. USE GIGABITS GEAR :)
+
+
+By default LJ uses on 127.0.0.1 (localhost) :
+
+- A websocket on port 9001 for WebUI interaction.
+- The redis server on port 6379 ('ljayserverip')
+- An OSC server on port 8002. Incoming commands are transfered to webUI.
+- An OSC client on 'bhoroscIP' port 8001.
+- An OSC client for Nozoids support on 'nozoscIP', port 8003.
+
+You need to update mainy.conf to your network/etherdreams IPs and be sure to check command arguments : python mainyservers.py --help
+
+A dedicated computer to act as "laser server" usually depends on how many lasers you want to control and your main computer load. If you seen flickering with small point lists, try the dedicated computer option.
+
 
 
 Program your own "Client" :
@@ -65,9 +87,18 @@ Program your own "Client" :
 # Install 
 #
 
-In terminal type :
+With Linux, type in a terminal window :
 
 ./install.sh
+
+For OS X, you need brew already installed, then :
+
+brew update
+brew upgrade
+brew install redis
+type all install.sh commands beginning line 4.
+
+For Linux and OS X :
 
 Check the bind line in /etc/redis/redis.conf :
 

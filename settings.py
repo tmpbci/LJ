@@ -24,6 +24,7 @@ def Write():
 	config.set('General', 'ljayserverip', str(gstt.LjayServerIP))
 	config.set('General', 'bhoroscip', str(gstt.oscIPin))
 	config.set('General', 'nozoscip', str(gstt.nozoscIP))
+	config.set('General', 'debug', str(gstt.debug))
 
 	for i in range(gstt.LaserNumber):
 		laser = 'laser' + str(i)
@@ -52,6 +53,7 @@ def Read():
 	gstt.LjayServerIP= config.get('General', 'ljayserverip')
 	gstt.oscIPin = config.get('General', 'bhoroscip')
 	gstt.nozoscip = config.get('General', 'nozoscip')
+	gstt.debug = config.get('General', 'debug')
 
 	for i in range(4):
 		laser = 'laser' + str(i)

@@ -29,6 +29,8 @@ print ""
 import settings
 settings.Read()
 
+import cli
+settings.Write()
 from multiprocessing import Process, Queue, TimeoutError 
 import random, ast
 
@@ -63,116 +65,6 @@ def dac_process(number, pl):
         except KeyboardInterrupt:
             sys.exit(0)
  
-
-
-'''
-def Laserver():
-        
-
-
-    
-    #for laserid in range(0,4):
-    #    r.set('/lack/'+str(laserid),0)
-    #    r.set('/lstt/'+str(laserid),0)
-    
-
-
-    # Some random lists for all lasers at launch.
-    print ""
-    print "Creating startup point lists..."
-
-    random_points = [(300.0+random.randint(-100, 100), 200.0+random.randint(-100, 100), 0), (500.0+random.randint(-100, 100), 200.0+random.randint(-100, 100), 65280), (500.0+random.randint(-100, 100), 400.0+random.randint(-100, 100), 65280), (300.0+random.randint(-100, 100), 400.0+random.randint(-100, 100), 65280), (300.0+random.randint(-100, 100), 200.0+random.randint(-100, 100), 65280)]
-    if r.set('/pl/0', str(random_points)) == True:
-        print "/pl/0 ", ast.literal_eval(r.get('/pl/0'))
-
-    random_points = [(300.0+random.randint(-100, 100), 200.0+random.randint(-100, 100), 0), (500.0+random.randint(-100, 100), 200.0+random.randint(-100, 100), 65280), (500.0+random.randint(-100, 100), 400.0+random.randint(-100, 100), 65280), (300.0+random.randint(-100, 100), 400.0+random.randint(-100, 100), 65280), (300.0+random.randint(-100, 100), 200.0+random.randint(-100, 100), 65280)]
-    if r.set('/pl/1', str(random_points)) == True:
-        print "/pl/1 ", ast.literal_eval(r.get('/pl/1'))
-
-    random_points = [(300.0+random.randint(-100, 100), 200.0+random.randint(-100, 100), 0), (500.0+random.randint(-100, 100), 200.0+random.randint(-100, 100), 65280), (500.0+random.randint(-100, 100), 400.0+random.randint(-100, 100), 65280), (300.0+random.randint(-100, 100), 400.0+random.randint(-100, 100), 65280), (300.0+random.randint(-100, 100), 200.0+random.randint(-100, 100), 65280)]
-    if r.set('/pl/2', str(random_points)) == True:
-        print "/pl/2 ", ast.literal_eval(r.get('/pl/2'))
-
-    random_points = [(300.0+random.randint(-100, 100), 200.0+random.randint(-100, 100), 0), (500.0+random.randint(-100, 100), 200.0+random.randint(-100, 100), 65280), (500.0+random.randint(-100, 100), 400.0+random.randint(-100, 100), 65280), (300.0+random.randint(-100, 100), 400.0+random.randint(-100, 100), 65280), (300.0+random.randint(-100, 100), 200.0+random.randint(-100, 100), 65280)]
-    if r.set('/pl/3', str(random_points)) == True:
-        print "/pl/3 ", ast.literal_eval(r.get('/pl/3'))
-
-
-    # Order all lasers to show these random shapes at startup -> tell all 4 laser process to USER PLs
-    r.set('/order', "0")
-    
-
-    # Launch one process (a newdacp instance) by etherdream
-
-    print ""
-    dac_worker0= Process(target=dac_process,args=(0,0))
-    print "Launching Laser 0 Process..."
-    dac_worker0.start()
-    
-    if lasernumber >0:
-        dac_worker1= Process(target=dac_process,args=(1,0))
-        print "Launching Laser 1 Process..."
-        dac_worker1.start()
-
-    if lasernumber >1:
-        dac_worker2= Process(target=dac_process,args=(2,0))
-        print "Launching Laser 2 Process..."
-        dac_worker2.start()
-    
-    if lasernumber >2:
-        dac_worker3= Process(target=dac_process,args=(3,0))
-        print "Launching Laser 3 Process..."
-        dac_worker3.start()
-
-    # Main loop do nothing. Maybe do the webui server ?
-    try:
-        #while True:
-        
-        # Websocket startup
-
-        server = WebsocketServer(wsPORT,host=serverIP)
-        # Launch OSC thread listening to Bhorosc
-        print ""
-        print "Launching webUI OSC Handler..."
-        thread.start_new_thread(osc_thread, ())
-        # Default OSC handler for all incoming message from Bhorosc
-        oscserver.addMsgHandler("default", handler)
-
-        #print server
-        print ""
-        print "Launching webUI Websocket server..."
-        print "at :", serverIP, "port :",wsPORT
-        server.set_fn_new_client(new_client)
-        server.set_fn_client_left(client_left)
-        server.set_fn_message_received(message_received)
-        server.run_forever()
-        print ""
-        print "Running..."
- 
-    except KeyboardInterrupt:
-        pass
-
-    # Gently stop on CTRL C
-
-    finally:
-
-        dac_worker0.join()
-        if lasernumber >0:
-            dac_worker1.join()
-        if lasernumber >1:
-            dac_worker2.join()
-        if lasernumber >2:
-            dac_worker3.join()
- 
-    
-        for laserid in range(0,lasernumber+1):
-            print "reset redis values for laser",laserid
-            r.set('/lack/'+str(laserid),64)
-            r.set('/lstt/'+str(laserid),64)
-            r.set('/cap/'+str(laserid),0)
-    
-    print "Fin des haricots"
-'''
 
 
 #
@@ -215,14 +107,6 @@ bhoroscPORTout = 8001
 NozoscIPout = nozoscIP
 NozoscPORTout = 8003
 
-
-# 
-# OSC part
-# 
-
-print ""
-print "Launching Bhorosc commands receiver..."
-print "at", bhoroscIPin, "port",str(bhoroscPORTin)
 oscserver = OSCServer( (bhoroscIPin, bhoroscPORTin) )
 oscserver.timeout = 0
 OSCRunning = True
@@ -283,12 +167,14 @@ def sendnozosc(oscaddress,oscargs=''):
 def handler(path, tags, args, source):
 
     oscpath = path.split("/")
-    pathlength = len(oscpath)
-    if debug >0:
+    print "debug", gstt.debug
+    if gstt.debug >0:
         print ""
         print "default handler"
         print "Bhorosc said : ", path, oscpath, args
     sendWSall(path + " " + str(args[0]))
+
+    las.handler(oscpath,args)
     
     '''
     # /lstt/number value
@@ -313,8 +199,7 @@ def osc_frame():
 # OSC Thread. Bhorosc handler and Automated status sender to UI.
 def osc_thread():
 
-    print "Launching Automatic Dac status and bhorosc forwarder."
-    print "Will use Redis server IP ", serverIP 
+    #print "Will use Redis server IP ", serverIP 
 
     '''
     r = redis.StrictRedis(host=serverIP, port=6379, db=0)
@@ -394,6 +279,20 @@ def new_client(client, server):
     print("New WS client connected and was given id %d" % client['id'])
     sendWSall("/status Hello %d" % client['id'])
 
+    for laserid in range(0,gstt.LaserNumber):    
+        sendWSall("/ip/" + str(laserid) + " " + str(gstt.lasersIPS[laserid]))
+        sendWSall("/kpps/" + str(laserid)+ " " + str(gstt.kpps[laserid]))
+
+        if gstt.swapX[laserid] == 1:
+            sendWSall("swap/X/" + str(laserid)+ " 1")
+        else:
+            sendWSall("swap/X/" + str(laserid)+ " 0")
+
+        if gstt.swapY[laserid] == 1:
+            sendWSall("swap/Y/" + str(laserid)+ " 1")
+        else:
+            sendWSall("swap/Y/" + str(laserid)+ " 0")
+
 # Called for every WS client disconnecting
 def client_left(client, server):
     print("WS Client(%d) disconnected" % client['id'])
@@ -403,13 +302,15 @@ def client_left(client, server):
 def message_received(client, server, message):
     if len(message) > 200:
         message = message[:200]+'..'    
-    if debug >0:
+    if gstt.debug >0:
         print("WS Client(%d) said: %s" % (client['id'], message))
     oscpath = message.split(" ")
     
     # current UI has no dedicated off button so /on 0 trigs /off to bhorosc
     if oscpath[0] == "/on":
         if oscpath[1] == "1":
+
+
             sendbhorosc("/on")
         else:
             sendbhorosc("/off")
@@ -426,7 +327,7 @@ def handle_timeout(self):
 
 
 def sendWSall(message):
-    if debug >0:
+    if gstt.debug >0:
         print("WS sending %s" % (message))
     server.send_message_to_all(message)
     
@@ -452,10 +353,13 @@ random_points = [(300.0+random.randint(-100, 100), 200.0+random.randint(-100, 10
 if r.set('/pl/3', str(random_points)) == True:
     print "/pl/3 ", ast.literal_eval(r.get('/pl/3'))
 
-
 # Order all lasers to show these random shapes at startup -> tell all 4 laser process to USER PLs
-r.set('/order', "0")
+for laserid in range(0,lasernumber+1):
+    r.set('/order/'+str(laserid), 0)
 
+
+print ""
+print "Etherdream connection check is NOT DISPLAYED"
 
 # Launch one process (a newdacp instance) by etherdream
 
@@ -484,25 +388,29 @@ try:
     #while True:
     
     # Websocket startup
-
     server = WebsocketServer(wsPORT,host=serverIP)
+    
     # Launch OSC thread listening to Bhorosc
     print ""
-    print "Launching webUI OSC Handler..."
+    print "Launching OSC server..."
+    print "at", bhoroscIPin, "port",str(bhoroscPORTin)
+    print "Will update webUI dac status every second"
     thread.start_new_thread(osc_thread, ())
-    # Default OSC handler for all incoming message from Bhorosc
-    oscserver.addMsgHandler("default", las.handler)
+    
+    # Default OSC handler for all OSC incoming message
+    oscserver.addMsgHandler("default", handler)
 
     #print server
     print ""
     print "Launching webUI Websocket server..."
-    print "at :", serverIP, "port :",wsPORT
+    print "at", serverIP, "port",wsPORT
     server.set_fn_new_client(new_client)
     server.set_fn_client_left(client_left)
     server.set_fn_message_received(message_received)
-    server.run_forever()
     print ""
-    print "Running..."
+    print "ws server running forver..."
+    server.run_forever()
+
 
 except KeyboardInterrupt:
     pass

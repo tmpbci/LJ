@@ -251,15 +251,15 @@ class DAC(object):
 		# Lower case pl is the actual point list coordinates
 		self.pl = ast.literal_eval(r.get('/pl/'+str(self.mylaser)))
 		#if self.mylaser ==0:
-		print "DAC Init Laser", self.mylaser
+		#print "DAC Init Laser", self.mylaser
 		#print  "pl :", self.pl
 		#print "EDH/"+str(self.mylaser),r.get('/EDH/'+str(self.mylaser))
 		if r.get('/EDH/'+str(self.mylaser)) == None:
-			print "Laser",self.mylaser,"NO EDH !! Computing one..."
+			#print "Laser",self.mylaser,"NO EDH !! Computing one..."
 			homographyp.newEDH(self.mylaser)
 		else:	
 			gstt.EDH[self.mylaser] = np.array(ast.literal_eval(r.get('/EDH/'+str(self.mylaser))))
-			print "Laser",self.mylaser,"found its EDH in redis"
+			#print "Laser",self.mylaser,"found its EDH in redis"
 			#print gstt.EDH[self.mylaser]
 		
 		'''
@@ -273,13 +273,15 @@ class DAC(object):
 
 		self.xyrgb = self.xyrgb_prev = (0,0,0,0,0)
 		self.newstream = self.OnePoint()
+		
+		if gstt.debug >0:
+			if self.connstatus != 0:
+				#print ""
+				print "Connection ERROR",self.connstatus,"with laser", str(mylaser),":",str(gstt.lasersIPS[mylaser])
+				#print "first 10 points in PL",self.PL, self.GetPoints(10)
+			else:
+				print "Connection status for", self.mylaser,":", self.connstatus
 
-		print "Connection status for", self.mylaser,":", self.connstatus
-		#print 'debug', debug
-		if self.connstatus != 0:
-			print ""
-			print "Connection ERROR",self.connstatus,"with laser", str(mylaser),":",str(gstt.lasersIPS[mylaser])
-			#print "first 10 points in PL",self.PL, self.GetPoints(10)
 
 		# Reference points 
 		# Read the "hello" message
@@ -348,10 +350,43 @@ class DAC(object):
 		while True:
 
 			#print "laser", self.mylaser, "Pb : ",self.last_status.playback_state
-			# update drawing parameters from redis keys
 
-			order = int(r.get('/order'))
+			order = r.get('/order/'+str(self.mylaser))
+			if order == 0:
 
+				# USER point list
+				self.pl = ast.literal_eval(r.get('/pl/'+str(self.mylaser)))
+			else:
+	
+				# recompute EDH 
+				if order == 1:
+					print "Laser",self.mylaser,"new EDH ORDER in redis"
+					gstt.EDH[self.mylaser]= np.array(ast.literal_eval(r.get('/EDH/'+str(self.mylaser))))
+					# Back to user point list
+					r.set('/order/'+str(self.mylaser), 0)
+				
+				# BLACK point list
+				if order == 2:
+					print "Laser",self.mylaser,"BLACK ORDER in redis"
+					self.pl = black_points
+	
+				# GRID point list
+				if order == 3:
+					print "Laser",self.mylaser,"GRID ORDER in redis"
+					self.pl = grid_points
+
+			
+				# Resampler Modification
+				if order == 4:
+					self.resampler = ast.literal_eval(r.get('/resampler/'+str(self.mylaser)))
+					print "resampler for", self.mylaser, ":",self.resampler
+					gstt.stepshortline    = self.resampler[0]
+					gstt.stepslongline[0] = self.resampler[1]
+					gstt.stepslongline[1] = self.resampler[2]
+					gstt.stepslongline[2] = self.resampler[3]
+				
+	
+			'''
 			#Laser order bit 0 = 0
 			if not order & (1 << (self.mylaser*2)):
 				#print "laser",mylaser,"bit 0 : 0"
@@ -385,22 +420,6 @@ class DAC(object):
 				# Laser bit 0 = 1 and bit 1 = 1 : GRID PL
 					#print "laser",mylaser,"bit 1 : 1"   
 					self.pl = grid_points 
-
-
-
-			#self.pl = ast.literal_eval(r.get('/pl/'+str(self.mylaser)))
-
-			#if self.mylaser == 0:
-			#	print "franken pl for ", self.mylaser, ":", self.pl
-			#print "franken 0 point :", self.pl[0]
-
-			'''
-			self.resampler = ast.literal_eval(r.get('/resampler/'+str(self.mylaser)))
-			print "resampler for", self.mylaser, ":",self.resampler
-			gstt.stepshortline    = self.resampler[0]
-			gstt.stepslongline[0] = self.resampler[1]
-			gstt.stepslongline[1] = self.resampler[2]
-			gstt.stepslongline[2] = self.resampler[3]
 			'''
 
 			r.set('/lstt/'+str(self.mylaser), self.last_status.playback_state)

@@ -24,63 +24,66 @@ import redis
 
 r = redis.StrictRedis(host=gstt.LjayServerIP , port=6379, db=0)
 
-def GridOn(laser):
-
-    print "Grid for laser ", laser
-    # Grid PL is Laser bit 0 = 1 and bit 1 = 1
-    order = r.get('/order')
-    neworder =  order | (1<<laser*2)
-    neworder =  neworder | (1<< 1+laser*2)
-    r.set('/order', str(neworder))
 
     
 def UserOn(laser):
 
+    print "User for laser ", laser
+    r.set('/order/'+str(laser), 0)
     # Laser bit 0 = 0 and bit 1 = 0 : USER PL
-    order = r.get('/order')
-    neworder = order & ~(1<< laser*2)
-    neworder = neworder & ~(1<< 1+ laser*2)
-    r.set('/order', str(neworder))  
-
-
-def BlackOn(laser):
-
-    print "Black for laser ", laser
-    # Black PL is Laser bit 0 = 1 and bit 1 = 0 :
-    order = r.get('/order')
-    neworder =  order | (1<<laser*2)
-    neworder =  neworder & ~(1<< 1+laser*2)
-    r.set('/order', str(neworder))
+    #order = r.get('/order')
+    #neworder = order & ~(1<< laser*2)
+    #neworder = neworder & ~(1<< 1+ laser*2)
+    #r.set('/order', str(neworder))  
 
 
 def NewEDH(laser):
 
     settings.Write()
+    print "New EDH for laser ", laser
+    r.set('/order/'+str(laser), 1)
     # Laser bit 0 = 0 and bit 1 = 1 : New EDH
-    order = r.get('/order')
-    neworder = order & ~(1<< laser*2)
-    neworder =  neworder | (1<< 1+laser*2)
-    r.set('/order', str(neworder))
+    #order = r.get('/order')
+    #neworder = order & ~(1<< laser*2)
+    #neworder =  neworder | (1<< 1+laser*2)
+    #r.set('/order', str(neworder))
 
+def BlackOn(laser):
 
-
-
-def handler(path, tags, args, source):
-
+    print "Black for laser ", laser
+    r.set('/order/'+str(laser), 2)
+    # Black PL is Laser bit 0 = 1 and bit 1 = 0 :
+    #order = r.get('/order')
+    #neworder =  order | (1<<laser*2)
+    #neworder =  neworder & ~(1<< 1+laser*2)
     
-    oscpath = path.split("/")
+
+def GridOn(laser):
+
+    print "Grid for laser ", laser
+    r.set('/order/'+str(laser), 3)
+    # Grid PL is Laser bit 0 = 1 and bit 1 = 1
+    #order = r.get('/order')
+    #neworder =  order | (1<<laser*2)
+    #neworder =  neworder | (1<< 1+laser*2)
+    #r.set('/order', str(neworder))
+
+
+def Resampler(laser):
+
+    print "Resampler change for laser ", laser
+    r.set('/order/'+str(laser), 4)
+
+
+
+
+def handler(oscpath, args):
+
     pathlength = len(oscpath)
-    sendWSall(path + " " + str(args[0]))
     if pathlength == 2:
         laser = int(oscpath[2])
     else:
         laser = int(oscpath[2])
-
-
-    if debug >0:
-        print ""
-        print "default handler"
-        print "Bhorosc said for laser",laser,": ", path, oscpath, args
 
 
     # /grid/lasernumber value (0 or 1) 

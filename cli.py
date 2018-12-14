@@ -15,13 +15,13 @@ from /team/laser
 import gstt
 import argparse
 
+print "-h will display help"
+print ""
 
 def handle():
 
-	if gstt.debug > 2:
-		print ""
-		print "Arguments parsing if needed..."
-		#have to be done before importing bhorosc.py to get correct port assignment
+
+	#have to be done before importing bhorosc.py to get correct port assignment
 	argsparser = argparse.ArgumentParser(description="LJay")
 	argsparser.add_argument("-r","--redisIP",help="Redis computer IP address (gstt.LjayServerIP by default)",type=str)
 	argsparser.add_argument("-i","--iport",help="OSC port number to listen to (8001 by default)",type=int)
@@ -45,6 +45,10 @@ def handle():
 
 	args = argsparser.parse_args()
 
+	# Verbose = debug
+	if args.verbose  != None:
+		#print "setting gstt.debug to", args.verbose
+		gstt.debug = args.verbose
 
 	# Ports arguments
 	if args.iport:
@@ -111,9 +115,7 @@ def handle():
 
 
 
-	# Verbose = debug
-	if args.verbose  != None:
-		gstt.debug = args.verbose
+
 	
 
 	# Lasers = number of laser connected
@@ -161,3 +163,4 @@ def handle():
 		gstt.swapy[0] = 1
 		#Settings.Write()
 	
+handle()

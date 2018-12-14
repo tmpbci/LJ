@@ -8,7 +8,7 @@ Etat global (anciennement singleton de la classe GameState + autres VARIABLES n√
 #ConfigName = "setexample.conf"
 ConfigName = "mainy.conf"
 
-debug = 0
+debug = 2
 
 anims= [[],[],[],[]]
 
