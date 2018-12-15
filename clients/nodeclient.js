@@ -2,7 +2,7 @@
 // In compatible LJay string format (pythonic lists)
 
 var redis = require("redis"),
-client = redis.createClient(6379,'192.168.1.13');
+client = redis.createClient(6379,'127.0.0.1');
 
 
 

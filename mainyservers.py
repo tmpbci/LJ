@@ -8,10 +8,6 @@ Laser server + webUI servers (ws + OSC)
 
 todo :
 
-r.set('/resampler/0', '[ (1.0, 8),(0.25, 3), (0.75, 3), (1.0, 10)]')
-r.set('/resampler/1', '[ (1.0, 8),(0.25, 3), (0.75, 3), (1.0, 10)]')
-r.set('/resampler/2', '[ (1.0, 8),(0.25, 3), (0.75, 3), (1.0, 10)]')
-r.set('/resampler/3', '[ (1.0, 8),(0.25, 3), (0.75, 3), (1.0, 10)]')
 
 '''
 from __future__ import absolute_import
@@ -45,6 +41,7 @@ from websocket_server import WebsocketServer
 import types, thread, time
 
 r = redis.StrictRedis(host=gstt.LjayServerIP , port=6379, db=0)
+args =[0,0]
 
 def dac_process(number, pl):
     while True:
@@ -93,7 +90,7 @@ wsPORT = 9001
 
 # With Bhorosc
 # OSC Server : relay OSC message from Bhorosc outport 8002 to UI
-#oscIPin = "192.168.1.10"
+#oscIPin = "192.168.1.10"s
 bhoroscIPin = serverIP
 bhoroscPORTin = 8002
 
@@ -107,6 +104,8 @@ bhoroscPORTout = 8001
 NozoscIPout = nozoscIP
 NozoscPORTout = 8003
 
+
+print bhoroscIPin
 oscserver = OSCServer( (bhoroscIPin, bhoroscPORTin) )
 oscserver.timeout = 0
 OSCRunning = True
@@ -162,7 +161,7 @@ def sendnozosc(oscaddress,oscargs=''):
         pass
     #time.sleep(0.001)
 
-# NOT USED see las.py
+
 # OSC default path handler : send OSC message from Bhorosc 8002 to UI via websocket 9001
 def handler(path, tags, args, source):
 
@@ -173,17 +172,7 @@ def handler(path, tags, args, source):
         print "default handler"
         print "Bhorosc said : ", path, oscpath, args
     sendWSall(path + " " + str(args[0]))
-
     las.handler(oscpath,args)
-    
-    '''
-    # /lstt/number value
-    if oscpath[1] == "lstt":
-        sendWSall(path + " " + str(args[0]))
-    # /status string
-    if oscpath[1] == "status":
-        sendWSall(path + " " + str(args[0]))
-    '''
 
 
 # RAW OSC Frame available ? 
@@ -213,9 +202,7 @@ def osc_thread():
 
                 time.sleep(1)
                 osc_frame()
-
-                
-                for laserid in range(0,lasernumber):           # Laser not used -> led is not lit
+                for laserid in range(0,gstt.LaserNumber):           # Laser not used -> led is not lit
 
                     lstt = r.get('/lstt/'+ str(laserid))
                     #print "laserid", laserid,"lstt",lstt
@@ -226,9 +213,9 @@ def osc_thread():
                     if lstt == "2":                              # Dac PLAYING (2) -> led is green (1)
                         sendWSall("/lstt/" + str(laserid) + " 1")
                 
-                    # This is used not working : lack never change. Todo : retest.
+                    
                     lack= r.get('/lack/'+str(laserid))
-                    #print "laserid", laserid,"lack",lack
+                    print "laserid", laserid,"lack",lack
                     if lack == 'a':                             # Dac sent ACK ("a") -> led is green (1)
                         sendWSall("/lack/" + str(laserid) +" 1")
                     if lack == 'F':                             # Dac sent FULL ("F") -> led is orange (5)
@@ -247,7 +234,7 @@ def osc_thread():
                         # last number of points sent to etherdream buffer
                         sendWSall("/points/" + str(laserid) + " " + str(r.get('/cap/'+str(laserid))))
 
-                    #sendWSall("/plframe/" + str(laserid) ) # + " " + str(r.get('/pl/'+str(laserid))))
+                    sendWSall("/plframe/" + str(laserid) + " " + str(r.get('/pl/'+str(laserid))))
 
                 # WIP Too much packets -> flood webUI : Draw all PL point lists in JS canvas in WebUI
                 
@@ -276,6 +263,7 @@ def osc_thread():
 
 # Called for every WS client connecting (after handshake)
 def new_client(client, server):
+
     print("New WS client connected and was given id %d" % client['id'])
     sendWSall("/status Hello %d" % client['id'])
 
@@ -284,14 +272,14 @@ def new_client(client, server):
         sendWSall("/kpps/" + str(laserid)+ " " + str(gstt.kpps[laserid]))
 
         if gstt.swapX[laserid] == 1:
-            sendWSall("swap/X/" + str(laserid)+ " 1")
+            sendWSall("/swap/X/" + str(laserid)+ " 1")
         else:
-            sendWSall("swap/X/" + str(laserid)+ " 0")
+            sendWSall("/swap/X/" + str(laserid)+ " 0")
 
         if gstt.swapY[laserid] == 1:
-            sendWSall("swap/Y/" + str(laserid)+ " 1")
+            sendWSall("/swap/Y/" + str(laserid)+ " 1")
         else:
-            sendWSall("swap/Y/" + str(laserid)+ " 0")
+            sendWSall("/swap/Y/" + str(laserid)+ " 0")
 
 # Called for every WS client disconnecting
 def client_left(client, server):
@@ -302,19 +290,24 @@ def client_left(client, server):
 def message_received(client, server, message):
     if len(message) > 200:
         message = message[:200]+'..'    
+
     if gstt.debug >0:
+        print ("")
         print("WS Client(%d) said: %s" % (client['id'], message))
+    
     oscpath = message.split(" ")
+    args[0] = float(oscpath[1]) 
+    #print oscpath[0].split("/"),oscpath[1]
+    las.handler(oscpath[0].split("/"),args)
     
     # current UI has no dedicated off button so /on 0 trigs /off to bhorosc
     if oscpath[0] == "/on":
         if oscpath[1] == "1":
-
-
             sendbhorosc("/on")
         else:
             sendbhorosc("/off")
     else:   
+
         print "sending to bhorosc",oscpath[0],oscpath[1]
         sendbhorosc(oscpath[0],oscpath[1])
     
@@ -354,7 +347,7 @@ if r.set('/pl/3', str(random_points)) == True:
     print "/pl/3 ", ast.literal_eval(r.get('/pl/3'))
 
 # Order all lasers to show these random shapes at startup -> tell all 4 laser process to USER PLs
-for laserid in range(0,lasernumber+1):
+for laserid in range(0,gstt.LaserNumber):
     r.set('/order/'+str(laserid), 0)
 
 
@@ -429,7 +422,7 @@ finally:
 
 
     for laserid in range(0,lasernumber+1):
-        print "Redis Etherdream",laserid,"feedback reset."
+        print "Laser",laserid,"feedbacks reset."
         r.set('/lack/'+str(laserid),64)
         r.set('/lstt/'+str(laserid),64)
         r.set('/cap/'+str(laserid),0)

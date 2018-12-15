@@ -58,7 +58,6 @@ def Read():
 	for i in range(4):
 		laser = 'laser' + str(i)
 		gstt.lasersIPS[i]= config.get(laser, 'ip')
-		gstt.lasersPLS[i] = config.getint(laser, 'PL')
 		gstt.kpps[i] = config.getint(laser, 'kpps')
 		#gstt.lasersPLcolor[i] = config.getint(laser, 'color')
 		gstt.centerX[i]= config.getint(laser, 'centerx')

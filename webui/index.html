@@ -42,6 +42,7 @@
         },
         onMessage: function (e) {
           var res = e.data.split(" ");
+          var pl = ""
           //console.log(e.data)
           //console.log(res[0].substring(0,6))
 		  switch (res[0].substring(0,6)) {
@@ -49,12 +50,13 @@
     				_WS.showstatus(e.data.slice(8));
         			break;
     			case "/plfra":
-        			console.log(e.data.slice(11));
+              pl = e.data.slice(11)
+        			console.log(pl);
         			break;
-        		case "/plpoi":
+        	case "/plpoi":
         			//console.log("plpoint");
         			break;
-        		default:
+        	default:
         			console.log(res[0] + " "  + res[1])
         			//console.log(res[1])
         			document.getElementById(res[0].slice(1)).value = res[1];

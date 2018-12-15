@@ -39,9 +39,11 @@ def UserOn(laser):
 
 def NewEDH(laser):
 
+    print "New EDH requested for laser ", laser
     settings.Write()
-    print "New EDH for laser ", laser
-    r.set('/order/'+str(laser), 1)
+    homographyp.newEDH(laser)
+    
+    #r.set('/order/'+str(laser), 1)
     # Laser bit 0 = 0 and bit 1 = 1 : New EDH
     #order = r.get('/order')
     #neworder = order & ~(1<< laser*2)
@@ -69,22 +71,21 @@ def GridOn(laser):
     #r.set('/order', str(neworder))
 
 
-def Resampler(laser):
+def Resampler(laser,lsteps):
 
+    # lsteps is a string like : "[ (1.0, 8),(0.25, 3), (0.75, 3), (1.0, 10)]"
     print "Resampler change for laser ", laser
+    r.set('/resampler/' + str(laser), lsteps)
     r.set('/order/'+str(laser), 4)
-
-
 
 
 def handler(oscpath, args):
 
     pathlength = len(oscpath)
-    if pathlength == 2:
+    if pathlength == 3:
         laser = int(oscpath[2])
     else:
-        laser = int(oscpath[2])
-
+        laser = int(oscpath[3])
 
     # /grid/lasernumber value (0 or 1) 
     if oscpath[1] == "grid":
@@ -113,30 +114,34 @@ def handler(oscpath, args):
     if oscpath[1] == "ip":
         print "New IP for laser ", laser
         gstt.lasersIPS[laser]= args[0]
-        NewEDH(laser) 
+        settings.Write()
+
 
     # /kpps/lasernumber value
     # Live change of kpps is not implemented in newdac.py. Change will effect next startup.
     if oscpath[1] == "kpps":
         print "New kpps for laser ", laser, " next startup", args[0]
         gstt.kpps[laser]= int(args[0])
-        NewEDH(laser)
+        settings.Write()
 
     # /angle/lasernumber value 
     if oscpath[1] == "angle":
         print "New Angle modification for laser ", oscpath[2], ":",  args[0]
         gstt.finANGLE[laser] += int(args[0])
-        homographyp.newEDH(laser)
         NewEDH(laser)
         
-
-
     # /intens/lasernumber value 
     if oscpath[1] == "intens":
-        print "New intensity requested for laser ", oscpath[2], ":",  args[0]
+        print "New intensity requested for laser ", laser, ":",  args[0]
         print "Change not implemented yet"
 
 
+
+    # /resampler/lasernumber lsteps
+    # lsteps is a string like "[ (1.0, 8),(0.25, 3), (0.75, 3), (1.0, 10)]"
+    if oscpath[1] == "resampler":
+        Resampler(laser,args[0])
+        
 
     # /mouse/lasernumber value (0 or 1) 
     if oscpath[1] == "mouse":
@@ -154,13 +159,11 @@ def handler(oscpath, args):
         if args[0] == "0":
             print "swap X : -1 for laser ", laser
             gstt.swapX[laser]= -1
-            homographyp.newEDH(laser)
             NewEDH(laser)
 
         else:
             print "swap X : 1 for laser ",  laser
             gstt.swapX[laser]= 1
-            homographyp.newEDH(laser)
             NewEDH(laser)
 
     # /swap/Y/lasernumber value (0 or 1) 
@@ -168,41 +171,35 @@ def handler(oscpath, args):
         if args[0] == "0":
             print "swap Y : -1 for laser ",  laser
             gstt.swapY[laser]= -1
-            homographyp.newEDH(laser)
             NewEDH(laser)
         else:
             print "swap Y : 1 for laser ",  laser
             gstt.swapY[laser]= 1
-            homographyp.newEDH(laser)
             NewEDH(laser)
 
     # /loffset/X/lasernumber value
     if oscpath[1] == "loffset" and oscpath[2] == "X":
-        print "offset/X laser ", laser, "modified : ",  args[0]
+        print "offset/X laser", laser, "modified to",  args[0]
         gstt.centerX[laser] -=  int(args[0])
-        homographyp.newEDH(laser)
         NewEDH(laser)
     
     # /loffset/Y/lasernumber value
     if oscpath[1] == "loffset" and oscpath[2] == "Y":
-        print "offset/Y laser ", laser, "modified : ",  args[0]
+        print "offset/Y laser", laser, "modified to",  args[0]
         gstt.centerY[laser] -=  int(args[0])
-        homographyp.newEDH(laser)
         NewEDH(laser)
 
 
     # /scale/X/lasernumber value
     if oscpath[1] == "scale" and oscpath[2] == "X":
-        print "scale/X laser ", laser , "modified : ",  args[0]
+        print "scale/X laser", laser , "modified to",  args[0]
         gstt.zoomX[laser] += int(args[0])
-        homographyp.newEDH(laser)
         NewEDH(laser)
 
     # /scale/Y/lasernumber value
     if oscpath[1] == "scale" and oscpath[2] == "Y":
-        print "scale/Y laser ",  laser, "modified : ",  args[0]
+        print "scale/Y laser",  laser, "modified to",  args[0]
         gstt.zoomY[laser] += int(args[0])
-        homographyp.newEDH(laser)
         NewEDH(laser)
 
 '''

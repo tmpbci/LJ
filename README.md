@@ -9,13 +9,13 @@ LICENCE : CC BY
 
 A software server with gui for up to 4 lasers live actions. Think creative like Laser "battles", planetarium,... 
 
-No .ild file here, you run your client that generate/send point lists to LJ. Any redis capable programming langage is fine.
+This software is in python 2.7 but you run and write your clients separatly in any redis capable programming langage (50+ : https://redis.io/clients).
 
 Needs at least : an etherdream DAC connected to an ILDA laser, RJ 45 IP network (gigabits only !!  no wifi, 100 mpbs doesn't work well with several lasers)
 
 Nozosc : Semi modular synthetizers from Nozoids can send a lot of their inner sound curves and be displayed in many ways, i.e VCO 1 on X axis and LFO 2 on Y axis.
 
-The server approach is based on redis. One process per etherdream is spawn to : retrieve the given point list from redis, warp, resample and manage the given etherdream DAC dialog.
+The server approach is based on redis. One process per etherdream is spawn : to retrieve the given point list from redis, warp, resample and manage the given etherdream dialog.
 
 LJ supports Linux and OS X. Windows is unkown but welcome, if someone want to jump in and care about it.
 
@@ -48,9 +48,11 @@ LJ supports Linux and OS X. Windows is unkown but welcome, if someone want to ju
 
 LJ is meant for Live, so a lot of parameters can be changed via OSC/midi, webUI,...
 
-This is *critical and flickering reason #1* if not managed properly : use static network configuration, especially if you move your gear for different venues.
+This is *critical and flickering reason #1* if not managed properly, especially you have several lasers.
 
 Our "always working solution" :
+
+We use static network configuration, as we regularly move our gear for different venues.
 
 Our Etherdreams controllers have static IPs defined in their SDcard from 192.168.1.1 to 192.168.1.9. Because wifi will always finally sucks for many reasons, our computers are *gigabits wired connected* with 192.168.1.10 and after. Don't trust end user gear marketing on wifi. 
 

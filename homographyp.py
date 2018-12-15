@@ -221,16 +221,21 @@ def newEDH(mylaser):
 
 	# EDH matrix is H x Hwarp
 	#gstt.EDH[mylaser] = np.dot(H,Hwarp)
-	print "Laser",mylaser,"NEW EDH computed, sending to redis..."
-	r.set('/EDH/'+str(mylaser), np.array2string(gstt.EDH[mylaser], separator=','))
-
+	print "Laser",mylaser,"New EDH computed, sending to redis..."
+	if r.set('/EDH/'+str(mylaser), np.array2string(gstt.EDH[mylaser], separator=',')) == True:
+		r.set('/order/'+str(mylaser), 1)
+		print "New EDH sent."
+	else:
+		print "New EDH not sent."
+	'''
 	# Laser bit 0 = 0 and bit 1 = 1 : New EDH
 	order = r.get('/order')
 	print order
 	neworder =  order & ~(1<< mylaser*2)
 	neworder =  neworder | (1<< 1+mylaser*2)
 	r.set('/order', str(neworder))
-	
+	'''
+
 	if gstt.debug >1:
 		print ""
 		print "laser ", mylaser

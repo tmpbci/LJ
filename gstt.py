@@ -34,21 +34,12 @@ simuPL = 1
 lasersIPS = ['192.168.1.5','192.168.1.6','192.168.1.3','192.168.1.4']
 
 
-# gstt.laserPLS : What point list is sent to what laser. 
-# ** Will be overridden by the ConfigName (see below) file values **
-lasersPLS = [0,1,2,0]
-
-
 # gstt.kpps stores kpps for each laser.
 # ** Will be overridden by the ConfigName (see below) file values **
 kpps = [25000,25000,25000,25000]
 
 # gstt.GridDisplay : if = 1 Curve points actually sent to PL are replaced by a grid
 GridDisplay = [0,0,0,0]
-
-# with 4 laser available, 4 PL only are necessary
-PL = [[],[],[],[]]
-
 
 # Transformation Matrix for each laser 
 EDH = [[], [], [], []]
@@ -72,8 +63,8 @@ maxCurvesByLaser = 4
 # For glitch art : change position and decrease number of points added by newdac.py
 # shortline for lines shorter than 4000 (in etherdream coordinates) 
 # i.e (0.25,3) means add 3 points at 25% on the line.
-stepshortline = [ (1.0, 8)]
-stepslongline = [ (0.25, 3), (0.75, 3), (1.0, 10)]
+stepshortline = [(1.0, 8)]
+stepslongline = [(0.25, 3), (0.75, 3), (1.0, 10)]
 
 
 #curveColor = [255,0,0] * maxCurvesByLaser
@@ -90,8 +81,6 @@ YTimeAxe=30000
 
 #curveX = [255,255,255] * maxCurvesByLaser
 #curveY = [255,255,255] * maxCurvesByLaser
-
-Mode = 5
 
 point = [0,0,0]
 
@@ -125,21 +114,7 @@ cc[22]= 60
 fov = 4 * cc[22]
 
 
-
-'''
-Also vailable with args : -v Value 
-
-if debug = 1 you get :
-
-
-if debug = 2 you get :
-- dac errors
-
-'''
-
-
 JumpFlag =0
-
 
 # nice X (cc 5) Y (cc 6) curve at first
 cc[5] = cc[6] = 60

@@ -3,10 +3,10 @@
 # -*- mode: Python -*-
 
 '''
-LJay v0.8.0
+LJay/LJ v0.8.0
 
 newdacp.py
-Unhanced version (redis and process style) of the etherdream python library from j4cDAC.
+Enhanced version (redis and process style) of the etherdream python library from j4cDAC.
 
 LICENCE : CC
 Sam Neurohack, pclf
@@ -38,7 +38,7 @@ Geometric corrections :
 import socket
 import time
 import struct
-from gstt import debug, PL
+#from gstt import debug
 import gstt
 import math
 from itertools import cycle
@@ -157,13 +157,13 @@ class DAC(object):
 				if math.hypot(delta_x, delta_y) < 4000:
 
 					# For glitch art : decrease lsteps
-					l_steps = [ (1.0, 8)]
-					#l_steps = gstt.stepshortline
+					#l_steps = [ (1.0, 8)]
+					l_steps = gstt.stepshortline
 
 				else:
 					# For glitch art : decrease lsteps
-					l_steps = [ (0.25, 3), (0.75, 3), (1.0, 10)]
-					#_steps = gstt.stepslongline
+					#l_steps = [ (0.25, 3), (0.75, 3), (1.0, 10)]
+					l_steps = gstt.stepslongline
 
 				for e in l_steps:
 					step = e[0]
@@ -255,11 +255,11 @@ class DAC(object):
 		#print  "pl :", self.pl
 		#print "EDH/"+str(self.mylaser),r.get('/EDH/'+str(self.mylaser))
 		if r.get('/EDH/'+str(self.mylaser)) == None:
-			#print "Laser",self.mylaser,"NO EDH !! Computing one..."
+			print "Laser",self.mylaser,"NO EDH !! Computing one..."
 			homographyp.newEDH(self.mylaser)
 		else:	
 			gstt.EDH[self.mylaser] = np.array(ast.literal_eval(r.get('/EDH/'+str(self.mylaser))))
-			#print "Laser",self.mylaser,"found its EDH in redis"
+			print "Laser",self.mylaser,"found its EDH in redis"
 			#print gstt.EDH[self.mylaser]
 		
 		'''
@@ -358,7 +358,7 @@ class DAC(object):
 				self.pl = ast.literal_eval(r.get('/pl/'+str(self.mylaser)))
 			else:
 	
-				# recompute EDH 
+				# Get the new EDH 
 				if order == 1:
 					print "Laser",self.mylaser,"new EDH ORDER in redis"
 					gstt.EDH[self.mylaser]= np.array(ast.literal_eval(r.get('/EDH/'+str(self.mylaser))))
@@ -379,7 +379,7 @@ class DAC(object):
 				# Resampler Modification
 				if order == 4:
 					self.resampler = ast.literal_eval(r.get('/resampler/'+str(self.mylaser)))
-					print "resampler for", self.mylaser, ":",self.resampler
+					print "newdacp resetting lsteps for", self.mylaser, ":",self.resampler
 					gstt.stepshortline    = self.resampler[0]
 					gstt.stepslongline[0] = self.resampler[1]
 					gstt.stepslongline[1] = self.resampler[2]
@@ -445,6 +445,7 @@ class DAC(object):
 #			print "Took %f" % (t1 - t0, )
 
 			if not started:
+				print "starting laser", self.mylaser, "with", gstt.kpps[self.mylaser],"kpps"
 				self.begin(0, gstt.kpps[self.mylaser])
 				started = 1
 
