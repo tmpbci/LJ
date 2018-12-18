@@ -41,6 +41,9 @@ def NewEDH(laser):
 
     print "New EDH requested for laser ", laser
     settings.Write()
+    print "Settings saving swapX ", gstt.swapX[laser]
+    print "Settings saving swapY ", gstt.swapY[laser]
+
     homographyp.newEDH(laser)
     
     #r.set('/order/'+str(laser), 1)
@@ -79,14 +82,60 @@ def Resampler(laser,lsteps):
     r.set('/order/'+str(laser), 4)
 
 
+def LasClientChange(clientnumber):
+
+    # 
+    if r.get("/pl/"+str(clientnumber)+"/0") != None:
+
+        print "Switching to laser client", clientnumber
+        gstt.ClientNumber = clientnumber
+        r.set('/clientkey', "/pl/"+str(clientnumber)+"/")
+        print "clientkey set to", "/pl/"+str(clientnumber)+"/"
+        for laserid in xrange(0,gstt.LaserNumber):
+            r.set('/order/'+str(laserid), 5)
+    else:
+        print "Error : new laser client",clientnumber,"must send points first to","/pl/"+str(clientnumber)+"/0"
+        
+
+        
+def NoteOn(note):
+    print "NoteOn", note
+
+    # Change laser client
+    if note < 8:
+        LasClientChange(note)
+    
+    # New PL displayed
+    if  note > 23 and note < 32:
+        if note - 24 > gstt.LaserNumber -1:
+            print "Only",gstt.LaserNumber,"asked, you dum ass !"
+        else: 
+            gstt.Laser = note -24
+            print "Current Laser switched to",gstt.Laser
+            #LasClientChange(gstt.Laser)
+
+
+
 def handler(oscpath, args):
 
-    pathlength = len(oscpath)
-    if pathlength == 3:
-        laser = int(oscpath[2])
-    else:
-        laser = int(oscpath[3])
+    print ""
+    print "Handler"
 
+    if oscpath[1] == "client" or oscpath[1] =="noteon":
+        if oscpath[1] == "client":
+            LasClientChange(int(args[0]))
+        else:
+            NoteOn(int(args[0]))
+
+    else:
+        pathlength = len(oscpath)
+        if pathlength == 3:
+            laser = int(oscpath[2])
+        else:
+            laser = int(oscpath[3])
+
+    print "args[0] :",args[0]," ", type(args[0])
+    
     # /grid/lasernumber value (0 or 1) 
     if oscpath[1] == "grid":
     
@@ -102,12 +151,11 @@ def handler(oscpath, args):
     if oscpath[1] == "black":
     
         if args[0] == "1":
-            print "Grid requested for laser ", laser
+            print "Black requested for laser ", laser
             BlackOn(laser)        
         else:
-            print "No grid for laser ", laser
+            print "No black for laser ", laser
             UserOn(laser)
-
 
     
     # /ip/lasernumber value
@@ -120,19 +168,20 @@ def handler(oscpath, args):
     # /kpps/lasernumber value
     # Live change of kpps is not implemented in newdac.py. Change will effect next startup.
     if oscpath[1] == "kpps":
-        print "New kpps for laser ", laser, " next startup", args[0]
+        print "New kpps for laser ", laser, " next startup", int(args[0])
         gstt.kpps[laser]= int(args[0])
         settings.Write()
 
     # /angle/lasernumber value 
     if oscpath[1] == "angle":
-        print "New Angle modification for laser ", oscpath[2], ":",  args[0]
-        gstt.finANGLE[laser] += int(args[0])
+        print "New Angle modification for laser ", oscpath[2], ":",  float(args[0])
+        gstt.finANGLE[laser] += float(args[0])
         NewEDH(laser)
+        "New angle", gstt.finANGLE[laser]
         
     # /intens/lasernumber value 
     if oscpath[1] == "intens":
-        print "New intensity requested for laser ", laser, ":",  args[0]
+        print "New intensity requested for laser ", laser, ":",  int(args[0])
         print "Change not implemented yet"
 
 
@@ -156,24 +205,27 @@ def handler(oscpath, args):
     # /swap/X/lasernumber value (0 or 1) 
     if oscpath[1] == "swap" and oscpath[2] == "X":
     
+        print "swapX was", gstt.swapX[laser]
         if args[0] == "0":
-            print "swap X : -1 for laser ", laser
+            print "swap X -1 for laser ", laser
             gstt.swapX[laser]= -1
             NewEDH(laser)
 
         else:
-            print "swap X : 1 for laser ",  laser
+            print "swap X 1 for laser ",  laser
             gstt.swapX[laser]= 1
             NewEDH(laser)
 
     # /swap/Y/lasernumber value (0 or 1) 
     if oscpath[1] == "swap" and oscpath[2] == "Y":
+
+        print "swapY was", gstt.swapX[laser]
         if args[0] == "0":
-            print "swap Y : -1 for laser ",  laser
+            print "swap Y -1 for laser ",  laser
             gstt.swapY[laser]= -1
             NewEDH(laser)
         else:
-            print "swap Y : 1 for laser ",  laser
+            print "swap Y 1 for laser ",  laser
             gstt.swapY[laser]= 1
             NewEDH(laser)
 

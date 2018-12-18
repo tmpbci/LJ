@@ -83,8 +83,8 @@ console.log(pl0);
 console.log(pl1);
 
 // Send points lists to redis server
-client.set("/pl/0",pl0);
-client.set("/pl/1",pl1);
+client.set("/pl/0/0",pl0);
+client.set("/pl/0/1",pl1);
 
 // Quit
 client.quit()

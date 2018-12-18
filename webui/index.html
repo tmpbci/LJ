@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>LJay</title>
+        <title>LJ</title>
 
         <!-- Web audio defaults -->
         <script src="webcomponents-lite.js"></script>
@@ -22,7 +22,8 @@
 
 	    <!-- Webscoket handler -->
 		<script type="text/javascript">
-
+		var  pl = "";
+		var  pl2 = new Array();
         var _WS = {
         uri: 'ws://127.0.0.1:9001/',
         ws: null,
@@ -42,7 +43,6 @@
         },
         onMessage: function (e) {
           var res = e.data.split(" ");
-          var pl = ""
           //console.log(e.data)
           //console.log(res[0].substring(0,6))
 		  switch (res[0].substring(0,6)) {
@@ -50,14 +50,17 @@
     				_WS.showstatus(e.data.slice(8));
         			break;
     			case "/plfra":
-              pl = e.data.slice(11)
-        			console.log(pl);
+        			console.log(e.data.slice(11));
+        			pl = e.data.slice(9);
+        			//console.log(pl);
+        			pl2 = eval(pl.replace(/[()]/g, ''));
+  					//console.log(pl2);
         			break;
-        	case "/plpoi":
+        		case "/plpoi":
         			//console.log("plpoint");
         			break;
-        	default:
-        			console.log(res[0] + " "  + res[1])
+        		default:
+        			//console.log(res[0] + " "  + res[1])
         			//console.log(res[1])
         			document.getElementById(res[0].slice(1)).value = res[1];
               }
@@ -204,7 +207,7 @@
         <webaudio-switch id="swap/Y/0" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
     </div>
     <!-- Lasergrid 0 -->
-    <div class="lasergrid" style="background-image: url(knobs/lasergrid0.png);">
+    <div class="lasergrid" style="background-image: url(lasergrid0.png);">
 
     	<div><webaudio-param id="kpps/0" link="kpps/0" ></webaudio-param></div>
        	<div><webaudio-param id="points/0" link="points/0"></webaudio-param></div>
@@ -254,7 +257,7 @@
         <webaudio-switch id="swap/Y/1" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
     </div>
     <!-- Lasergrid 1 -->
-    <div class="lasergrid" style="background-image: url(knobs/lasergrid1.png);">
+    <div class="lasergrid" style="background-image: url(lasergrid1.png);">
     	<div><webaudio-param id="kpps/1" link="kpps/1"></webaudio-param></div>
        	<div><webaudio-param id="points/1" link="points/1"></webaudio-param></div>
         <div class="lasertext">kPPS</div>
@@ -303,7 +306,7 @@
         <webaudio-switch id="swap/Y/2" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
     </div>
     <!-- Laser 2 grid -->
-    <div class="lasergrid" style="background-image: url(knobs/lasergrid2.png)">
+    <div class="lasergrid" style="background-image: url(lasergrid2.png)">
     	<div><webaudio-param id="kpps/2" link="kpps/2"></webaudio-param></div>
        	<div><webaudio-param id="points/2" link="points/2"></webaudio-param></div>
         <div class="lasertext">kPPS</div>
@@ -352,7 +355,7 @@
         <webaudio-switch id="swap/Y/3" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
     </div>
     <!-- Laser 3 grid -->
-    <div class="lasergrid" style="background-image: url(knobs/lasergrid3.png)">
+    <div class="lasergrid" style="background-image: url(lasergrid3.png)">
     	<div><webaudio-param id="kpps/3" link="kpps/3" ></webaudio-param></div>
        	<div><webaudio-param id="points/3" link="points/3"></webaudio-param></div>
         <div class="lasertext">kPPS</div>
@@ -480,67 +483,32 @@
   </div>
 
   <!-- mg run icons grid -->
-  <div id="mgrun"class="mgrun">
-    	<!-- Curve selection grid -->
-  	    <div><img src="img/iconljay2.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconljay2.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconastro.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconljay2.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconllstr.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconastro.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconljay2.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconpose.png" alt=" " class="icongrid" /></div>
-  	    <div><button id ="noteon 0" onclick ="buttonClicked(this.id)"  class="button">Map.</button></div>
-  	    <div><button id ="noteon 1" onclick ="buttonClicked(this.id)"  class="button">xPLS</button></div>
-  	    <div><button id ="noteon 2" onclick ="buttonClicked(this.id)"  class="button">Orbits</button></div>
-  	    <div><button id ="noteon 3" onclick ="buttonClicked(this.id)"  class="button">Dot</button></div>
-  	    <div><button id ="noteon 4" onclick ="buttonClicked(this.id)"  class="button">Sine</button></div>
-  	    <div><button id ="noteon 5" onclick ="buttonClicked(this.id)"  class="button">Astro</button></div>
-  	    <div><button id ="noteon 6" onclick ="buttonClicked(this.id)"  class="button:checked">Text</button></div>
-  	    <div><button id ="noteon 7" onclick ="buttonClicked(this.id)"  class="button">Pose</button></div>
-  	    <!-- Set selection grid -->
-  	    <div><img src="img/iconljay1.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconljay1.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconllstr.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconpose.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconljay1.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconljay1.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconljay1.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconljay1.png" alt=" " class="icongrid" /></div>
-  	    <div><button id ="noteon 8" onclick ="buttonClicked(this.id)"  class="button:checked">Set 0</button></div>
-  	    <div><button id ="noteon 9" onclick ="buttonClicked(this.id)"  class="button">Set 1</button></div>
-  	    <div><button id ="noteon 10" onclick ="buttonClicked(this.id)"  class="button">LLSTR</button></div>
-  	    <div><button id ="noteon 11" onclick ="buttonClicked(this.id)"  class="button">Franken</button></div>
-  	    <div><button id ="noteon 12" onclick ="buttonClicked(this.id)"  class="button">Ex.</button></div>
-  	    <div><button id ="noteon 13" onclick ="buttonClicked(this.id)"  class="button">5.</button></div>
-  	    <div><button id ="noteon 14" onclick ="buttonClicked(this.id)"  class="button">6</button></div>
-  	    <div><button id ="noteon 15" onclick ="buttonClicked(this.id)"  class="button">7</button></div>
-  	    <!-- Laser selection grid -->
-  	    <div><img src="img/iconlaser.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconlaser.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconlaser.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconlaser.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><button id ="noteon 16" onclick ="buttonClicked(this.id)"  class="button:checked">0</button></div>
-  	    <div><button id ="noteon 17" onclick ="buttonClicked(this.id)"  class="button">1</button></div>
-  	    <div><button id ="noteon 18" onclick ="buttonClicked(this.id)"  class="button">2</button></div>
-  	    <div><button id ="noteon 19" onclick ="buttonClicked(this.id)"  class="button">3</button></div>
-  	    <div></div>
-  	    <div></div>
-  	    <div></div>
-  	    <div></div>
+  <div id="mgrun"class="mgrun">    	<!-- Laser Client selection grid -->
+  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+  	    <div><button id ="noteon 0" onclick ="buttonClicked(this.id)"  class="button:checked">0</button></div>
+  	    <div><button id ="noteon 1" onclick ="buttonClicked(this.id)"  class="button">1</button></div>
+  	    <div><button id ="noteon 2" onclick ="buttonClicked(this.id)"  class="button">2</button></div>
+  	    <div><button id ="noteon 3" onclick ="buttonClicked(this.id)"  class="button">3</button></div>
+  	    <div><button id ="noteon 4" onclick ="buttonClicked(this.id)"  class="button">4</button></div>
+  	    <div><button id ="noteon 5" onclick ="buttonClicked(this.id)"  class="button">5</button></div>
+  	    <div><button id ="noteon 6" onclick ="buttonClicked(this.id)"  class="button">6</button></div>
+  	    <div><button id ="noteon 7" onclick ="buttonClicked(this.id)"  class="button">7</button></div>
   	    <!-- Simulator PL selection grid -->
-  	    <div><img src="img/iconsimu.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconsimu.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconsimu.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconsimu.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="img/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconpl.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconpl.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconpl.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconpl.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
   	    <div><button id ="noteon 24" onclick ="buttonClicked(this.id)"  class="button:checked">PL 0</button></div>
   	    <div><button id ="noteon 25" onclick ="buttonClicked(this.id)"  class="button">PL 1</button></div>
   	    <div><button id ="noteon 26" onclick ="buttonClicked(this.id)"  class="button">PL 2</button></div>
@@ -549,7 +517,41 @@
   	    <div></div>
   	    <div></div>
   	    <div></div>
-	</div>
+  	    <!-- Laser selection grid -->
+  	    <div><img src="knobs/iconlaser.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconlaser.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconlaser.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconlaser.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><button id ="noteon 16" onclick ="buttonClicked(this.id)"  class="button:checked">0</button></div>
+  	    <div><button id ="noteon 17" onclick ="buttonClicked(this.id)"  class="button">1</button></div>
+  	    <div><button id ="noteon 18" onclick ="buttonClicked(this.id)"  class="button">2</button></div>
+  	    <div><button id ="noteon 19" onclick ="buttonClicked(this.id)"  class="button">3</button></div>
+  	    <div></div>
+  	    <div></div>
+  	    <div></div>
+  	    <div></div>
+  	    <!-- Hidden grid -->
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>  	    
+  	    <div></div>
+  	    <div></div>
+  	    <div></div>
+  	    <div></div>
+  	    <div></div>
+  	    <div></div>
+  	    <div></div>
+  	    <div></div>
+  	 </div>
 
   <!-- mg : footer display events for debug -->
   <div class="mgfooter">
@@ -688,88 +690,42 @@
     }
 </script>
 
+
 <!-- Point list draw -->
-<script>
+<script type="text/javascript">
 
 	// Store Reference To The Canvas & Set Context
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
-
-	//var re = document.getElementById('speed');
-	//re.addEventListener('change', function(){
-	//	speed = re.value;
-	//	});
-
+	var lastpoint = { x: 0, y: 0 };
 
 	function draw() {
 
     	// Clear Canvas At The Start Of Every Frame
     	ctx.clearRect(0,0,400,400);
+    	if (pl2.length > 0)
+    		{
+    		ctx.beginPath();
+    		ctx.moveTo(lastpoint.x , lastpoint.y );
 
-    	ctx.beginPath();
-    	ctx.moveTo(Math.random() * 220, Math.random() * 220);
-
-    	// var xA = new Array();
-    	// var yA = new Array();
-    	//for (var i=0; i<=100, i++){
-    	//xA[i] = ;
-    	//yA[i] = ;
-    	//}
-
-    	// Draw Additional Randomly Placed Lines
-    	for (var i = 0; i < 25; i++) {
-        	ctx.lineTo(Math.random() * 400, Math.random() * 400);
-    		}
-    	ctx.strokeStyle = "#888";
-    	ctx.stroke();
-
-    	// Call Draw Function Again To Continue
-    	// Drawing To Canvas To Create Animation
+    		// Draw Lines
+    		for (var i = 0; i < pl2.length/3; i++) {
+        		ctx.lineTo(pl2[i*3]*0.7, pl2[1+(i*3)]*0.7);
+    			}
+    		
+    		ctx.strokeStyle = "#888";
+    		ctx.stroke();
+    		lastpoint.x = pl2[i*3];
+			lastpoint.y = pl2[1+(i*3)];
+			} 
+    	// Call Draw Function Again To Create Animation
     	window.requestAnimationFrame(draw);
 		}
-
-    	<!--
-
-    	//var speed = 100;
-    	var lastpoint = { x: 0, y: 0 };
-    	var pt = { x: 0, y: 0 };
-
-    	// fade background a bit...
-		ctx.globalAlpha = 0.1;
-		ctx.fillStyle = '#000';
-		ctx.fillRect(0, 0, 400, 400);
-		ctx.globalAlpha = 1.0;
-		for (var i=0; i<=100; i++){
-			//var pt = seg.points[point];
-			pt.x = Math.random() * 400;
-			pt.y = Math.random() * 400;
-			// console.log('draw', pt);
-			var newpoint = {
-				x: pt.x,
-				y: pt.y
-				//x: 200 + 190 * pt.x / 32768,
-				//y: 200 - 190 * pt.y / 32768
-				};
-			ctx.strokeStyle = "#888";
-			ctx.beginPath();
-			ctx.moveTo(lastpoint.x, lastpoint.y);
-			ctx.lineTo(newpoint.x, newpoint.y);
-			ctx.closePath();
-			ctx.stroke();
-
-			lastpoint.x = newpoint.x;
-			lastpoint.y = newpoint.y;
-			}
-
-    	-->
-
-
-
+    	
 	// Initialize The Draw Function
 	draw();
+
 </script>
-
-
 </body>
 
     <!-- non displayed items, for code reference

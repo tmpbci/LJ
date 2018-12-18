@@ -105,7 +105,7 @@ def rPolyLineOneColor(xy_list, c, PL , closed, xpos = 0, ypos =0, resize =0.7, r
 # 0: point list / 1: Grid 
 def LinesPL(PL):
 
-	if r.set('/pl/'+str(PL), str(pl[PL])) == True:
+	if r.set('/pl/0/'+str(PL), str(pl[PL])) == True:
 		return True
 	else:
 		return False

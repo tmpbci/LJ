@@ -174,17 +174,18 @@ def EDpoint(mylaser,(pygamex,pygamey)):
 	x = (gstt.xy_center[0] + ((XX * CosANGLE) - (YY * SinANGLE)) - gstt.xy_center[0]) * gstt.zoomX[mylaser] + gstt.centerX[mylaser]
 	y = (gstt.xy_center[1] + ((XX * SinANGLE) + (YY * CosANGLE)) - gstt.xy_center[1]) * gstt.zoomY[mylaser] + gstt.centerY[mylaser]
 	
-	if gstt.debug >0:
+	if gstt.debug >1:
 	
 		#print "global center :", xy_center
-	
+		print "EDpoint computing..."
 		print "Laser :", mylaser, "center at : ", gstt.centerX[mylaser], gstt.centerY[mylaser]
+		print "Pygame point",pygamex,",",pygamey
 		'''
 		print "swaps : ", (gstt.swapX[mylaser]), str(gstt.swapY[mylaser])
 		print "zooms : ", gstt.zoomX[mylaser], gstt.zoomY[mylaser]
 		print "angles : ", gstt.finANGLE[mylaser]
 		'''
-		print "result : ", x * gstt.swapX[mylaser] , y * gstt.swapY[mylaser]
+		print "Result point : ", x * gstt.swapX[mylaser] , y * gstt.swapY[mylaser]
 	return [x * gstt.swapX[mylaser] , y * gstt.swapY[mylaser]]
 
 '''

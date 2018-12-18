@@ -235,6 +235,8 @@ class DAC(object):
 
 		#print "init"
 		self.mylaser = mylaser
+		self.clientkey = r.get("/clientkey")
+		#print "Laser",self.mylaser,"Got clientkey", self.clientkey
 		#print "DAC", self.mylaser, "Handler process, connecting to", gstt.lasersIPS[mylaser] 
 		self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.connstatus = self.conn.connect_ex((gstt.lasersIPS[mylaser], port))
@@ -249,17 +251,18 @@ class DAC(object):
 		self.PL = PL
 
 		# Lower case pl is the actual point list coordinates
-		self.pl = ast.literal_eval(r.get('/pl/'+str(self.mylaser)))
+		print "Laser",self.mylaser,"asking for ckey", self.clientkey+str(self.mylaser)
+		self.pl = ast.literal_eval(r.get(self.clientkey + str(self.mylaser)))
 		#if self.mylaser ==0:
 		#print "DAC Init Laser", self.mylaser
 		#print  "pl :", self.pl
 		#print "EDH/"+str(self.mylaser),r.get('/EDH/'+str(self.mylaser))
 		if r.get('/EDH/'+str(self.mylaser)) == None:
-			print "Laser",self.mylaser,"NO EDH !! Computing one..."
+			#print "Laser",self.mylaser,"NO EDH !! Computing one..."
 			homographyp.newEDH(self.mylaser)
 		else:	
 			gstt.EDH[self.mylaser] = np.array(ast.literal_eval(r.get('/EDH/'+str(self.mylaser))))
-			print "Laser",self.mylaser,"found its EDH in redis"
+			#print "Laser",self.mylaser,"found its EDH in redis"
 			#print gstt.EDH[self.mylaser]
 		
 		'''
@@ -355,7 +358,8 @@ class DAC(object):
 			if order == 0:
 
 				# USER point list
-				self.pl = ast.literal_eval(r.get('/pl/'+str(self.mylaser)))
+				self.pl = ast.literal_eval(r.get(self.clientkey+str(self.mylaser)))
+
 			else:
 	
 				# Get the new EDH 
@@ -376,7 +380,7 @@ class DAC(object):
 					self.pl = grid_points
 
 			
-				# Resampler Modification
+				# Resampler Change
 				if order == 4:
 					self.resampler = ast.literal_eval(r.get('/resampler/'+str(self.mylaser)))
 					print "newdacp resetting lsteps for", self.mylaser, ":",self.resampler
@@ -384,6 +388,16 @@ class DAC(object):
 					gstt.stepslongline[0] = self.resampler[1]
 					gstt.stepslongline[1] = self.resampler[2]
 					gstt.stepslongline[2] = self.resampler[3]
+					# Back to user point list order
+					r.set('/order/'+str(self.mylaser), 0)
+
+				# Client Key change
+				if order == 5:
+					print "Laser",self.mylaser,"new clientkey",
+					self.clientkey = r.get('/clientkey')
+					# Back to user point list order
+					r.set('/order/'+str(self.mylaser), 0)
+
 				
 	
 			'''

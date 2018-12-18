@@ -26,12 +26,12 @@ def rgb2int(r,g,b):
 pl1 =  [(100,300,rgb2int(255,255,255)),(200,300,rgb2int(255,255,255)),(200,200,rgb2int(255,255,255)),(100,200,rgb2int(255,255,255))]
 
 # Send to laser 0 (see mainy.conf)
-r.set('/pl/0', str(pl0))
+r.set('/pl/0/0', str(pl0))
 
 # Send to laser 1 (see mainy.conf)
-r.set('/pl/1', str(pl1))
-
-r.set('/pl/2', str(pl1))
+r.set('/pl/0/1', str(pl1))
+# Send to laser 2 (see mainy.conf)
+r.set('/pl/0/2', str(pl1))
 
 '''
 You can also use PolyLineOneColor or rPolylineOneColor to stack n point lists to build a "frame"
