@@ -19,6 +19,11 @@ anims= [[],[],[],[]]
 
 # How many lasers are connected. Different that "currentlaser" used by bhorosc
 LaserNumber = 2
+
+# What laser client to listen at launch
+LasClientNumber = 0
+MaxLasClient = 3
+
 screen_size = [800,600]
 xy_center = [screen_size[0]/2,screen_size[1]/2]
 
@@ -38,7 +43,7 @@ simuPL = 1
 # gstt.laserIPS. Will be overridden by the ConfigName (see below) file values
 lasersIPS = ['192.168.1.5','192.168.1.6','192.168.1.3','192.168.1.4']
 
-ClientNumber = 1
+
 
 # gstt.kpps stores kpps for each laser.
 # ** Will be overridden by the ConfigName (see below) file values **

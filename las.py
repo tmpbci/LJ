@@ -88,13 +88,13 @@ def LasClientChange(clientnumber):
     if r.get("/pl/"+str(clientnumber)+"/0") != None:
 
         print "Switching to laser client", clientnumber
-        gstt.ClientNumber = clientnumber
+        gstt.LasClientNumber = clientnumber
         r.set('/clientkey', "/pl/"+str(clientnumber)+"/")
         print "clientkey set to", "/pl/"+str(clientnumber)+"/"
         for laserid in xrange(0,gstt.LaserNumber):
             r.set('/order/'+str(laserid), 5)
     else:
-        print "Error : new laser client",clientnumber,"must send points first to","/pl/"+str(clientnumber)+"/0"
+        print "ERROR : MaxLasClient is set to ", gstt.MaxLasClient
         
 
         
@@ -105,14 +105,14 @@ def NoteOn(note):
     if note < 8:
         LasClientChange(note)
     
-    # New PL displayed
+    # Change PL displayed on webui
     if  note > 23 and note < 32:
         if note - 24 > gstt.LaserNumber -1:
-            print "Only",gstt.LaserNumber,"asked, you dum ass !"
+            print "Only",gstt.LaserNumber,"lasers asked, you dum ass !"
         else: 
             gstt.Laser = note -24
             print "Current Laser switched to",gstt.Laser
-            #LasClientChange(gstt.Laser)
+
 
 
 

@@ -560,10 +560,13 @@
     		// Draw Lines
     		for (var i = 0; i < pl2.length/3; i++) {
         		ctx.lineTo(pl2[i*3]*0.7, pl2[1+(i*3)]*0.7);
+            //ctx.strokeStyle = "#"+(pl2[2+(i*3)]).toString(16);
+            ctx.strokeStyle = "#"+((pl2[2+(i*3)]) + Math.pow(16, 6)).toString(16).slice(-6);
+            ctx.stroke();
     			}
     		
-    		ctx.strokeStyle = "#888";
-    		ctx.stroke();
+    		//ctx.strokeStyle = "#888";
+    		//ctx.stroke();
     		lastpoint.x = pl2[i*3];
 			lastpoint.y = pl2[1+(i*3)];
 			} 

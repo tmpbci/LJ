@@ -98,22 +98,18 @@
     			case "/statu":
     				_WS.showstatus(e.data.slice(8));
         			break;
-    			case "/plfra":
-        			console.log(e.data.slice(11));
-        			pl = e.data.slice(9);
-        			//console.log(pl);
+          case "/simul":
+        			pl = e.data.slice(7);
         			pl2 = eval(pl.replace(/[()]/g, ''));
-  					//console.log(pl2);
         			break;
-        		case "/plpoi":
+        	case "/plpoi":
         			//console.log("plpoint");
         			break;
-        		default:
-        			//console.log(res[0] + " "  + res[1])
-        			//console.log(res[1])
+        	default:
         			document.getElementById(res[0].slice(1)).value = res[1];
+              _WS.showin(e.data);
               }
-          _WS.showin(e.data);
+          
         },
         onError: function (e) {
           _WS.showin('<span style="color: red;">ERROR:</span> ' + e.data);

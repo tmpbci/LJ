@@ -25,6 +25,10 @@ def rgb2int(r,g,b):
 # White rectangular shape 
 pl1 =  [(100,300,rgb2int(255,255,255)),(200,300,rgb2int(255,255,255)),(200,200,rgb2int(255,255,255)),(100,200,rgb2int(255,255,255))]
 
+
+# /pl/clientnumber/lasernumber pointlist
+
+# Consider you're client 0
 # Send to laser 0 (see mainy.conf)
 r.set('/pl/0/0', str(pl0))
 

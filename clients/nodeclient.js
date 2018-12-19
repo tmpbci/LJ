@@ -83,6 +83,9 @@ console.log(pl0);
 console.log(pl1);
 
 // Send points lists to redis server
+// /pl/clientnumber/lasernumber pointlist
+// you're client 0 and want to send points to laser 0 and 1
+
 client.set("/pl/0/0",pl0);
 client.set("/pl/0/1",pl1);
 

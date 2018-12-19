@@ -70,7 +70,7 @@ def dac_process(number, pl):
 # webUI server
 #
 
-print "Laser client number :",gstt.ClientNumber
+print "Laser client number :",gstt.LasClientNumber
 serverIP = gstt.LjayServerIP
 print "Redis IP :", serverIP
 
@@ -212,7 +212,8 @@ def osc_thread():
                 
                     
                     lack= r.get('/lack/'+str(laserid))
-                    print "laserid", laserid,"lack",lack
+                    if gstt.debug >0:
+                        print "laserid", laserid,"lack",lack
                     if lack == 'a':                             # Dac sent ACK ("a") -> led is green (1)
                         sendWSall("/lack/" + str(laserid) +" 1")
                     if lack == 'F':                             # Dac sent FULL ("F") -> led is orange (5)
@@ -231,8 +232,8 @@ def osc_thread():
                         # last number of points sent to etherdream buffer
                         sendWSall("/points/" + str(laserid) + " " + str(r.get('/cap/'+str(laserid))))
 
-                print "Sending simu frame from",'/pl/'+str(gstt.ClientNumber)+'/'+str(gstt.Laser)
-                sendWSall("/plframe" +" "+ r.get('/pl/'+str(gstt.ClientNumber)+'/'+str(gstt.Laser)))
+                print "Sending simu frame from",'/pl/'+str(gstt.LasClientNumber)+'/'+str(gstt.Laser)
+                sendWSall("/simul" +" "+ r.get('/pl/'+str(gstt.LasClientNumber)+'/'+str(gstt.Laser)))
 
 
         except Exception as e:
@@ -311,23 +312,23 @@ def sendWSall(message):
     
 
 
-# Some random lists for all lasers at launch for laser client gstt.ClientNumber
+# Creating a startup point list for each client : 0,1,2,...
+
 print ""
-print "Creating startup point lists for client",gstt.ClientNumber,"..."
+for clientid in range(0,gstt.MaxLasClient):
+    print "Creating startup point lists for client",clientid,"..."
+    digit_points = font1.DigitsDots(clientid,65280)
 
+    # Order all lasers to show the laser client number at startup -> tell all 4 laser process to USER PLs
+    for laserid in range(0,gstt.LaserNumber):
 
-digit_points = font1.DigitsDots(gstt.ClientNumber,16711935)
+        if r.set('/pl/'+str(clientid)+'/'+str(laserid), str(digit_points)) == True:
+            print "/pl/"+str(clientid)+"/"+str(laserid)+" ", ast.literal_eval(r.get('/pl/'+str(clientid)+'/'+str(laserid)))
 
-# Order all lasers to show the laser client number at startup -> tell all 4 laser process to USER PLs
-for laserid in range(0,gstt.LaserNumber):
+        r.set('/order/'+str(laserid), 0)
 
-    if r.set('/pl/'+str(gstt.ClientNumber)+'/'+str(laserid), str(digit_points)) == True:
-        print "/pl/"+str(gstt.ClientNumber)+"/"+str(laserid)+" ", ast.literal_eval(r.get('/pl/'+str(gstt.ClientNumber)+'/'+str(laserid)))
-
-    r.set('/order/'+str(laserid), 0)
-
-if r.set("/clientkey","/pl/"+str(gstt.ClientNumber)+"/")==True:
-    print "sent clientkey : /pl/"+str(gstt.ClientNumber)+"/"
+if r.set("/clientkey","/pl/"+str(gstt.LasClientNumber)+"/")==True:
+    print "sent clientkey : /pl/"+str(gstt.LasClientNumber)+"/"
 
 print ""
 print "Etherdream connection check is NOT DISPLAYED"
