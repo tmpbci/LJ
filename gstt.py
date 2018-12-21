@@ -11,7 +11,7 @@ from /team/laser
 '''
 
 #ConfigName = "setexample.conf"
-ConfigName = "mainy.conf"
+ConfigName = "LJ.conf"
 
 debug = 2
 

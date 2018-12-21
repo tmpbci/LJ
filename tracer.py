@@ -1,12 +1,11 @@
 #!/usr/bin/python2.7
 # -*- coding: utf-8 -*-
 # -*- mode: Python -*-
-
 '''
 LJay/LJ v0.8.0
 
-newdacp.py
-Enhanced version (redis and process style) of the etherdream python library from j4cDAC.
+tracer.py (was newdacp.py)
+Enhanced version (support for several lasers) of the etherdream python library from j4cDAC.
 
 LICENCE : CC
 Sam Neurohack, pclf
@@ -18,6 +17,7 @@ Uses redis keys value for live inputs/outputs
 These redis keys are read and set at each main loop.
 
 Live inputs :
+/order select some change to adjust
 /pl/lasernumber [(x,y,color),(x1,y1,color),...] A string of list of pygame points list. 
 /resampler/lasernumber [(1.0,8), (0.25,3),(0.75,3),(1.0,10)] : a string for resampling rules. 
 					the first tuple (1.0,8) is for short line < 4000 in etherdream space
@@ -29,9 +29,6 @@ Live ouputs :
 /cap/lasernumber           number of empty points sent to fill etherdream buffer (up to 1799)
 /lack/lasernumber value    "a": ACK   "F": Full  "I": invalid. 64 or 35 for no connection. 
 Geometric corrections :
-
-
-
 
 '''
 

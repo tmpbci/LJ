@@ -1,7 +1,7 @@
 # coding=UTF-8
 """
 
-LJ OSC handler
+LJ OSC and Websockets laser commands
 v0.7.0
 
 

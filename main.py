@@ -1,5 +1,5 @@
 '''
-LJ Servers v0.8
+LJ Laser Server v0.8
 
 Laser server + webUI servers (ws + OSC)
 
@@ -30,9 +30,9 @@ settings.Write()
 from multiprocessing import Process, Queue, TimeoutError 
 import random, ast
 
-import newdacp
+import tracer
 import homographyp
-import las
+import commands
 import font1
 
 
@@ -48,7 +48,7 @@ args =[0,0]
 def dac_process(number, pl):
     while True:
         try:
-            d = newdacp.DAC(number,pl)
+            d = tracer.DAC(number,pl)
             d.play_stream()
         except Exception as e:
 
@@ -176,7 +176,7 @@ def handler(path, tags, args, source):
         print "default handler"
         print "OSC said : ", path, oscpath, args
     sendWSall(path + " " + str(args[0]))
-    las.handler(oscpath,args)
+    commands.handler(oscpath,args)
 
 
 # RAW OSC Frame available ? 
@@ -288,7 +288,7 @@ def message_received(client, server, message):
     oscpath = message.split(" ")
     args[0] = str(oscpath[1]) 
     #print oscpath[0].split("/"),oscpath[1]
-    las.handler(oscpath[0].split("/"),args)
+    commands.handler(oscpath[0].split("/"),args)
     
     # current UI has no dedicated off button so /on 0 trigs /off to bhorosc
     if oscpath[0] == "/on":
@@ -367,7 +367,7 @@ try:
     print "Launching OSC server..."
     print "at", bhoroscIPin, "port",str(bhoroscPORTin)
     print "Will update webUI dac status every second"
-    oscserver.addMsgHandler( "/noteon", las.NoteOn )
+    oscserver.addMsgHandler( "/noteon", commands.NoteOn )
     # Default OSC handler for all OSC incoming message
     oscserver.addMsgHandler("default", handler)
     thread.start_new_thread(osc_thread, ())

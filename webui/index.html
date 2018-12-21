@@ -403,10 +403,10 @@
 
   <!-- mg run icons grid -->
   <div id="mgrun"class="mgrun">    	<!-- Laser Client selection grid -->
-  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
   	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
   	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
   	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
@@ -420,10 +420,10 @@
   	    <div><button id ="noteon 6" onclick ="buttonClicked(this.id)"  class="button">6</button></div>
   	    <div><button id ="noteon 7" onclick ="buttonClicked(this.id)"  class="button">7</button></div>
   	    <!-- Simulator PL selection grid -->
-  	    <div><img src="knobs/iconpl.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconpl.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconpl.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconpl.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
   	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
   	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
   	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
@@ -546,37 +546,63 @@
 	// Store Reference To The Canvas & Set Context
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
-	var lastpoint = { x: 0, y: 0 };
+  var lastpoint = { x: 0, y: 0, color: 0};
 
-	function draw() {
 
-    	// Clear Canvas At The Start Of Every Frame
-    	ctx.clearRect(0,0,400,400);
-    	if (pl2.length > 0)
-    		{
-    		ctx.beginPath();
-    		ctx.moveTo(lastpoint.x , lastpoint.y );
+  // Todo : laser point will have black points to go from a polyline to another. Need to discard those black points.
+  function draw() {
 
-    		// Draw Lines
-    		for (var i = 0; i < pl2.length/3; i++) {
-        		ctx.lineTo(pl2[i*3]*0.7, pl2[1+(i*3)]*0.7);
-            //ctx.strokeStyle = "#"+(pl2[2+(i*3)]).toString(16);
+      // Clear Canvas At The Start Of Every Frame
+      ctx.clearRect(0,0,400,400);
+      if (pl2.length > 0)
+        {
+
+        // Begin a new path
+        // 0.7 reduces max coordinates in a more browser compatible resolution.
+        ctx.beginPath();
+        ctx.moveTo(pl2[0]*0.7, pl2[1]*0.7);
+        lastpoint.color = pl2[2];
+
+        // Draw n Lines
+        for (var i = 0; i < pl2.length/3; i++) 
+          {
+          
+          // New point has the same color -> add a new line to new point
+          if (pl2[2+(i*3)] === lastpoint.color)
+            {
+            ctx.lineTo(pl2[i*3]*0.7, pl2[1+(i*3)]*0.7);
+            }
+
+          // New point has different color -> stroke with previous color
+          if (pl2[2+(i*3)] != lastpoint.color) 
+            {
+            ctx.strokeStyle = "#"+(lastpoint.color + Math.pow(16, 6)).toString(16).slice(-6);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pl2[i*3]*0.7, pl2[1+(i*3)]*0.7);
+            }
+
+          // Last point -> stroke with current color
+          if (i === (pl2.length/3)-1 ) 
+            {
+            ctx.moveTo(pl2[i*3]*0.7, pl2[1+(i*3)]*0.7);
             ctx.strokeStyle = "#"+((pl2[2+(i*3)]) + Math.pow(16, 6)).toString(16).slice(-6);
             ctx.stroke();
-    			}
-    		
-    		//ctx.strokeStyle = "#888";
-    		//ctx.stroke();
-    		lastpoint.x = pl2[i*3];
-			lastpoint.y = pl2[1+(i*3)];
-			} 
-    	// Call Draw Function Again To Create Animation
-    	window.requestAnimationFrame(draw);
-		}
-    	
-	// Initialize The Draw Function
-	draw();
+            }
 
+          // store point for comparison
+          lastpoint.x = pl2[i*3];
+          lastpoint.y = pl2[1+(i*3)];
+          lastpoint.color = pl2[2+(i*3)];
+          }
+
+      } 
+      // Call Draw Function Again To Create Animation
+      window.requestAnimationFrame(draw);
+    }
+      
+  // Initialize The Draw Function
+  draw();
 </script>
 </body>
 
