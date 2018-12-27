@@ -546,31 +546,35 @@
 	// Store Reference To The Canvas & Set Context
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
-  var lastpoint = { x: 0, y: 0, color: 0};
+  	var lastpoint = { x: 0, y: 0, color: 0};
+  	ctx.clearRect(0,0,400,400);
+  	ctx.save
 
 
   // Todo : laser point will have black points to go from a polyline to another. Need to discard those black points.
   function draw() {
 
       // Clear Canvas At The Start Of Every Frame
-      ctx.clearRect(0,0,400,400);
+      ctx.restore
+      
       if (pl2.length > 0)
         {
 
         // Begin a new path
         // 0.7 reduces max coordinates in a more browser compatible resolution.
         ctx.beginPath();
-        ctx.moveTo(pl2[0]*0.7, pl2[1]*0.7);
+        //ctx.clearRect(0,0,400,400);
+        ctx.moveTo(pl2[0]*0.5, pl2[1]*0.5);
         lastpoint.color = pl2[2];
 
         // Draw n Lines
         for (var i = 0; i < pl2.length/3; i++) 
           {
           
-          // New point has the same color -> add a new line to new point
+          // New point has the same color -> add a new line to the new point
           if (pl2[2+(i*3)] === lastpoint.color)
             {
-            ctx.lineTo(pl2[i*3]*0.7, pl2[1+(i*3)]*0.7);
+            ctx.lineTo(pl2[i*3]*0.5, pl2[1+(i*3)]*0.5);
             }
 
           // New point has different color -> stroke with previous color
@@ -578,16 +582,24 @@
             {
             ctx.strokeStyle = "#"+(lastpoint.color + Math.pow(16, 6)).toString(16).slice(-6);
             ctx.stroke();
+            //ctx.closePath()
+            ctx.restore
             ctx.beginPath();
-            ctx.moveTo(pl2[i*3]*0.7, pl2[1+(i*3)]*0.7);
+            //ctx.clearRect(0,0,400,400);
+            
+            ctx.moveTo(pl2[i*3]*0.5, pl2[1+(i*3)]*0.5);
             }
 
           // Last point -> stroke with current color
           if (i === (pl2.length/3)-1 ) 
             {
-            ctx.moveTo(pl2[i*3]*0.7, pl2[1+(i*3)]*0.7);
+            ctx.moveTo(pl2[i*3]*0.5, pl2[1+(i*3)]*0.5);
             ctx.strokeStyle = "#"+((pl2[2+(i*3)]) + Math.pow(16, 6)).toString(16).slice(-6);
             ctx.stroke();
+            
+            //ctx.closePath()
+            ctx.restore
+            //ctx.clearRect(0,0,400,400);
             }
 
           // store point for comparison

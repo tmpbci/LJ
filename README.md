@@ -69,7 +69,7 @@ By default LJ uses on 127.0.0.1 (localhost) :
 - An OSC client on 'bhoroscIP' port 8001.
 - An OSC client for Nozoids support on 'nozoscIP', port 8003.
 
-You need to update mainy.conf to your network/etherdreams IPs and be sure to check command arguments : python mainyservers.py --help
+You need to update LJ.conf to your network/etherdreams IPs and be sure to check command arguments : python main.py --help
 
 A dedicated computer to act as "laser server" usually depends on how many lasers you want to control and your main computer load. If you seen flickering with small point lists, try the dedicated computer option.
 
@@ -109,7 +109,7 @@ Check the bind line in /etc/redis/redis.conf :
 
 In webui/index.html change the ws ip adress to the server IP or 127.0.0.1 if client computer = laser server computer.
 
-Using the same idea check all ip address in mainy.conf.
+Using the same idea check all ip address in LJ.conf.
 
 For network Gurus : bind to all network interface scheme is not working yet.
 
@@ -123,7 +123,7 @@ Always start the laser server first.
 
 Case 1 : the laser server computer is the same that the computer running a client :
 
-python mainyservers.py
+python main.py
 
 Open/reload in browser webui/index.html. (javascript must be enabled)
 
@@ -143,7 +143,7 @@ Say the laser server computer (running LJ) IP is 192.138.1.13, the client comput
 
 On the server computer :
 edit /etc/redis/redis.conf
-python mainyservers.py -r 192.168.1.13
+python main.py -r 192.168.1.13
 
 on the client computer for all features :
 

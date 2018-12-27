@@ -248,7 +248,7 @@ class DAC(object):
 		self.PL = PL
 
 		# Lower case pl is the actual point list coordinates
-		print "Laser",self.mylaser,"asking for ckey", self.clientkey+str(self.mylaser)
+		print "Init laser",self.mylaser,"asking for ckey", self.clientkey+str(self.mylaser)
 		self.pl = ast.literal_eval(r.get(self.clientkey + str(self.mylaser)))
 		#if self.mylaser ==0:
 		#print "DAC Init Laser", self.mylaser
@@ -262,15 +262,6 @@ class DAC(object):
 			#print "Laser",self.mylaser,"found its EDH in redis"
 			#print gstt.EDH[self.mylaser]
 		
-		'''
-		d =homographyp.apply(gstt.EDH[self.mylaser],np.array([(300,400)]))
-		print ''
-		print "d",d
-		print "d0",d[0]
-		#print "d1",len(d[1])
-		print " "
-		'''
-
 		self.xyrgb = self.xyrgb_prev = (0,0,0,0,0)
 		self.newstream = self.OnePoint()
 		
@@ -332,6 +323,8 @@ class DAC(object):
 		self.conn.sendall("?")
 		return self.readresp("?")
 
+
+
 	def play_stream(self):
 
 		# print last playback state
@@ -351,11 +344,14 @@ class DAC(object):
 
 			#print "laser", self.mylaser, "Pb : ",self.last_status.playback_state
 
-			order = r.get('/order/'+str(self.mylaser))
-			if order == 0:
+			order = int(r.get('/order/'+str(self.mylaser)))
 
+			#print "laser", self.mylaser, "order : ",type(order) 
+			if order == 0:
+				
 				# USER point list
 				self.pl = ast.literal_eval(r.get(self.clientkey+str(self.mylaser)))
+				#print "laser", self.mylaser, "pl : ",length(self.pl)
 
 			else:
 	
@@ -397,7 +393,47 @@ class DAC(object):
 
 				
 	
-			'''
+			r.set('/lstt/'+str(self.mylaser), self.last_status.playback_state)
+			# pdb.set_trace()
+			# How much room?
+
+			cap = 1799 - self.last_status.fullness
+			points = self.GetPoints(cap)
+
+			r.set('/cap/'+str(self.mylaser), cap)
+
+			if cap < 100:
+				time.sleep(0.001)
+				cap += 150
+
+#			print "Writing %d points" % (cap, )
+			#t0 = time.time()
+			#print points
+			self.write(points)
+			#t1 = time.time()
+#			print "Took %f" % (t1 - t0, )
+
+			if not started:
+				print "starting laser", self.mylaser, "with", gstt.kpps[self.mylaser],"kpps"
+				self.begin(0, gstt.kpps[self.mylaser])
+				started = 1
+
+# not used in LJay.
+def find_dac():
+	"""Listen for broadcast packets."""
+
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	s.bind(("0.0.0.0", 7654))
+
+	while True:
+		data, addr = s.recvfrom(1024)
+		bp = BroadcastPacket(data)
+		
+		print "Packet from %s: " % (addr, )
+		bp.dump()
+
+
+'''
 			#Laser order bit 0 = 0
 			if not order & (1 << (self.mylaser*2)):
 				#print "laser",mylaser,"bit 0 : 0"
@@ -431,45 +467,4 @@ class DAC(object):
 				# Laser bit 0 = 1 and bit 1 = 1 : GRID PL
 					#print "laser",mylaser,"bit 1 : 1"   
 					self.pl = grid_points 
-			'''
-
-			r.set('/lstt/'+str(self.mylaser), self.last_status.playback_state)
-			# pdb.set_trace()
-			# How much room?
-
-			cap = 1799 - self.last_status.fullness
-			points = self.GetPoints(cap)
-
-			r.set('/cap/'+str(self.mylaser), cap)
-
-			#if self.mylaser == 0:
-			#print self.mylaser, cap
-			if cap < 100:
-				time.sleep(0.001)
-				cap += 150
-
-#			print "Writing %d points" % (cap, )
-			#t0 = time.time()
-			#print points
-			self.write(points)
-			#t1 = time.time()
-#			print "Took %f" % (t1 - t0, )
-
-			if not started:
-				print "starting laser", self.mylaser, "with", gstt.kpps[self.mylaser],"kpps"
-				self.begin(0, gstt.kpps[self.mylaser])
-				started = 1
-
-# not used in LJay.
-def find_dac():
-	"""Listen for broadcast packets."""
-
-	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	s.bind(("0.0.0.0", 7654))
-
-	while True:
-		data, addr = s.recvfrom(1024)
-		bp = BroadcastPacket(data)
-		
-		print "Packet from %s: " % (addr, )
-		bp.dump()
+'''

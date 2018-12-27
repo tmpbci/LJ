@@ -12,7 +12,7 @@ pclf, Sam Neurohack
 import math
 import redis
 
-redisIP = '192.168.1.13'
+redisIP = '127.0.0.1'
 r = redis.StrictRedis(host=redisIP, port=6379, db=0)
 
 point_list = []
@@ -104,8 +104,9 @@ def rPolyLineOneColor(xy_list, c, PL , closed, xpos = 0, ypos =0, resize =0.7, r
 # set all points for given laser. special behavior depends on GridDisplay flag
 # 0: point list / 1: Grid 
 def LinesPL(PL):
-
+	#print '/pl/0/'+str(PL), str(pl[PL])
 	if r.set('/pl/0/'+str(PL), str(pl[PL])) == True:
+		pl[PL] = []
 		return True
 	else:
 		return False

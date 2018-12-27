@@ -197,7 +197,7 @@ def osc_thread():
         try:
             while True:
 
-                time.sleep(1)
+                time.sleep(0.5)
                 osc_frame()
                 for laserid in range(0,gstt.LaserNumber):           # Laser not used -> led is not lit
 
@@ -232,7 +232,7 @@ def osc_thread():
                         # last number of points sent to etherdream buffer
                         sendWSall("/points/" + str(laserid) + " " + str(r.get('/cap/'+str(laserid))))
 
-                print "Sending simu frame from",'/pl/'+str(gstt.LasClientNumber)+'/'+str(gstt.Laser)
+                #print "Sending simu frame from",'/pl/'+str(gstt.LasClientNumber)+'/'+str(gstt.Laser)
                 sendWSall("/simul" +" "+ r.get('/pl/'+str(gstt.LasClientNumber)+'/'+str(gstt.Laser)))
 
 
@@ -306,8 +306,8 @@ def handle_timeout(self):
 
 
 def sendWSall(message):
-    if gstt.debug >0:
-        print("WS sending %s" % (message))
+    #if gstt.debug >0:
+        #print("WS sending %s" % (message))
     server.send_message_to_all(message)
     
 
