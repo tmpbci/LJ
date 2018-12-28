@@ -95,7 +95,7 @@ def Proj(x,y,z,angleX,angleY,angleZ):
 
 
 
-def Draw3PL():
+def Draw2PL():
 
 	Shape = []
 	Left = []
@@ -103,7 +103,9 @@ def Draw3PL():
 	counter =0
 
 	while 1:
-
+		Shape = []
+		Left = []
+		Right = []
 		for fa in faces:
 			#print ""
 			#print "face",fa
@@ -119,11 +121,11 @@ def Draw3PL():
 				#print "right",x+RightShift(z*25),y,z, Proj(x+RightShift(z*25),y,z)
 
 
-				Shape.append(Proj(x,y,z,0,0,counter))
+				#Shape.append(Proj(x,y,z,0,0,counter))
 				Left.append( Proj(x+LeftShift(z*5),y,z,0,0,counter))
 				Right.append(Proj(x+RightShift(z*5),y,z,0,0,counter))	
 
-		framy.PolyLineOneColor(Shape, c = white,  PL = 0, closed = False)
+		#framy.PolyLineOneColor(Shape, c = white,  PL = 0, closed = False)
 		framy.PolyLineOneColor(Left,  c = red,    PL = 1, closed = False)
 		framy.PolyLineOneColor(Right, c = green,   PL = 2, closed = False)
 		'''
@@ -171,8 +173,9 @@ def Draw1PL():
 				Right.append(Proj(x+RightShift(z*25),y,z,0,0,counter))	
 
 		#framy.PolyLineOneColor(Shape, c = white,  PL = 0, closed = False)
-		framy.PolyLineOneColor(Left,  c = rgb2int(0,155,0),    PL = 0, closed = False)
-		framy.PolyLineOneColor(Right, c = rgb2int(0,0,155),   PL = 0, closed = False)
+		framy.PolyLineOneColor(Left,  c = red,    PL = 0, closed = False)
+		framy.PolyLineOneColor(Right, c = green,   PL = 0, closed = False)
+
 		'''
 		framy.rPolyLineOneColor(Shape, c = white,  PL = 0, closed = False, xpos = 200, ypos = 250, resize = 1, rotx =0, roty =0 , rotz=0)
 		framy.rPolyLineOneColor(Left,  c = red,    PL = 1, closed = False, xpos = 200, ypos = 250, resize = 1, rotx =0, roty =0 , rotz=0)
