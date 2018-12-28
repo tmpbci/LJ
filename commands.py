@@ -14,11 +14,8 @@ from /team/laser
 
 import types, time
 import gstt
-
-#import colorify
 import homographyp
 import settings
-#import alignp
 import redis
 
 
@@ -30,11 +27,6 @@ def UserOn(laser):
 
     print "User for laser ", laser
     r.set('/order/'+str(laser), 0)
-    # Laser bit 0 = 0 and bit 1 = 0 : USER PL
-    #order = r.get('/order')
-    #neworder = order & ~(1<< laser*2)
-    #neworder = neworder & ~(1<< 1+ laser*2)
-    #r.set('/order', str(neworder))  
 
 
 def NewEDH(laser):
@@ -45,33 +37,17 @@ def NewEDH(laser):
     print "Settings saving swapY ", gstt.swapY[laser]
 
     homographyp.newEDH(laser)
-    
-    #r.set('/order/'+str(laser), 1)
-    # Laser bit 0 = 0 and bit 1 = 1 : New EDH
-    #order = r.get('/order')
-    #neworder = order & ~(1<< laser*2)
-    #neworder =  neworder | (1<< 1+laser*2)
-    #r.set('/order', str(neworder))
 
 def BlackOn(laser):
 
     print "Black for laser ", laser
     r.set('/order/'+str(laser), 2)
-    # Black PL is Laser bit 0 = 1 and bit 1 = 0 :
-    #order = r.get('/order')
-    #neworder =  order | (1<<laser*2)
-    #neworder =  neworder & ~(1<< 1+laser*2)
     
 
 def GridOn(laser):
 
     print "Grid for laser ", laser
     r.set('/order/'+str(laser), 3)
-    # Grid PL is Laser bit 0 = 1 and bit 1 = 1
-    #order = r.get('/order')
-    #neworder =  order | (1<<laser*2)
-    #neworder =  neworder | (1<< 1+laser*2)
-    #r.set('/order', str(neworder))
 
 
 def Resampler(laser,lsteps):
@@ -112,7 +88,6 @@ def NoteOn(note):
         else: 
             gstt.Laser = note -24
             print "Current Laser switched to",gstt.Laser
-
 
 
 
@@ -244,15 +219,17 @@ def handler(oscpath, args):
 
     # /scale/X/lasernumber value
     if oscpath[1] == "scale" and oscpath[2] == "X":
-        print "scale/X laser", laser , "modified to",  args[0]
-        gstt.zoomX[laser] += int(args[0])
-        NewEDH(laser)
+        if gstt.zoomX[laser] + int(args[0]) > 0:
+            gstt.zoomX[laser] += int(args[0])
+            print "scale/X laser", laser , "modified to",  gstt.zoomX[laser]
+            NewEDH(laser)
 
     # /scale/Y/lasernumber value
     if oscpath[1] == "scale" and oscpath[2] == "Y":
-        print "scale/Y laser",  laser, "modified to",  args[0]
-        gstt.zoomY[laser] += int(args[0])
-        NewEDH(laser)
+        if gstt.zoomY[laser] + int(args[0]) > 0:
+            gstt.zoomY[laser] += int(args[0])
+            print "scale/Y laser",  laser, "modified to",  gstt.zoomY[laser]
+            NewEDH(laser)
 
 '''
 For reference values of EDH modifier if assign to keyboard keys (was alignp)
@@ -279,4 +256,30 @@ For reference values of EDH modifier if assign to keyboard keys (was alignp)
         gstt.finANGLE[gstt.Laser] -= 0.001
         
         gstt.finANGLE[gstt.Laser] += 0.001
+
+Code for bit analysis 2 bits / laser to encode order.
+
+    # Grid PL is Laser bit 0 = 1 and bit 1 = 1
+    #order = r.get('/order')
+    #neworder =  order | (1<<laser*2)
+    #neworder =  neworder | (1<< 1+laser*2)
+    #r.set('/order', str(neworder))
+
+    # Laser bit 0 = 0 and bit 1 = 0 : USER PL
+    #order = r.get('/order')
+    #neworder = order & ~(1<< laser*2)
+    #neworder = neworder & ~(1<< 1+ laser*2)
+    #r.set('/order', str(neworder))  
+
+    # Laser bit 0 = 0 and bit 1 = 1 : New EDH
+    #order = r.get('/order')
+    #neworder = order & ~(1<< laser*2)
+    #neworder =  neworder | (1<< 1+laser*2)
+    #r.set('/order', str(neworder))
+
+    # Black PL is Laser bit 0 = 1 and bit 1 = 0 :
+    #order = r.get('/order')
+    #neworder =  order | (1<<laser*2)
+    #neworder =  neworder & ~(1<< 1+laser*2)
+
 '''

@@ -38,10 +38,10 @@ function GenPoints()
 	{
 	var pt = {};
 
-	// direct colors, i.e red
+	// direct colors, i.e white
 	pt.r = 255;
-	pt.g = 0;
-	pt.b = 0;
+	pt.g = 255;
+	pt.b = 255;
 
 	// named colors
 	var white = rgb2int(255, 255, 255);

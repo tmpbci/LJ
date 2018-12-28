@@ -346,12 +346,12 @@ class DAC(object):
 
 			order = int(r.get('/order/'+str(self.mylaser)))
 
-			#print "laser", self.mylaser, "order : ",type(order) 
+			#print "laser", self.mylaser, "order : ",order 
 			if order == 0:
 				
 				# USER point list
 				self.pl = ast.literal_eval(r.get(self.clientkey+str(self.mylaser)))
-				#print "laser", self.mylaser, "pl : ",length(self.pl)
+				#print "laser", self.mylaser, " order 0 : pl : ",len(self.pl)
 
 			else:
 	
@@ -376,7 +376,7 @@ class DAC(object):
 				# Resampler Change
 				if order == 4:
 					self.resampler = ast.literal_eval(r.get('/resampler/'+str(self.mylaser)))
-					print "newdacp resetting lsteps for", self.mylaser, ":",self.resampler
+					print "tracer resetting lsteps for", self.mylaser, ":",self.resampler
 					gstt.stepshortline    = self.resampler[0]
 					gstt.stepslongline[0] = self.resampler[1]
 					gstt.stepslongline[1] = self.resampler[2]

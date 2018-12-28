@@ -197,7 +197,7 @@ def osc_thread():
         try:
             while True:
 
-                time.sleep(0.5)
+                time.sleep(1)
                 osc_frame()
                 for laserid in range(0,gstt.LaserNumber):           # Laser not used -> led is not lit
 
@@ -381,6 +381,11 @@ try:
     server.set_fn_new_client(new_client)
     server.set_fn_client_left(client_left)
     server.set_fn_message_received(message_received)
+    print ""
+    print "Resetting all Homographies.."
+    for laserid in range(0,gstt.LaserNumber):  
+        homographyp.newEDH(laserid)
+        
     print ""
     print "ws server running forver..."
     server.run_forever()
