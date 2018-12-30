@@ -4,20 +4,25 @@ By Sam Neurohack, Loloster, Cocoa
 
 LICENCE : CC BY
 
-
+ 
 ![LJ](http://www.teamlaser.fr/thsf/images/fulls/THSF9-33.jpg)
 
-A software server with gui for up to 4 lasers live actions. Think creative like Laser "battles", planetarium,... 
+A software laser server with GUI for up to 4 lasers live actions. Think creative like Laser "battles", planetarium,... 
 
-This software is in python 2.7 but you run and write your clients separatly in any redis capable programming langage (50+ : https://redis.io/clients).
+LJ has 3 main components : 
+
+- A tracer per etherdream/laser that take current client point list, correct geometry, recompute in etherdreams coordinates, send it to its controller,... and report etherdream status to the manager.
+- A manager that talk to all tracers (which client number point lists to draw, new geometry correction,...), handle the webui functions, OSC commands,...
+- Up to ten clients, that simultaneously send one point list per laser.
+
+You run and write your clients in any redis capable programming langage (50+ : https://redis.io/clients).
 
 Needs at least : an etherdream DAC connected to an ILDA laser, RJ 45 IP network (gigabits only !!  no wifi, 100 mpbs doesn't work well with several lasers)
 
-Nozosc : Semi modular synthetizers from Nozoids can send a lot of their inner sound curves and be displayed in many ways, i.e VCO 1 on X axis and LFO 2 on Y axis.
-
-The server approach is based on redis. One process per etherdream is spawn : to retrieve the given point list from redis, warp, resample and manage the given etherdream dialog.
+The server approach is based on redis.
 
 LJ supports Linux and OS X. Windows is unkown but welcome, if someone want to jump in and care about it.
+
 
 
 #
@@ -26,12 +31,13 @@ LJ supports Linux and OS X. Windows is unkown but welcome, if someone want to ju
 
 (Doc in progress)
 
-- Automatically hook to Midi devices IN & OUT seen by OS. Very cool : LJ can script or be scripted by a midi device : Triggering different musics at given moments,... or in opposite, you can make a midi file with an external midi sequencer to script/trigger laser effects.
+- OSC and websocket commands. Very cool : LJ can script or be scripted.
 - Interactive (mouse style) warp correction for each laser.
 - Web ui : In your browser open webui/index.html. Javascript is needed.
-- Status every 0.5 seconds : every etherdream DAC state, number of buffer points sent,...
+- Status update every 0.5 seconds : every etherdream DAC state, number of buffer points sent,...
 - "Optimisation" points automatically added, can be changed live for glitch art. Search "resampler" commands.
-
+- A compiled version for os x of nannou.org etherdream+laser emulator is included. For more information https://github.com/nannou-org/ether-dream
+- A 3D anaglyph client example
 
 #
 # External devices 
@@ -42,36 +48,30 @@ LJ supports Linux and OS X. Windows is unkown but welcome, if someone want to ju
 
 
 #
-# Introduction
+# Networking
 #
 
 
-LJ is meant for Live, so a lot of parameters can be changed via OSC/midi, webUI,...
+LJ is network based and this is *critical and flickering reason #1* if not managed properly, especially you have several lasers.
 
-This is *critical and flickering reason #1* if not managed properly, especially you have several lasers.
+Our "always working solution", as we regularly move our gear for different venues :
 
-Our "always working solution" :
+We use static network configuration. Our Etherdreams controllers have static IPs defined in their SDcard from 192.168.1.1 to 192.168.1.9. Because wifi will always finally sucks for many reasons, our computers (laser server and clients) are *gigabits wired connected* with 192.168.1.10 and after. Don't trust end user gear marketing on wifi, we have a big gigabits switch for laser only stuff. We provide Internet through wifi on different network like 192.168.2.x
 
-We use static network configuration, as we regularly move our gear for different venues.
-
-Our Etherdreams controllers have static IPs defined in their SDcard from 192.168.1.1 to 192.168.1.9. Because wifi will always finally sucks for many reasons, our computers are *gigabits wired connected* with 192.168.1.10 and after. Don't trust end user gear marketing on wifi. 
-
-We have a big *laser dedicated gigabit switch*. We provide Internet through wifi on a different network address like 192.168.2.x
-
-Even if etherdreams are 100 Mbits, use gigabits gear. Use gigabits gear. USE GIGABITS GEAR :)
+Even if etherdreams are 100 Mbits, we use gigabits gear.
 
 
 By default LJ uses on 127.0.0.1 (localhost) :
 
 - A websocket on port 9001 for WebUI interaction.
 - The redis server on port 6379 ('ljayserverip')
-- An OSC server on port 8002. Incoming commands are transfered to webUI.
-- An OSC client on 'bhoroscIP' port 8001.
+- An OSC server on port 8002.
+- An OSC client for 'bhoroscIP' port 8001.
 - An OSC client for Nozoids support on 'nozoscIP', port 8003.
 
 You need to update LJ.conf to your network/etherdreams IPs and be sure to check command arguments : python main.py --help
 
-A dedicated computer to act as "laser server" usually depends on how many lasers you want to control and your main computer load. If you seen flickering with small point lists, try the dedicated computer option.
+A dedicated computer to act as "laser server" usually depends on how many lasers you want to control and your main computer load. If you seen flickering with small point lists, try the dedicated computer option and/or stop process interfering like redis monitoring,...
 
 
 
@@ -81,7 +81,7 @@ Program your own "Client" :
 - Read the Introduction part in this readme.
 - Carefully read all comments in clients examples.
 - Generate at least one point list array (say a square). 
-- Feed your point list string to redis server 
+- Feed your point list array in string format to redis server.
 
 
 
@@ -111,15 +111,14 @@ In webui/index.html change the ws ip adress to the server IP or 127.0.0.1 if cli
 
 Using the same idea check all ip address in LJ.conf.
 
-For network Gurus : bind to all network interface scheme is not working yet.
-
 
 
 #
 # To run
 #
 
-Always start the laser server first. 
+A typical start is python main.py -L numberoflasers. Use -h to display all possible arguments. 
+Always start the redis server first, then laser server, maybe those two should run on the same computer, then your client.
 
 Case 1 : the laser server computer is the same that the computer running a client :
 
@@ -127,7 +126,7 @@ python main.py
 
 Open/reload in browser webui/index.html. (javascript must be enabled)
 
-Check in your client if the server IP is the good one
+Check in your client code if the laser server IP is the good one
 
 Run your client
 
@@ -143,17 +142,16 @@ Say the laser server computer (running LJ) IP is 192.138.1.13, the client comput
 
 On the server computer :
 edit /etc/redis/redis.conf
+use -r argument :
 python main.py -r 192.168.1.13
 
-on the client computer for all features :
+run the client on client computer, like :
 
-to just generate and send list points
 node testredis.js
 
 to monitor redis server :
 
-
-redis-cli -h  monitor
+redis-cli -h redisserverIP monitor
 
 
 
