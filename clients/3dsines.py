@@ -201,8 +201,6 @@ def Draw1PL():
 		framy.rPolyLineOneColor(Left,  c = red,    PL = 0, closed = False, xpos = 0, ypos = 10, resize = 1.5, rotx =0, roty =0 , rotz=0)
 		framy.rPolyLineOneColor(Right, c = green,   PL = 0, closed = False, xpos = 0, ypos = 10, resize = 1.5, rotx =0, roty =0 , rotz=0)
 
-
-
 		Left = []
 		Right = []
 		x = -1
@@ -215,8 +213,6 @@ def Draw1PL():
 
 		framy.rPolyLineOneColor(Left,  c = red,    PL = 0, closed = False, xpos = 0, ypos = 25, resize = 1.5, rotx =0, roty =0 , rotz=0)
 		framy.rPolyLineOneColor(Right, c = green,   PL = 0, closed = False, xpos = 0, ypos = 25, resize = 1.5, rotx =0, roty =0 , rotz=0)
-
-
 
 		Left = []
 		Right = []
@@ -232,15 +228,8 @@ def Draw1PL():
 		framy.rPolyLineOneColor(Right, c = green,   PL = 0, closed = False, xpos = 0, ypos = 50, resize = 1.5, rotx =0, roty =0 , rotz=0)
 
 
-
-
-		'''
-		framy.rPolyLineOneColor(Shape, c = white,  PL = 0, closed = False, xpos = 200, ypos = 250, resize = 1.5, rotx =0, roty =0 , rotz=0)
-		framy.rPolyLineOneColor(Left,  c = red,    PL = 1, closed = False, xpos = 200, ypos = 250, resize = 1.5, rotx =0, roty =0 , rotz=0)
-		framy.rPolyLineOneColor(Right, c = blue,   PL = 2, closed = False, xpos = 200, ypos = 250, resize = 1.5, rotx =0, roty =0 , rotz=0)
-		'''
 		framy.LinesPL(0)
-		time.sleep(0.1)
+		time.sleep(0.005)
 
 white = rgb2int(255,255,255)
 red = rgb2int(255,0,0)

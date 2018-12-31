@@ -4,7 +4,25 @@ By Sam Neurohack, Loloster, Cocoa
 
 LICENCE : CC BY
 
- 
+Dear 
+
+I'm part of a group of laser freaks that use etherdreams in demoparty and many other occasions. Recently we started using your wonderful dac emulator that is so useful. 
+
+It compiles and works flawlessly in fairly new computers, we tried successfully several os X and different linux flavors, but with older generation i5 M560 (a dual core 2.67 Ghz) when i run ./visualiser I get an error : 
+
+ thread 'main' panicked at 'could not build default app window: GlutinCreationError(NoAvailablePixelFormat)', libcore/result.rs:1009:5
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+
+My guess is to modify the display creation in... nannou ?
+
+I don't speak Rust, but the dac emulator import a nannou crate, so I can't modify the code in dac emulator directly ?
+
+Would you consider supporting older computers by testing configuration and then modifying the display creation accordingly ?
+
+This will be very helpfull 
+
+
+
 ![LJ](http://www.teamlaser.fr/thsf/images/fulls/THSF9-33.jpg)
 
 A software laser server with GUI for up to 4 lasers live actions. Think creative like Laser "battles", planetarium,... 

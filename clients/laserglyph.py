@@ -169,8 +169,8 @@ def Draw1PL():
 
 
 				Shape.append(Proj(x,y,z,0,0,counter))
-				Left.append( Proj(x+LeftShift(z*25),y,z,0,0,counter))
-				Right.append(Proj(x+RightShift(z*25),y,z,0,0,counter))	
+				Left.append( Proj(x+LeftShift(z*25),y,z,0,counter,0))
+				Right.append(Proj(x+RightShift(z*25),y,z,0,counter,0))	
 
 		#framy.PolyLineOneColor(Shape, c = white,  PL = 0, closed = False)
 		framy.PolyLineOneColor(Left,  c = red,    PL = 0, closed = False)

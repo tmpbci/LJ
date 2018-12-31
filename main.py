@@ -197,7 +197,7 @@ def osc_thread():
         try:
             while True:
 
-                time.sleep(1)
+                time.sleep(0.1)
                 osc_frame()
                 for laserid in range(0,gstt.LaserNumber):           # Laser not used -> led is not lit
 

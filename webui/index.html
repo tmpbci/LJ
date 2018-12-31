@@ -551,7 +551,7 @@
 	var ctx = canvas.getContext("2d");
   	var lastpoint = { x: 0, y: 0, color: 0};
   	ctx.clearRect(0,0,400,400);
-  	ctx.save
+  	//ctx.save
 
 
   // Todo : laser point will have black points to go from a polyline to another. Need to discard those black points.
@@ -565,8 +565,9 @@
 
         // Begin a new path
         // 0.7 reduces max coordinates in a more browser compatible resolution.
+        ctx.clearRect(0,0,400,400);
         ctx.beginPath();
-        //ctx.clearRect(0,0,400,400);
+       
         ctx.moveTo(pl2[0]*0.5, pl2[1]*0.5);
         lastpoint.color = pl2[2];
 
@@ -585,8 +586,8 @@
             {
             ctx.strokeStyle = "#"+(lastpoint.color + Math.pow(16, 6)).toString(16).slice(-6);
             ctx.stroke();
-            //ctx.closePath()
-            ctx.restore
+            ctx.closePath()
+            //ctx.restore
             ctx.beginPath();
             //ctx.clearRect(0,0,400,400);
             
@@ -600,8 +601,8 @@
             ctx.strokeStyle = "#"+((pl2[2+(i*3)]) + Math.pow(16, 6)).toString(16).slice(-6);
             ctx.stroke();
             
-            //ctx.closePath()
-            ctx.restore
+            ctx.closePath()
+            //ctx.restore
             //ctx.clearRect(0,0,400,400);
             }
 

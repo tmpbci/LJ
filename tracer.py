@@ -251,10 +251,7 @@ class DAC(object):
 		# Lower case pl is the actual point list coordinates
 		print "Init laser",self.mylaser,"asking for ckey", self.clientkey+str(self.mylaser)
 		self.pl = ast.literal_eval(r.get(self.clientkey + str(self.mylaser)))
-		#if self.mylaser ==0:
-		#print "DAC Init Laser", self.mylaser
-		#print  "pl :", self.pl
-		#print "EDH/"+str(self.mylaser),r.get('/EDH/'+str(self.mylaser))
+
 		if r.get('/EDH/'+str(self.mylaser)) == None:
 			#print "Laser",self.mylaser,"NO EDH !! Computing one..."
 			homographyp.newEDH(self.mylaser)
@@ -328,7 +325,6 @@ class DAC(object):
 
 	def play_stream(self):
 
-		# print last playback state
 		#print "laser", self.mylaser, "Pb : ",self.last_status.playback_state
 
 		# error if etherdream is already playing state (from other source)
@@ -347,7 +343,6 @@ class DAC(object):
 
 			order = int(r.get('/order/'+str(self.mylaser)))
 
-			#print "laser", self.mylaser, "order : ",order 
 			if order == 0:
 				
 				# USER point list
