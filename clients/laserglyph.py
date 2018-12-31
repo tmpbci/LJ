@@ -150,7 +150,7 @@ def Draw1PL():
 	counter =0
 
 	while 1:
-		Shape = []
+		#Shape = []
 		Left = []
 		Right = []
 		for fa in faces:
@@ -168,7 +168,7 @@ def Draw1PL():
 				#print "right",x+RightShift(z*25),y,z, Proj(x+RightShift(z*25),y,z)
 
 
-				Shape.append(Proj(x,y,z,0,0,counter))
+				#Shape.append(Proj(x,y,z,0,0,counter))
 				Left.append( Proj(x+LeftShift(z*25),y,z,0,counter,0))
 				Right.append(Proj(x+RightShift(z*25),y,z,0,counter,0))	
 

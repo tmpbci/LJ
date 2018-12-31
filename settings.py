@@ -18,8 +18,6 @@ import numpy as np
 
 def Write(): 
 
-	config.set('General', 'set', str(gstt.Set))
-	config.set('General', 'curve', str(gstt.Curve))
 	config.set('General', 'lasernumber', str(gstt.LaserNumber))
 	config.set('General', 'ljayserverip', str(gstt.LjayServerIP))
 	config.set('General', 'bhoroscip', str(gstt.oscIPin))
@@ -46,8 +44,6 @@ def Write():
 
 def Read(): 
 	
-	gstt.Set = config.getint('General', 'set')
-	gstt.Curve = config.getint('General', 'curve')
 	gstt.LaserNumber = config.getint('General', 'lasernumber')
 	gstt.LjayServerIP= config.get('General', 'ljayserverip')
 	gstt.oscIPin = config.get('General', 'bhoroscip')
