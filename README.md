@@ -4,24 +4,6 @@ By Sam Neurohack, Loloster, Cocoa
 
 LICENCE : CC BY
 
-Dear 
-
-I'm part of a group of laser freaks that use etherdreams in demoparty and many other occasions. Recently we started using your wonderful dac emulator that is so useful. 
-
-It compiles and works flawlessly in fairly new computers, we tried successfully several os X and different linux flavors, but with older generation i5 M560 (a dual core 2.67 Ghz) when i run ./visualiser I get an error : 
-
- thread 'main' panicked at 'could not build default app window: GlutinCreationError(NoAvailablePixelFormat)', libcore/result.rs:1009:5
-note: Run with `RUST_BACKTRACE=1` for a backtrace.
-
-My guess is to modify the display creation in... nannou ?
-
-I don't speak Rust, but the dac emulator import a nannou crate, so I can't modify the code in dac emulator directly ?
-
-Would you consider supporting older computers by testing configuration and then modifying the display creation accordingly ?
-
-This will be very helpfull 
-
-
 
 ![LJ](http://www.teamlaser.fr/thsf/images/fulls/THSF9-33.jpg)
 
@@ -54,7 +36,7 @@ LJ supports Linux and OS X. Windows is unkown but welcome, if someone want to ju
 - Web ui : In your browser open webui/index.html. Javascript is needed.
 - Status update every 0.5 seconds : every etherdream DAC state, number of buffer points sent,...
 - "Optimisation" points automatically added, can be changed live for glitch art. Search "resampler" commands.
-- A compiled version for os x of nannou.org etherdream+laser emulator is included. For more information https://github.com/nannou-org/ether-dream
+- A compiled version for os x and linux of nannou.org etherdream+laser emulator is included. For more informations, like license see https://github.com/nannou-org/ether-dream
 - A 3D anaglyph client example
 
 #
