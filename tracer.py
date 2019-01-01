@@ -239,7 +239,6 @@ class DAC(object):
 		self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.connstatus = self.conn.connect_ex((gstt.lasersIPS[mylaser], port))
 		#print "Connection status for", self.mylaser,":", self.connstatus
-		#print 'debug', debug, gstt.debug
 		# ipconn state is -1 at startup (see gstt) and modified here
 		r.set('/lack/'+str(self.mylaser), self.connstatus)
 		gstt.lstt_ipconn[self.mylaser] =  self.connstatus		
@@ -249,7 +248,6 @@ class DAC(object):
 		self.PL = PL
 
 		# Lower case pl is the actual point list coordinates
-		print "Init laser",self.mylaser,"asking for ckey", self.clientkey+str(self.mylaser)
 		self.pl = ast.literal_eval(r.get(self.clientkey + str(self.mylaser)))
 
 		if r.get('/EDH/'+str(self.mylaser)) == None:
@@ -264,6 +262,7 @@ class DAC(object):
 		self.newstream = self.OnePoint()
 		
 		if gstt.debug >0:
+			print "Init laser",self.mylaser,"asked for ckey", self.clientkey+str(self.mylaser)
 			if self.connstatus != 0:
 				#print ""
 				print "Connection ERROR",self.connstatus,"with laser", str(mylaser),":",str(gstt.lasersIPS[mylaser])

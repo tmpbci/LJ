@@ -86,9 +86,19 @@
         onOpen: function () {
           _WS.showout(_WS.uri);
           _WS.showout('CONNECTED');
+          document.getElementById("on").value = 1;
         },
         onClose: function () {
           _WS.showout('DISCONNECTED');
+          document.getElementById("on").value = 0;
+          document.getElementById("lstt/0").value = 0;
+          document.getElementById("lstt/1").value = 0;
+          document.getElementById("lstt/2").value = 0;
+          document.getElementById("lstt/3").value = 0;
+          document.getElementById("lack/0").value = 0;
+          document.getElementById("lack/1").value = 0;
+          document.getElementById("lack/2").value = 0;
+          document.getElementById("lack/3").value = 0;
         },
         onMessage: function (e) {
           var res = e.data.split(" ");

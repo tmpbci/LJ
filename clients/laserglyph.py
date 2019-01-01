@@ -27,6 +27,7 @@ viewer_distance = 2.2
 eye_spacing = 100
 nadir = 0.5
 observer_altitude = 30000
+#observer_altitude = 10000
 # elevation = z coordinate
  
 # 0.0  or -2000 pop out)
@@ -45,8 +46,7 @@ vertices = [
 
 # Define the vertices that compose each of the 6 faces. These numbers are
 # indices to the vertices list defined above.
-#faces = [(0,1,2,3),(1,5,6,2),(5,4,7,6),(4,0,3,7),(0,4,5,1),(3,2,6,7)]
-faces = [(0,1,2,3),(1,5,6,2),(5,4,7,6),(4,0,3,7),(0,4,5,1),(3,2,6,7)]
+faces = [(0,1,2,3),(0,4,5,1),(1,5,6,2),(2,3,7,6),(6,5,4,7),(7,3,0,4)]
 
 def LeftShift(elevation):
 
@@ -106,6 +106,18 @@ def Draw2PL():
 		Shape = []
 		Left = []
 		Right = []
+
+		x = vertices[0][0]
+		y = vertices[0][1]
+		z = vertices[0][2]
+
+		Left.append( Proj(x+LeftShift(z*5),y,z,0,0,counter))
+		Right.append(Proj(x+RightShift(z*5),y,z,0,0,counter))	
+
+		#framy.PolyLineOneColor(Shape, c = white,  PL = 0, closed = False)
+		framy.PolyLineOneColor(Left,  c = red,    PL = 1, closed = False)
+		framy.PolyLineOneColor(Right, c = green,   PL = 2, closed = False)
+
 		for fa in faces:
 			#print ""
 			#print "face",fa
@@ -133,11 +145,7 @@ def Draw2PL():
 		framy.rPolyLineOneColor(Left,  c = red,    PL = 1, closed = False, xpos = 200, ypos = 250, resize = 1, rotx =0, roty =0 , rotz=0)
 		framy.rPolyLineOneColor(Right, c = blue,   PL = 2, closed = False, xpos = 200, ypos = 250, resize = 1, rotx =0, roty =0 , rotz=0)
 		'''
-		#print framy.LinesPL(0)
-		#print framy.LinesPL(1)
-		#print framy.LinesPL(2)
-
-		#counter -= 1
+		#counter += 1
 		#if counter >360:
 		#	counter =0
 
@@ -153,6 +161,18 @@ def Draw1PL():
 		#Shape = []
 		Left = []
 		Right = []
+
+		# Polyline will "move" the laser to this first point in black, then move to the next with second point color.
+		# For more accuracy in dac emulator, repeat this first point.
+		# Here the cube start always with vertice 0
+
+		x = vertices[0][0]
+		y = vertices[0][1]
+		z = vertices[0][2]
+
+		Left.append( Proj(x+LeftShift(z*5),y,z,0,counter,0))
+		Right.append(Proj(x+RightShift(z*5),y,z,0,counter,0))	
+		
 		for fa in faces:
 			#print ""
 			#print "face",fa
@@ -163,8 +183,10 @@ def Draw1PL():
 				x = vertices[point][0]
 				y = vertices[point][1]
 				z = vertices[point][2]
-				#print x,y,z
-				#print "left",x+LeftShift(z*25),y,z, Proj(x+LeftShift(z*25),y,z)
+				#print x,y,z,counter
+				#if point == 0:
+				#	print Proj(x+LeftShift(z*5),y,z,0,0,counter)
+				#print "left", Proj(x+LeftShift(z*25),y,z,0,counter,0)
 				#print "right",x+RightShift(z*25),y,z, Proj(x+RightShift(z*25),y,z)
 
 
@@ -173,8 +195,9 @@ def Draw1PL():
 				Right.append(Proj(x+RightShift(z*25),y,z,0,counter,0))	
 
 		#framy.PolyLineOneColor(Shape, c = white,  PL = 0, closed = False)
-		framy.PolyLineOneColor(Left,  c = red,    PL = 0, closed = False)
-		framy.PolyLineOneColor(Right, c = green,   PL = 0, closed = False)
+		#print Left
+		framy.PolyLineOneColor(Left,  c = red,    PL = 0, closed = True)
+		framy.PolyLineOneColor(Right, c = green,   PL = 0, closed = True)
 
 		'''
 		framy.rPolyLineOneColor(Shape, c = white,  PL = 0, closed = False, xpos = 200, ypos = 250, resize = 1, rotx =0, roty =0 , rotz=0)
@@ -183,7 +206,7 @@ def Draw1PL():
 		'''
 		framy.LinesPL(0)
 		time.sleep(0.1)
-		counter -= 1
+		counter += 1
 		if counter >360:
 			counter =0
 
