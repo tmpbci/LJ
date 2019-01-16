@@ -1,19 +1,47 @@
 # coding=UTF-8
 
 '''
-Anaglyphed cube
+Anaglyphed rotating cube (for red and green glasses)
+
+This client uses the drawing functions (polyline) provided by LJ in lj.py
+You must check in lj.py if the redis server IP is correct.
 
 LICENCE : CC
 '''
 
 import redis
-import framy
+import lj
 import math
 import time
+import argparse
 
-# IP defined in /etd/redis/redis.conf
-redisIP = '127.0.0.1'
-r = redis.StrictRedis(host=redisIP, port=6379, db=0)
+print ("")
+print ("Arguments parsing if needed...")
+argsparser = argparse.ArgumentParser(description="Text Cycling for LJ")
+argsparser.add_argument("-r","--redisIP",help="IP of the Redis server used by LJ (127.0.0.1 by default) ",type=str)
+argsparser.add_argument("-c","--client",help="LJ client number (0 by default)",type=int)
+argsparser.add_argument("-l","--laser",help="Laser number to be displayed (0 by default)",type=int)
+
+args = argsparser.parse_args()
+
+
+if args.client:
+	ljclient = args.client
+else:
+	ljclient = 0
+
+if args.laser:
+	plnumber = args.laser
+else:
+	plnumber = 0
+
+# Redis Computer IP
+if args.redisIP  != None:
+	redisIP  = args.redisIP
+else:
+	redisIP = '127.0.0.1'
+
+lj.Config(redisIP,ljclient)
 
 
 width = 800
@@ -21,18 +49,22 @@ height = 600
 centerX = width / 2
 centerY = height / 2
 
+# 3D to 2D projection parameters
 fov = 256
 viewer_distance = 2.2
 
+
+# Anaglyph computation parameters for right and left eyes.
 eye_spacing = 100
 nadir = 0.5
 observer_altitude = 30000
 #observer_altitude = 10000
 # elevation = z coordinate
- 
-# 0.0  or -2000 pop out)
+# 0.0, -2000 pop out
 map_plane_altitude = 0.0 
 
+# Cube coordinates
+# Define the vertices that compose each of the 6 faces.
 vertices = [
 	(- 1.0, 1.0,- 1.0),
 	( 1.0, 1.0,- 1.0),
@@ -43,10 +75,9 @@ vertices = [
 	( 1.0,- 1.0, 1.0),
 	(- 1.0,- 1.0, 1.0)
 	]
-
-# Define the vertices that compose each of the 6 faces. These numbers are
-# indices to the vertices list defined above.
 faces = [(0,1,2,3),(0,4,5,1),(1,5,6,2),(2,3,7,6),(6,5,4,7),(7,3,0,4)]
+
+
 
 def LeftShift(elevation):
 
@@ -93,17 +124,15 @@ def Proj(x,y,z,angleX,angleY,angleZ):
 		y = - y * factor + centerY
 		return (x,y)
 
+def Run():
 
 
-def Draw2PL():
-
-	Shape = []
 	Left = []
 	Right = []
 	counter =0
 
 	while 1:
-		Shape = []
+
 		Left = []
 		Right = []
 
@@ -111,101 +140,44 @@ def Draw2PL():
 		y = vertices[0][1]
 		z = vertices[0][2]
 
-		Left.append( Proj(x+LeftShift(z*5),y,z,0,0,counter))
-		Right.append(Proj(x+RightShift(z*5),y,z,0,0,counter))	
-
-		#framy.PolyLineOneColor(Shape, c = white,  PL = 0, closed = False)
-		framy.PolyLineOneColor(Left,  c = red,    PL = 1, closed = False)
-		framy.PolyLineOneColor(Right, c = green,   PL = 2, closed = False)
-
-		for fa in faces:
-			#print ""
-			#print "face",fa
-
-			for point in fa:
-				#print ""
-				#print "point ", point 
-				x = vertices[point][0]
-				y = vertices[point][1]
-				z = vertices[point][2]
-				#print x,y,z
-				#print "left",x+LeftShift(z*25),y,z, Proj(x+LeftShift(z*25),y,z)
-				#print "right",x+RightShift(z*25),y,z, Proj(x+RightShift(z*25),y,z)
-
-
-				#Shape.append(Proj(x,y,z,0,0,counter))
-				Left.append( Proj(x+LeftShift(z*5),y,z,0,0,counter))
-				Right.append(Proj(x+RightShift(z*5),y,z,0,0,counter))	
-
-		#framy.PolyLineOneColor(Shape, c = white,  PL = 0, closed = False)
-		framy.PolyLineOneColor(Left,  c = red,    PL = 1, closed = False)
-		framy.PolyLineOneColor(Right, c = green,   PL = 2, closed = False)
-		'''
-		framy.rPolyLineOneColor(Shape, c = white,  PL = 0, closed = False, xpos = 200, ypos = 250, resize = 1, rotx =0, roty =0 , rotz=0)
-		framy.rPolyLineOneColor(Left,  c = red,    PL = 1, closed = False, xpos = 200, ypos = 250, resize = 1, rotx =0, roty =0 , rotz=0)
-		framy.rPolyLineOneColor(Right, c = blue,   PL = 2, closed = False, xpos = 200, ypos = 250, resize = 1, rotx =0, roty =0 , rotz=0)
-		'''
-		#counter += 1
-		#if counter >360:
-		#	counter =0
-
-
-def Draw1PL():
-
-	Shape = []
-	Left = []
-	Right = []
-	counter =0
-
-	while 1:
-		#Shape = []
-		Left = []
-		Right = []
-
-		# Polyline will "move" the laser to this first point in black, then move to the next with second point color.
+		# The cube start always with vertice 0
+		# LJ tracers will "move" the laser to this first point in black, then move to the next with second point color.
 		# For more accuracy in dac emulator, repeat this first point.
-		# Here the cube start always with vertice 0
 
-		x = vertices[0][0]
-		y = vertices[0][1]
-		z = vertices[0][2]
+		# Cube Y axis rotation of 'counter' angle and 3d-2d Proj function. 
+		#Left.append( Proj(x+LeftShift(z*5),y,z,0,counter,0))
+		#Right.append(Proj(x+RightShift(z*5),y,z,0,counter,0))	
 
-		Left.append( Proj(x+LeftShift(z*5),y,z,0,counter,0))
-		Right.append(Proj(x+RightShift(z*5),y,z,0,counter,0))	
-		
+
+		# Add all the cube points face by face.
 		for fa in faces:
-			#print ""
-			#print "face",fa
-
 			for point in fa:
-				#print ""
-				#print "point ", point 
 				x = vertices[point][0]
 				y = vertices[point][1]
 				z = vertices[point][2]
-				#print x,y,z,counter
-				#if point == 0:
-				#	print Proj(x+LeftShift(z*5),y,z,0,0,counter)
-				#print "left", Proj(x+LeftShift(z*25),y,z,0,counter,0)
-				#print "right",x+RightShift(z*25),y,z, Proj(x+RightShift(z*25),y,z)
 
-
-				#Shape.append(Proj(x,y,z,0,0,counter))
 				Left.append( Proj(x+LeftShift(z*25),y,z,0,counter,0))
 				Right.append(Proj(x+RightShift(z*25),y,z,0,counter,0))	
 
-		#framy.PolyLineOneColor(Shape, c = white,  PL = 0, closed = False)
-		#print Left
-		framy.PolyLineOneColor(Left,  c = red,    PL = 0, closed = True)
-		framy.PolyLineOneColor(Right, c = green,   PL = 0, closed = True)
+
+		# Drawing step, 2 possibilities 
+
+		# Red and Green drawn by laser 0
+		lj.PolyLineOneColor(Left,  c = red,    PL = 0, closed = True)
+		lj.PolyLineOneColor(Right, c = green,   PL = 0, closed = True)
+		lj.DrawPL(0)
 
 		'''
-		framy.rPolyLineOneColor(Shape, c = white,  PL = 0, closed = False, xpos = 200, ypos = 250, resize = 1, rotx =0, roty =0 , rotz=0)
-		framy.rPolyLineOneColor(Left,  c = red,    PL = 1, closed = False, xpos = 200, ypos = 250, resize = 1, rotx =0, roty =0 , rotz=0)
-		framy.rPolyLineOneColor(Right, c = blue,   PL = 2, closed = False, xpos = 200, ypos = 250, resize = 1, rotx =0, roty =0 , rotz=0)
+		# Red on laser 1 and green on laser 2
+		lj.PolyLineOneColor(Left,  c = red,    PL = 1, closed = True)
+		lj.PolyLineOneColor(Right, c = green,   PL = 2, closed = True)
+		lj.DrawPL(1)
+		lj.DrawPL(2)		
+
 		'''
-		framy.LinesPL(0)
+		
 		time.sleep(0.1)
+
 		counter += 1
 		if counter >360:
 			counter =0
@@ -216,20 +188,4 @@ blue = rgb2int(0,0,255)
 green = rgb2int(0,255,0)
 
 
-Draw1PL()
-	#r.set('/pl/0/0', str(pl0))
-# S = (e / 2) (d - p) / (a - d)
-
-
-'''
-# /pl/clientnumber/lasernumber pointlist
-
-# Consider you're client 0
-# Send to laser 0 (see mainy.conf)
-r.set('/pl/0/0', str(pl0))
-
-# Send to laser 1 (see mainy.conf)
-r.set('/pl/0/1', str(pl1))
-# Send to laser 2 (see mainy.conf)
-r.set('/pl/0/2', str(pl1))
-'''
+Run()

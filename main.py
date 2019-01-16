@@ -1,3 +1,6 @@
+#!/usr/bin/python2.7
+# -*- coding: utf-8 -*-
+# -*- mode: Python -*-
 '''
 LJ Laser Server v0.8
 
@@ -91,23 +94,23 @@ print "Lasers requested :", gstt.LaserNumber
 wsPORT = 9001
 
 # With Bhorosc
-# OSC Server : relay OSC message from Bhorosc outport 8002 to UI
+# OSC Server : accept OSC message on port 8002 
 #oscIPin = "192.168.1.10"s
 bhoroscIPin = serverIP
 bhoroscPORTin = 8002
 
-# OSC Client : relay message from UI to Bhorosc inport 8001
+# OSC Client : to send OSC message to an IP port 8001
 bhoroscIPout = bhoroscIP 
 bhoroscPORTout = 8001
 
 
-# With Nozosc
-# OSC Client : relay message from UI to Nozosc inport 8003
+# With Nozoid
+# OSC Client : to send OSC message to Nozoid inport 8003
 NozoscIPout = nozoscIP
 NozoscPORTout = 8003
 
+#print bhoroscIPin
 
-print bhoroscIPin
 oscserver = OSCServer( (bhoroscIPin, bhoroscPORTin) )
 oscserver.timeout = 0
 OSCRunning = True
@@ -164,7 +167,7 @@ def sendnozosc(oscaddress,oscargs=''):
     #time.sleep(0.001)
 
 
-# OSC default path handler : send OSC message from Bhorosc 8002 to UI via websocket 9001
+# OSC default path handler : send incoming OSC message to UI via websocket 9001
 def handler(path, tags, args, source):
 
     oscpath = path.split("/")
@@ -190,7 +193,7 @@ def osc_frame():
 
 
 
-# OSC Thread. OSC handler and Automated status sender to UI.
+# OSC server Thread : handler, dacs reports and simulator points sender to UI.
 def osc_thread():
 
     while True:
@@ -233,6 +236,7 @@ def osc_thread():
                         sendWSall("/points/" + str(laserid) + " " + str(r.get('/cap/'+str(laserid))))
 
                 #print "Sending simu frame from",'/pl/'+str(gstt.LasClientNumber)+'/'+str(gstt.Laser)
+                #print r.get('/pl/'+str(gstt.LasClientNumber)+'/'+str(gstt.Laser))
                 sendWSall("/simul" +" "+ r.get('/pl/'+str(gstt.LasClientNumber)+'/'+str(gstt.Laser)))
 
 

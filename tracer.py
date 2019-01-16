@@ -31,6 +31,8 @@ Etherdream status reports in redis keys:
 
 Geometric corrections :
 
+Doctodo
+
 '''
 
 import socket

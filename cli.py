@@ -22,20 +22,18 @@ def handle():
 
 
 	#have to be done before importing bhorosc.py to get correct port assignment
-	argsparser = argparse.ArgumentParser(description="LJay")
-	argsparser.add_argument("-r","--redisIP",help="Redis computer IP address (gstt.LjayServerIP by default)",type=str)
-	argsparser.add_argument("-i","--iport",help="OSC port number to listen to (8001 by default)",type=int)
-	argsparser.add_argument("-o","--oport",help="OSC port number to send to (8002 by default)",type=int)
+	argsparser = argparse.ArgumentParser(description="LJ v0.8")
+	argsparser.add_argument("-r","--redisIP",help="IP address to bind builtin servers (OSC and websocket) also must be the Redis server IP ",type=str)
+	argsparser.add_argument("-L","--Lasers",help="Number of lasers connected.",type=int)
+	argsparser.add_argument("-v","--verbose",help="Debug mode 0,1 or 2.",type=int)
 	argsparser.add_argument("-x","--invx",help="Invert laser 0 X axis again",action="store_true")
 	argsparser.add_argument("-y","--invy",help="Invert laser 0 Y axis again",action="store_true")
-	argsparser.add_argument("-s","--set",help="Only for VJ version. Specify wich generator set to use (default is in gstt.py)",type=int)
-	argsparser.add_argument("-c","--curve",help="Only for VJ version. Specify with generator curve to use (default is in gstt.py)",type=int)
+	argsparser.add_argument("-d","--display",help="Point List number displayed in simulator",type=int)
 	argsparser.add_argument("-a","--align",help="Reset laser 0 alignement values",action="store_true")
-	argsparser.add_argument("-d","--display",help="Point List number displayed in pygame simulator",type=int)
-	argsparser.add_argument("-v","--verbose",help="Debug mode 0,1 or 2.",type=int)
-	argsparser.add_argument("-L","--Lasers",help="Number of lasers connected.",type=int)
-	argsparser.add_argument("-b","--bhoroscIP",help="Computer IP running bhorosc ('127.0.0.1' by default)",type=str)
-	argsparser.add_argument("-n","--nozoscIP",help="Computer IP running Nozosc ('127.0.0.1' by default)",type=str)
+	argsparser.add_argument("-i","--iport",help="port number for builtin LJ OSC server (8002 by default)",type=int)	
+	argsparser.add_argument("-n","--nozoidIP",help="IP for llstr' Nozoid OSC server port 8003 ('127.0.0.1' by default)",type=str)
+	argsparser.add_argument("-b","--bhoroscIP",help="IP for OSC output ('127.0.0.1' by default)",type=str)
+	argsparser.add_argument("-o","--oport",help="OSC output port number (8001 by default)",type=int)
 
 
 
@@ -98,23 +96,11 @@ def handle():
 		gstt.LjayServerIP  = args.redisIP
 
 
-	# Set / Curves arguments
-	if args.set != None:
-		gstt.Set = args.set
-		print "Set : " + str(gstt.Set)
-
-	if args.curve != None:
-		gstt.Curve = args.curve
-		print "Curve : " + str(gstt.Curve)
-
 
 	# Point list number used by simulator
 	if args.display  != None:
 		gstt.simuPL = args.display
 		print "Display : " + str(gstt.simuPL)
-
-
-
 
 	
 
@@ -128,8 +114,8 @@ def handle():
 	else:
 		gstt.oscIPin = '127.0.0.1'
 
-	if args.nozoscIP  != None:
-		gstt.nozoscIP = args.nozoscIP
+	if args.nozoidIP  != None:
+		gstt.nozoscIP = args.nozoidIP
 	else:
 		gstt.nozoscIP = '127.0.0.1'
 

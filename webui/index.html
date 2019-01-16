@@ -18,7 +18,7 @@
         }
         </script>
         <script src="webaudio-controls.js"></script>
-		<link rel="stylesheet" href="ljaygrid.css" />
+		<link rel="stylesheet" href="LJgrid.css" />
       	<script src="LJ.js"></script>
 
 
@@ -549,10 +549,39 @@
 	// Store Reference To The Canvas & Set Context
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
-  	var lastpoint = { x: 0, y: 0, color: 0};
-  	ctx.clearRect(0,0,400,400);
-  	//ctx.save
+  var lastpoint = { x: 0, y: 0, color: 0};
+  ctx.clearRect(0,0,400,400);
+  var zoom = 0.5;
+  var mousePosDown =  { x: 0, y: 0};
+  var mousePosUp =  { x: 0, y: 0 };
+  var mouseMsgDown = '';
+  var mouseMsgUp = '';
+  //ctx.save
 
+  canvas.addEventListener("mouseup", MouseUp, false);
+  canvas.addEventListener("mousedown", MouseDown, false);
+
+  function getMousePos(canvas,evt) 
+      {
+      var rect = canvas.getBoundingClientRect();
+      return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+      }
+
+  function MouseDown(evt)
+      {
+      mousePosDown = getMousePos(canvas, evt);
+      mouseMsgDown = mousePosDown.x + ' ' + mousePosDown.y;
+      _WS.showin(mouseMsgDown);
+      }
+      
+  function MouseUp(evt)
+      {
+      mousePosUp = getMousePos(canvas, evt);
+      mouseMsgUp = mousePosUp.x + ' ' + mousePosUp.y;
+      _WS.showin(mouseMsgUp);
+      _WS.s.send('/mouse '+mouseMsgDown+' '+mouseMsgUp);
+      _WS.showin('/mouse '+mouseMsgDown+' '+mouseMsgUp);
+      }
 
   // Todo : laser point will have black points to go from a polyline to another. Need to discard those black points.
   function draw() {
@@ -568,7 +597,7 @@
         ctx.clearRect(0,0,400,400);
         ctx.beginPath();
        
-        ctx.moveTo(pl2[0]*0.5, pl2[1]*0.5);
+        ctx.moveTo(pl2[0]*zoom, pl2[1]*zoom);
         lastpoint.color = pl2[2];
 
         // Draw n Lines
@@ -578,7 +607,7 @@
           // New point has the same color -> add a new line to the new point
           if (pl2[2+(i*3)] === lastpoint.color)
             {
-            ctx.lineTo(pl2[i*3]*0.5, pl2[1+(i*3)]*0.5);
+            ctx.lineTo(pl2[i*3]*zoom, pl2[1+(i*3)]*zoom);
             }
 
           // New point has different color -> stroke with previous color
@@ -591,13 +620,13 @@
             ctx.beginPath();
             //ctx.clearRect(0,0,400,400);
             
-            ctx.moveTo(pl2[i*3]*0.5, pl2[1+(i*3)]*0.5);
+            ctx.moveTo(pl2[i*3]*zoom, pl2[1+(i*3)]*zoom);
             }
 
           // Last point -> stroke with current color
           if (i === (pl2.length/3)-1 ) 
             {
-            ctx.moveTo(pl2[i*3]*0.5, pl2[1+(i*3)]*0.5);
+            ctx.moveTo(pl2[i*3]*zoom, pl2[1+(i*3)]*zoom);
             ctx.strokeStyle = "#"+((pl2[2+(i*3)]) + Math.pow(16, 6)).toString(16).slice(-6);
             ctx.stroke();
             

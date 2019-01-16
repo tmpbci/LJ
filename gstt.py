@@ -17,7 +17,7 @@ from /team/laser
 #ConfigName = "setexample.conf"
 ConfigName = "LJ.conf"
 
-debug = 2
+debug = 0
 
 anims= [[],[],[],[]]
 
@@ -28,7 +28,7 @@ LaserNumber = 2
 LasClientNumber = 0
 MaxLasClient = 3
 
-screen_size = [800,600]
+screen_size = [400,400]
 xy_center = [screen_size[0]/2,screen_size[1]/2]
 
 LjayServerIP = '192.168.1.13'

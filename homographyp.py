@@ -170,7 +170,7 @@ def EDpoint(mylaser,(pygamex,pygamey)):
 	YY = pygamey - gstt.xy_center[1]
 	CosANGLE = math.cos(gstt.finANGLE[mylaser])
 	SinANGLE = math.sin(gstt.finANGLE[mylaser])
-	# Multilaser style
+
 	x = (gstt.xy_center[0] + ((XX * CosANGLE) - (YY * SinANGLE)) - gstt.xy_center[0]) * gstt.zoomX[mylaser] + gstt.centerX[mylaser]
 	y = (gstt.xy_center[1] + ((XX * SinANGLE) + (YY * CosANGLE)) - gstt.xy_center[1]) * gstt.zoomY[mylaser] + gstt.centerY[mylaser]
 	

@@ -7,7 +7,7 @@ LICENCE : CC
 '''
 
 import redis
-import framy
+import lj
 import math
 import time
 import numpy as np
@@ -34,21 +34,7 @@ observer_altitude = 30000
 map_plane_altitude = 0.0 
 
 samparray = [0] * 100
-vertices = [
-	(- 1.0, 1.0,- 1.0),
-	( 1.0, 1.0,- 1.0),
-	( 1.0,- 1.0,- 1.0),
-	(- 1.0,- 1.0,- 1.0),
-	(- 1.0, 1.0, 1.0),
-	( 1.0, 1.0, 1.0),
-	( 1.0,- 1.0, 1.0),
-	(- 1.0,- 1.0, 1.0)
-	]
 
-# Define the vertices that compose each of the 6 faces. These numbers are
-# indices to the vertices list defined above.
-#faces = [(0,1,2,3),(1,5,6,2),(5,4,7,6),(4,0,3,7),(0,4,5,1),(3,2,6,7)]
-faces = [(0,1,2,3),(1,5,6,2),(5,4,7,6),(4,0,3,7),(0,4,5,1),(3,2,6,7)]
 
 def LeftShift(elevation):
 
@@ -131,54 +117,7 @@ def Proj(x,y,z,angleX,angleY,angleZ):
 
 
 
-def Draw2PL():
-
-	Shape = []
-	Left = []
-	Right = []
-	counter =0
-
-	while 1:
-		Shape = []
-		Left = []
-		Right = []
-		for fa in faces:
-			#print ""
-			#print "face",fa
-
-			for point in fa:
-				#print ""
-				#print "point ", point 
-				x = vertices[point][0]
-				y = vertices[point][1]
-				z = vertices[point][2]
-				#print x,y,z
-				#print "left",x+LeftShift(z*25),y,z, Proj(x+LeftShift(z*25),y,z)
-				#print "right",x+RightShift(z*25),y,z, Proj(x+RightShift(z*25),y,z)
-
-
-				#Shape.append(Proj(x,y,z,0,0,counter))
-				Left.append( Proj(x+LeftShift(z*5),y,z,0,0,counter))
-				Right.append(Proj(x+RightShift(z*5),y,z,0,0,counter))	
-
-		#framy.PolyLineOneColor(Shape, c = white,  PL = 0, closed = False)
-		framy.PolyLineOneColor(Left,  c = red,    PL = 1, closed = False)
-		framy.PolyLineOneColor(Right, c = green,   PL = 2, closed = False)
-		'''
-		framy.rPolyLineOneColor(Shape, c = white,  PL = 0, closed = False, xpos = 200, ypos = 250, resize = 1.5, rotx =0, roty =0 , rotz=0)
-		framy.rPolyLineOneColor(Left,  c = red,    PL = 1, closed = False, xpos = 200, ypos = 250, resize = 1.5, rotx =0, roty =0 , rotz=0)
-		framy.rPolyLineOneColor(Right, c = blue,   PL = 2, closed = False, xpos = 200, ypos = 250, resize = 1.5, rotx =0, roty =0 , rotz=0)
-		'''
-		#print framy.LinesPL(0)
-		#print framy.LinesPL(1)
-		#print framy.LinesPL(2)
-
-		#counter -= 1
-		#if counter >360:
-		#	counter =0
-
-
-def Draw1PL():
+def DrawPL():
 
 	Shape = []
 	Left = []
@@ -198,8 +137,8 @@ def Draw1PL():
 			Right.append(Proj(x+RightShift(z*25),step/yfactor,z,0,0,0))	
 			x += 0.02
 
-		framy.rPolyLineOneColor(Left,  c = red,    PL = 0, closed = False, xpos = 0, ypos = 10, resize = 1.5, rotx =0, roty =0 , rotz=0)
-		framy.rPolyLineOneColor(Right, c = green,   PL = 0, closed = False, xpos = 0, ypos = 10, resize = 1.5, rotx =0, roty =0 , rotz=0)
+		lj.rPolyLineOneColor(Left,  c = red,    PL = 0, closed = False, xpos = 0, ypos = 10, resize = 1.5, rotx =0, roty =0 , rotz=0)
+		lj.rPolyLineOneColor(Right, c = green,   PL = 0, closed = False, xpos = 0, ypos = 10, resize = 1.5, rotx =0, roty =0 , rotz=0)
 
 		Left = []
 		Right = []
@@ -211,8 +150,8 @@ def Draw1PL():
 			Right.append(Proj(x+RightShift(z*25),step/yfactor,z,0,0,0))	
 			x += 0.02
 
-		framy.rPolyLineOneColor(Left,  c = red,    PL = 0, closed = False, xpos = 0, ypos = 25, resize = 1.5, rotx =0, roty =0 , rotz=0)
-		framy.rPolyLineOneColor(Right, c = green,   PL = 0, closed = False, xpos = 0, ypos = 25, resize = 1.5, rotx =0, roty =0 , rotz=0)
+		lj.rPolyLineOneColor(Left,  c = red,    PL = 0, closed = False, xpos = 0, ypos = 25, resize = 1.5, rotx =0, roty =0 , rotz=0)
+		lj.rPolyLineOneColor(Right, c = green,   PL = 0, closed = False, xpos = 0, ypos = 25, resize = 1.5, rotx =0, roty =0 , rotz=0)
 
 		Left = []
 		Right = []
@@ -224,11 +163,11 @@ def Draw1PL():
 			Right.append(Proj(x+RightShift(z*25),step/yfactor,z,0,0,0))	
 			x += 0.02
 
-		framy.rPolyLineOneColor(Left,  c = red,    PL = 0, closed = False, xpos = 0, ypos = 50, resize = 1.5, rotx =0, roty =0 , rotz=0)
-		framy.rPolyLineOneColor(Right, c = green,   PL = 0, closed = False, xpos = 0, ypos = 50, resize = 1.5, rotx =0, roty =0 , rotz=0)
+		lj.rPolyLineOneColor(Left,  c = red,    PL = 0, closed = False, xpos = 0, ypos = 50, resize = 1.5, rotx =0, roty =0 , rotz=0)
+		lj.rPolyLineOneColor(Right, c = green,   PL = 0, closed = False, xpos = 0, ypos = 50, resize = 1.5, rotx =0, roty =0 , rotz=0)
 
 
-		framy.LinesPL(0)
+		lj.DrawPL(0)
 		time.sleep(0.005)
 
 white = rgb2int(255,255,255)
@@ -240,4 +179,4 @@ y0 = ssine(100,5,-0.5)
 y1 = ssine(100,5,0)
 y2 = ssine(100,5,0.5)
 
-Draw1PL()
+DrawPL()
