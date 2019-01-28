@@ -151,6 +151,9 @@ def NoteOn(note):
             gstt.Laser = note -24
             print "Current Laser switched to",gstt.Laser
 
+def Mouse(x1,y1,x2,y2):
+    print "Mouse", x1,y1,x2,y2
+
 
 
 def handler(oscpath, args):
@@ -158,11 +161,13 @@ def handler(oscpath, args):
     print ""
     print "Handler"
 
-    if oscpath[1] == "client" or oscpath[1] =="noteon":
+    if oscpath[1] == "client" or oscpath[1] =="noteon" or oscpath[1]=="mouse":
         if oscpath[1] == "client":
             LasClientChange(int(args[0]))
-        else:
+        elif oscpath[1] == "noteon":
             NoteOn(int(args[0]))
+        elif oscpath[1] == "mouse":
+            Mouse(int(args[0]),int(args[1]),int(args[2]),int(args[3]))
 
     else:
         pathlength = len(oscpath)
