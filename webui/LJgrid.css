@@ -129,7 +129,7 @@
   height: 323px;
   width: 124px;
   grid-template-columns: 62px 62px;
-  grid-template-rows: 30px 19px 8px 55px 20px 19px 8px 55px 25px 19px 8px 55px 19px;
+  grid-template-rows: 30px 19px 8px 55px 19px 20px  8px 55px 19px 25px 8px 55px 19px;
   background-color: #111;
   line-height: 1;
   justify-items: center;
