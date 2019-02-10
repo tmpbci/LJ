@@ -39,7 +39,7 @@
 .mgalign {
   display: grid;
   height: 400px;
-  grid-template-columns: 144px 144px 138px 138px 10px;
+  grid-template-columns: 144px 144px 138px 138px 10px 326px;
   grid-template-rows: 1Fr;
   background-color: #151515;
   border-color: #445;

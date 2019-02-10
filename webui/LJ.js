@@ -6,18 +6,18 @@
 
 	function noMenu() {
 		// Set all menu button with normal button style
-	    var x = document.getElementById("showalign");
+	   var x = document.getElementById("showalign");
 	    x.className = "button";
 		var x = document.getElementById("showrun");
-		x.className = "button";
+		  x.className = "button";
 		var x = document.getElementById("showcanvas");
-		x.className = "button";
+		  x.className = "button";
 		var x = document.getElementById("showlive");
-		x.className = "button";
+		  x.className = "button";
     var x = document.getElementById("shownozoid");
-    x.className = "button";
+      x.className = "button";
     var x = document.getElementById("showplanet");
-    x.className = "button";
+      x.className = "button";
 
 		// Hide all possible main central grids.
 		var x = document.getElementById("mgalign");
@@ -39,52 +39,56 @@
 	function showAlign() {
 		noMenu();
     	var x = document.getElementById("mgalign");
-    	x.style.display = "grid";
+    	   x.style.display = "grid";
     	var x = document.getElementById("showalign");
-    	x.className = "button:checked";
+    	   x.className = "button:checked";
     	}
 
     function showRun() {
         noMenu();
     	var x = document.getElementById("mgrun");
-    	x.style.display = "grid";
+    	   x.style.display = "grid";
     	var x = document.getElementById("showrun");
-    	x.className = "button:checked";
+    	   x.className = "button:checked";
        	}
 
-     function showCanvas() {
+    function showCanvas() {
      	noMenu();
     	var x = document.getElementById("mgsimu");
        	x.style.display = "grid";
       var x = document.getElementById("cnvbuttons");
         x.style.display = "grid";
     	var x = document.getElementById("showcanvas");
-    	x.className = "button:checked";
+    	  x.className = "button:checked";
        	}
 
-     function showLive() {
+    function showLive() {
      	noMenu();
     	var x = document.getElementById("mglive");
-    	x.style.display = "grid";
+    	   x.style.display = "grid";
     	var x = document.getElementById("showlive");
-    	x.className = "button:checked";
+    	   x.className = "button:checked";
        	}
-     function showNozoid() {
+
+    function showNozoid() {
       noMenu();
       var x = document.getElementById("mgnozoid");
-      x.style.display = "grid";
+        x.style.display = "grid";
       var x = document.getElementById("shownozoid");
       x.className = "button:checked";
         } 
-     function showPlanet() {
+
+    function showPlanet() {
       noMenu();
       var x = document.getElementById("mgplanet");
-      x.style.display = "grid";
+        x.style.display = "grid";
+      var x = document.getElementById("cnvbuttons");
+        x.style.display = "grid";
       var x = document.getElementById("showplanet");
-      x.className = "button:checked";
+        x.className = "button:checked";
         }
-u
-     function buttonClicked(clicked_id) {
+
+    function buttonClicked(clicked_id) {
      	_WS.send("/" + clicked_id);
      	}
 
