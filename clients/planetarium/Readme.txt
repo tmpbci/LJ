@@ -2,39 +2,41 @@ Multi Laser planetarium in python3 for LJ.
 v0.01
 Sam Neurohack
 
-User can define :
 
-- Observer position using GPS coordinates or built in cities catalog on earth.
-- Observer time. If you choose Now, the sky is updated live, so you can virtual sky photography :)
-- Each laser starchart has a center direction like Azimuth : 63.86° & Altitude: 61.83° and a Field of view like 90°. For the all sky with 4 lasers, give 90° FOV per laser.
-- What is displayed : Solar system objects, Stars, Compass letters.
-- 
+Display all solar planets and hipparcos catalog objects below a given magnitude. Accuracy tested against apparent data and starchart at https://www.calsky.com/cs.cgi?cha=7&sec=3&sub=2
 
-Some future features : 
+It's an alpha release so a little hardcoded :
 
-- Constellations display
-- 3D with anaglyph
-- Time Speed setting
-- What do you want ?
+- set observer position (find SkyCity, SkyCountryCode) in main.py like 'Paris' and 'FR'
+- set observer date.time in InitObserver() arguments (default is now in UTC)
+- set what sky part you want to display for each laser in 'LaserSkies' variable : Define alitude and azimuth for top left and bottom right   
 
-User must understand Right Ascension/Declinaison and Azimuth/Altitude coordinates system. Some needed astronomy concepts online :
-https://rhodesmill.org/skyfield/stars.html
-https://in-the-sky.org//staratlas.php?ra=15.358411414&dec=73.47660962&limitmag=2
-http://www.physics.csbsju.edu/astro/SF/SF.06.html
+It needs more libraries than plan. Currently it relies on the awesome astropy, skyfield,...
 
+Soon some pictures.
 
-This project is on "OK" precision grade and definately not coding skills show off, I'm learning python coding it. To check accuracy, one can compare to :
-https://www.calsky.com/cs.cgi?cha=7&sec=3&sub=2
+To Run :
+
+Launch LJ first
+python3 main.py 
+
+For debug options and more type : python3 --help
 
 
-The author barely understand astronomy so please report if you find newbie errors sam (at) neurohack cc
+To install :
 
-This project uses the awesome Skyfield by Brandon Rhodes and Astropy. 
+go3.sh
 
-Kernels for Sky objects positions references :
-Acton, C.H.; "Ancillary Data Services of NASA's Navigation and Ancillary Information Facility;" Planetary and Space Science, Vol. 44, No. 1, pp. 65-70, 1996.
+NB :
+- if you get an year error out of range : install the last skyfield "python-skyfield" in github.  
+- Read main.py 
 
-Charles Acton, Nathaniel Bachman, Boris Semenov, Edward Wright; A look toward the future in the handling of space science mission geometry; Planetary and Space Science (2017);
-DOI 10.1016/j.pss.2017.02.013
-https://doi.org/10.1016/j.pss.2017.02.013 
 
+
+
+
+
+
+LICENCE : CC
+Remember : LJ will automatically warp geometry according to alignement data before sending to lasers. See webUI.  
+'''

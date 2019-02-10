@@ -21,7 +21,7 @@
 }
 .mgstatus {
   display: grid;  
-  grid-template-columns: 250px 150px 1fr;
+  grid-template-columns: 300px 150px 1fr;
   grid-template-raw: 30px;
   grid-column-gap: 1px;
   grid-row-gap: 1px;
@@ -46,15 +46,30 @@
   border-style: groove;
   border-width: 1px;
 }
-.mgcanvas {
+.mgsimu {
   display: none;
   height: 400px;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1Fr;
+  width: 900px;
+  grid-template-columns: 500px 400px;
+  grid-template-rows: 400px;
   background-color: #151515;
+
+}
+.cnvbuttons {
+  display: none;
+  height: 400px;
+  width: 400px;
+  grid-template-columns: 66px 66px 66px 66px;
+  grid-template-rows: 66px 17px  69px 17px;
+  background-color: #000;
+  justify-items: center;
+  align-items: center;
   border-color: #445;
   border-style: groove;
   border-width: 1px;
+  grid-gap: 1px;
+  transition: all .3s ease;
+  background-color: #151515;
 }
 .mglive {
   display: none;
@@ -65,6 +80,24 @@
   border-color: #445;
   border-style: groove;
   border-width: 1px;
+}
+.mgnozoid {
+  display: none;
+  height: 400px;
+  grid-template-columns: 1Fr;
+  grid-template-rows: 1Fr;
+  background-color: #151515;
+  border-color: #445;
+  border-style: groove;
+  border-width: 1px;
+}
+.mgplanet {
+  display: none;
+  height: 400px;
+  width: 900px;
+  grid-template-columns: 500px 400px;
+  grid-template-rows: 400px;
+  background-color: #151515;
 }
 .mgrun {
   display: none;

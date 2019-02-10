@@ -22,7 +22,11 @@ Sam Neurohack
 
 import math
 import redis
-#from OSC import OSCServer, OSCClient, OSCMessage
+
+# Import needed modules from osc4py3
+from osc4py3.as_eventloop import *
+from osc4py3 import oscbuildparse
+
 
 redisIP = '127.0.0.1'
 r = redis.StrictRedis(host=redisIP, port=6379, db=0)
@@ -32,16 +36,23 @@ ClientNumber = 0
 point_list = []
 pl = [[],[],[],[]]
 
+#
+# OSC interaction with LJ
+#
 
-'''
-LJIP = "127.0.0.1"
+def OSCstart():
+	# Start the system.
+	osc_startup()
+	#osc_udp_client(redisIP, 8002, "LJ 8002")
 
-osclientlj = OSCClient()
-oscmsg = OSCMessage()
-osclientlj.connect((redisIP, 8002)) 
-'''
+def OSCframe():
+	osc_process()
 
-'''
+# Properly close the system. Todo
+def OSCstop():
+	osc_terminate()
+
+
 def Send(oscaddress,oscargs=''):
         
     oscmsg = OSCMessage()
@@ -50,21 +61,35 @@ def Send(oscaddress,oscargs=''):
     
     #print ("sending to bhorosc : ",oscmsg)
     try:
-        osclientlj.sendto(oscmsg, (redisIP, 8002))
-        oscmsg.clearData()
+        msg = oscbuildparse.OSCMessage(oscaddress, None, [oscargs])
+        osc_send(msg, "LJ 8002")
     except:
         print ('Connection to LJ refused : died ?')
         pass
-    #time.sleep(0.001
-
-def WebStatus(message):
-	Send("/status",message)
 '''
+def handlerfunction(s, x, y):
+    # Will receive message data unpacked in s, x, y
+    pass
+
+def handlerfunction2(address, s, x, y):
+    # Will receive message address, and message data flattened in s, x, y
+    pass
+
+# Make server channels to receive packets.
+osc_udp_server("127.0.0.1", 3721, "localhost")
+osc_udp_server("0.0.0.0", 3724, "anotherserver")
+'''
+
+
+
+
+
+  
 
 
 ASCII_GRAPHICS = [
 
-#implementé
+# caracteres corrects
 
 	[(-50,30), (-30,-30), (30,-30), (10,30), (-50,30)],							#0
 	[(-20,30), (0,-30), (-20,30)], 												#1
@@ -77,7 +102,7 @@ ASCII_GRAPHICS = [
 	[(-30,30), (-30,-30), (30,-30), (30,30), (-30,30), (-30,0), (30,0)],			#8
 	[(30,0), (-30,0), (-30,-10), (0,-30), (30,-30), (30,10), (0,30), (-30,30)],	#9
 
-# A implementer	
+# caracteres a implementer	
 	[(-30,10), (30,-10), (30,10), (0,30), (-30,10), (-30,-10), (0,-30), (30,-10)], #:
 	[(-30,-10), (0,-30), (0,30)], [(-30,30), (30,30)],							#;
 	[(-30,-10), (0,-30), (30,-10), (30,0), (-30,30), (30,30)],					#<
@@ -86,7 +111,7 @@ ASCII_GRAPHICS = [
 	[(30,-30), (-30,-30), (-30,0), (0,0), (30,10), (0,30), (-30,30)],				#?
 	[(30,-30), (0,-30), (-30,-10), (-30,30), (0,30), (30,10), (30,0), (-30,0)],	#@
 
-# Implementé
+# Caracteres corrects
 	
 
 	[(-30,30), (-30,-30), (30,-30), (30,30), (30,0), (-30,0)],				#A
@@ -163,6 +188,7 @@ def Config(redisIP,client):
 
 	r = redis.StrictRedis(host=redisIP, port=6379, db=0)	
 	ClientNumber = client
+	osc_udp_client(redisIP, 8002, "LJ 8002")
 
  
 def LineTo(xy, c, PL):
@@ -296,10 +322,11 @@ def Text(message,c, PL, xpos, ypos, resize, rotx, roty, rotz):
 		# texte centre en x automatiquement selon le nombre de lettres l
 		x_offset = 26 * (- (0.9*l) + 3*i)
 		#print i,x_offset
+		# if digit 
 		if ord(ch)<58:
 			char_pl_list = ASCII_GRAPHICS[ord(ch) - 48]
 		else: 
-			char_pl_list = ASCII_GRAPHICS[ord(ch) - 46]
+			char_pl_list = ASCII_GRAPHICS[ord(ch) - 46 ]
 			
 		char_draw = []
 		#dots.append((char_pl_list[0][0] + x_offset,char_pl_list[0][1],0))
@@ -309,6 +336,7 @@ def Text(message,c, PL, xpos, ypos, resize, rotx, roty, rotz):
 		i +=1
 		#print ch,char_pl_list,char_draw			
 		rPolyLineOneColor(char_draw, c, PL , False, xpos, ypos, resize, rotx, roty, rotz)
+		#print ("laser",PL,"message",message)
 		#dots.append(char_draw)
 
 

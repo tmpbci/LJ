@@ -59,6 +59,8 @@ In webui/index.html change the ws ip adress to the server IP if needed.
 
 Using the same idea check all ip address in LJ.conf.
 
+There is a nice ws debug tool websocat.
+
 
 
 #

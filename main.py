@@ -8,6 +8,7 @@ Laser server + webUI servers (ws + OSC)
 
 - get point list to draw : /pl/lasernumber
 - for report /lstt/lasernumber /lack/lasernumber /cap/lasernumber
+- A nice ws debug tool : websocat 
 
 todo :
 
@@ -417,7 +418,7 @@ finally:
         r.set('/lstt/'+str(laserid),64)
         r.set('/cap/'+str(laserid),0)
 
-print "Fin des haricots"
+print "Fin de LJ."
 
 
 '''

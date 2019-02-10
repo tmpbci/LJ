@@ -14,16 +14,26 @@
 		x.className = "button";
 		var x = document.getElementById("showlive");
 		x.className = "button";
+    var x = document.getElementById("shownozoid");
+    x.className = "button";
+    var x = document.getElementById("showplanet");
+    x.className = "button";
 
 		// Hide all possible main central grids.
 		var x = document.getElementById("mgalign");
        	x.style.display = "none";
-		var x = document.getElementById("mgcanvas");
+		var x = document.getElementById("mgsimu");
     	x.style.display = "none";
-    	var x = document.getElementById("mgrun");
-    	x.style.display = "none";
-    	var x = document.getElementById("mglive");
-    	x.style.display = "none";
+    var x = document.getElementById("cnvbuttons");
+        x.style.display = "none";
+    var x = document.getElementById("mgrun");
+      	x.style.display = "none";
+    var x = document.getElementById("mglive");
+      	x.style.display = "none";
+    var x = document.getElementById("mgnozoid");
+        x.style.display = "none";
+    var x = document.getElementById("mgplanet");
+        x.style.display = "none";
 		}
 
 	function showAlign() {
@@ -44,8 +54,10 @@
 
      function showCanvas() {
      	noMenu();
-    	var x = document.getElementById("mgcanvas");
-       	x.style.display = "block";
+    	var x = document.getElementById("mgsimu");
+       	x.style.display = "grid";
+      var x = document.getElementById("cnvbuttons");
+        x.style.display = "grid";
     	var x = document.getElementById("showcanvas");
     	x.className = "button:checked";
        	}
@@ -57,7 +69,21 @@
     	var x = document.getElementById("showlive");
     	x.className = "button:checked";
        	}
-
+     function showNozoid() {
+      noMenu();
+      var x = document.getElementById("mgnozoid");
+      x.style.display = "grid";
+      var x = document.getElementById("shownozoid");
+      x.className = "button:checked";
+        } 
+     function showPlanet() {
+      noMenu();
+      var x = document.getElementById("mgplanet");
+      x.style.display = "grid";
+      var x = document.getElementById("showplanet");
+      x.className = "button:checked";
+        }
+u
      function buttonClicked(clicked_id) {
      	_WS.send("/" + clicked_id);
      	}

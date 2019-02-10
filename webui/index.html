@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <title>LJ</title>
 
-        <!-- Web audio defaults -->
+        <!-- Web audio buttons defaults -->
         <script src="webcomponents-lite.js"></script>
         <script>
         WebAudioControlsOptions={
@@ -18,18 +18,26 @@
         }
         </script>
         <script src="webaudio-controls.js"></script>
-		<link rel="stylesheet" href="LJgrid.css" />
-      	<script src="LJ.js"></script>
+        <link rel="stylesheet" href="LJgrid.css" />
+      	<!-- Javascript for this webapp is a the end of this html page and in LJ.js -->
+        <script src="LJ.js"></script>
 
 
- </head>
+    </head>
 
 <body style="background-color:#222;">
 
-<!-- mg : MainGrid Webpage one column, different raws displayed or hidden by menu button -->
+<!--
+  MainGrid Webpage one column, different raws displayed or hidden by menu button 
+-->
+
 <div class="maingrid">
 
-  <!-- mg : Title and laser state ()-->
+
+  <!--
+    Title and laser state
+  -->
+  
   <div class="mgtitle">
 
   	<!-- LJ Logo -->
@@ -73,7 +81,7 @@
     </div>
 
     <div>
-    <!--
+    <!-- 
   	<div class="topgrid">
   	    <div class="lasertext">Laser</div>
   		<div><webaudio-knob id="noteon" src="knobs/Prophetic5.png" diameter="70" min="16" max="20" value="0" sprites="5"></webaudio-knob></div>
@@ -90,7 +98,11 @@
     <div></div>
   </div>
 
-  <!-- mg : Menu buttons and Status display -->
+
+  <!--
+    Menu buttons and Status display 
+  -->
+
   <div id="mgstatus" class="mgstatus">
 		<div>
 			<!-- <webaudio-switch id="align" height="10" width="99" value="0" src="knobs/align.png" type="toggle"></webaudio-switch>
@@ -101,18 +113,23 @@
 			<button class="button" id="showcanvas" onclick="showCanvas()">Simu</button>
 			<button class="button" id="showrun" onclick="showRun()">Run</button>
 			<button class="button" id="showlive"  onclick="showLive()">Live</button>
+      <button class="button" id="shownozoid"  onclick="showNozoid()">Nozoid</button>
+      <button class="button" id="showplanet"  onclick="showPlanet()">Planet</button>
 		</div>
 			<div><button class="button" id="showstatus">DISCONNECTED</button></div>
-
     	<div></div>
    </div>
 
-  <!-- mg : Align -->
+
+  <!--
+    Align 
+  -->
+  
   <div id="mgalign" class="mgalign">
 
-   <!-- Laserbox 0 -->
+   <!-- Laser 0 -->
    <div class="laserbox">
-    <!-- IP 0 -->
+    <!-- IP laser 0 -->
     <div>
     <form onsubmit="onSubmit(); return false;">
     <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="ip/0">
@@ -160,24 +177,28 @@
     </div>
    </div>
 
-   <!-- Laserbox 1 -->
+   <!-- Laser 1 -->
    <div class="laserbox">
-    <!-- IP 1 -->
+    <!-- IP laser 1 -->
     <div>
     <form onsubmit="onSubmit(); return false;">
     <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="ip/1">
     </form>
    </div>
   	<div>
+
     	<!-- Align Icons -->
         <webaudio-switch id="grid/1" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/grid.png"></webaudio-switch>
         <webaudio-switch id="mouse/1" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/mouse.png"></webaudio-switch>
+      
         <!-- Blackout icon -->
         <webaudio-switch id="black/1" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/blackout.png"></webaudio-switch>
+      
         <!-- Swap Icons -->
         <webaudio-switch id="swap/X/1" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapx.png"></webaudio-switch>
         <webaudio-switch id="swap/Y/1" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
     </div>
+
     <!-- Lasergrid 1 -->
     <div class="lasergrid" style="background-image: url(lasergrid1.png);">
     	<div><webaudio-param id="kpps/1" link="kpps/1"></webaudio-param></div>
@@ -209,24 +230,28 @@
     </div>
    </div>
 
-   <!-- Laserbox 2 -->
+   <!-- Laser 2 -->
    <div class="laserbox">
-    <!-- IP 2 -->
+    <!-- IP laser 2 -->
     <div>
     <form onsubmit="onSubmit(); return false;">
     <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="ip/2">
     </form>
    </div>
   	<div>
-    	<!-- Align Icons -->
+    	
+      <!-- Align Icons -->
         <webaudio-switch id="grid/2" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/grid.png"></webaudio-switch>
         <webaudio-switch id="mouse/2" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/mouse.png"></webaudio-switch>
+      
         <!-- Blackout icon -->
         <webaudio-switch id="black/2" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/blackout.png"></webaudio-switch>
+      
         <!-- Swap Icons -->
         <webaudio-switch id="swap/X/2" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapx.png"></webaudio-switch>
         <webaudio-switch id="swap/Y/2" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
     </div>
+
     <!-- Laser 2 grid -->
     <div class="lasergrid" style="background-image: url(lasergrid2.png)">
     	<div><webaudio-param id="kpps/2" link="kpps/2"></webaudio-param></div>
@@ -260,24 +285,28 @@
     </div>
    </div>
 
-   <!-- Laserbox 3 -->
+   <!-- Laser 3 -->
    <div class="laserbox">
-    <!-- IP 3 -->
+    <!-- IP laser 3 -->
     <div>
     <form onsubmit="onSubmit(); return false;">
     <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="ip/3">
     </form>
    </div>
   	<div>
-    	<!-- Align Icons -->
+    	
+      <!-- Align Icons -->
         <webaudio-switch id="grid/3" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/grid.png"></webaudio-switch>
         <webaudio-switch id="mouse/3" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/mouse.png"></webaudio-switch>
+        
         <!-- Blackout icon -->
         <webaudio-switch id="black/3" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/blackout.png"></webaudio-switch>
+        
         <!-- Swap Icons -->
         <webaudio-switch id="swap/X/3" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapx.png"></webaudio-switch>
         <webaudio-switch id="swap/Y/3" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
     </div>
+
     <!-- Laser 3 grid -->
     <div class="lasergrid" style="background-image: url(lasergrid3.png)">
     	<div><webaudio-param id="kpps/3" link="kpps/3" ></webaudio-param></div>
@@ -312,11 +341,14 @@
    </div>
   </div>
 
-  <!-- mg : Live -->
+
+  <!-- 
+    Live 
+  -->
+
   <div id="mglive" class="mglive">
 
-
-    <!-- with AI box -->
+    <!-- with AI Interface -->
     <div class="withaibox">
     	<div class="lasertext" style="border-color:#334;border-style: groove;border-width:1px;">With AI
       </div>
@@ -347,7 +379,7 @@
     </div>
 
 
-    <!-- Lissabox -->
+    <!-- Lissa interface -->
     <div class="lissabox">
     	<div class="lasertext" style="border-color:#334;border-style: groove;border-width:1px;">LISSA
       </div>
@@ -378,7 +410,7 @@
     	</div>
     </div>
 
-    <!-- 3D proj grid -->
+    <!-- 3D proj interface -->
     <div class="projgrid">
     	<div></div>
     	<div class="lasertext" style="border-color:#334;border-style: groove;border-width:1px;">3D ROT</div>
@@ -396,90 +428,181 @@
     	<div class="lasertext">Y</div>
     	<div class="lasertext">Z</div>
     </div>
-
-
   </div>
 
-  <!-- mg : canvas to display point list as laser simulator -->
-  <div id = "mgcanvas" class="mgcanvas">
-        <div>
-        	<canvas id="canvas" width="500" height="500"></canvas>
-		</div>
-		<div></div>
+
+  <!-- 
+    Simulator to display point list 
+  -->
+
+  <div id = "mgsimu" class="mgsimu">
+    <div>
+  	 <canvas id="canvas" width="500" height="400" style="border-color: #445;border-style:groove;border-width:1px;"></canvas>
+    </div>
+
+      <!-- Selection buttons grid -->
+    <div id="cnvbuttons" class="cnvbuttons">    
+        <div><img src="knobs/client.png" alt=" "   class="icongrid"  /></div>
+        <div><img src="knobs/client.png" alt=" "   class="icongrid" /></div>
+        <div><img src="knobs/client.png" alt=" "   class="icongrid"  /></div>
+        <div><img src="knobs/client.png" alt=" "   class="icongrid"   /></div>
+        <div><button id ="noteon 0" onclick ="buttonClicked(this.id)"  class="button:checked">0</button></div>
+        <div><button id ="noteon 1" onclick ="buttonClicked(this.id)"  class="button">1</button></div>
+        <div><button id ="noteon 2" onclick ="buttonClicked(this.id)"  class="button">2</button></div>
+        <div><button id ="noteon 3" onclick ="buttonClicked(this.id)"  class="button">3</button></div>
+        <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+        <div><img src="knobs/iconljay2.png" alt=" " class="icongrid"  /></div>
+        <div><img src="knobs/iconljay2.png" alt=" " class="icongrid"  /></div>
+        <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+        <div><button id ="noteon 24" onclick ="buttonClicked(this.id)"  class="button:checked">PL 0</button></div>
+        <div><button id ="noteon 25" onclick ="buttonClicked(this.id)"  class="button">PL 1</button></div>
+        <div><button id ="noteon 26" onclick ="buttonClicked(this.id)"  class="button">PL 2</button></div>
+        <div><button id ="noteon 27" onclick ="buttonClicked(this.id)"  class="button">PL 3</button></div>
+      </div>
   </div>
 
-  <!-- mg run icons grid -->
-  <div id="mgrun"class="mgrun">    	<!-- Laser Client selection grid -->
-  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
-  	    <div><button id ="noteon 0" onclick ="buttonClicked(this.id)"  class="button:checked">0</button></div>
-  	    <div><button id ="noteon 1" onclick ="buttonClicked(this.id)"  class="button">1</button></div>
-  	    <div><button id ="noteon 2" onclick ="buttonClicked(this.id)"  class="button">2</button></div>
-  	    <div><button id ="noteon 3" onclick ="buttonClicked(this.id)"  class="button">3</button></div>
-  	    <div><button id ="noteon 4" onclick ="buttonClicked(this.id)"  class="button">4</button></div>
-  	    <div><button id ="noteon 5" onclick ="buttonClicked(this.id)"  class="button">5</button></div>
-  	    <div><button id ="noteon 6" onclick ="buttonClicked(this.id)"  class="button">6</button></div>
-  	    <div><button id ="noteon 7" onclick ="buttonClicked(this.id)"  class="button">7</button></div>
-  	    <!-- Simulator PL selection grid -->
-  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><button id ="noteon 24" onclick ="buttonClicked(this.id)"  class="button:checked">PL 0</button></div>
-  	    <div><button id ="noteon 25" onclick ="buttonClicked(this.id)"  class="button">PL 1</button></div>
-  	    <div><button id ="noteon 26" onclick ="buttonClicked(this.id)"  class="button">PL 2</button></div>
-  	    <div><button id ="noteon 27" onclick ="buttonClicked(this.id)"  class="button">PL 3</button></div>
-  	    <div></div>
-  	    <div></div>
-  	    <div></div>
-  	    <div></div>
-  	    <!-- Laser selection grid -->
-  	    <div><img src="knobs/iconlaser.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconlaser.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconlaser.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconlaser.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><button id ="noteon 16" onclick ="buttonClicked(this.id)"  class="button:checked">0</button></div>
-  	    <div><button id ="noteon 17" onclick ="buttonClicked(this.id)"  class="button">1</button></div>
-  	    <div><button id ="noteon 18" onclick ="buttonClicked(this.id)"  class="button">2</button></div>
-  	    <div><button id ="noteon 19" onclick ="buttonClicked(this.id)"  class="button">3</button></div>
-  	    <div></div>
-  	    <div></div>
-  	    <div></div>
-  	    <div></div>
-  	    <!-- Hidden grid -->
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
-  	    <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>  	    
-  	    <div></div>
-  	    <div></div>
-  	    <div></div>
-  	    <div></div>
-  	    <div></div>
-  	    <div></div>
-  	    <div></div>
-  	    <div></div>
-  	 </div>
 
-  <!-- mg : footer display events for debug -->
+  <!--
+     Run  
+   -->
+
+  <div id="mgrun" class="mgrun">    	
+
+      <!-- Laser Client selection grid -->
+      <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+      <div><button id ="noteon 0" onclick ="buttonClicked(this.id)"  class="button:checked">0</button></div>
+      <div><button id ="noteon 1" onclick ="buttonClicked(this.id)"  class="button">1</button></div>
+      <div><button id ="noteon 2" onclick ="buttonClicked(this.id)"  class="button">2</button></div>
+      <div><button id ="noteon 3" onclick ="buttonClicked(this.id)"  class="button">3</button></div>
+      <div><button id ="noteon 4" onclick ="buttonClicked(this.id)"  class="button">4</button></div>
+      <div><button id ="noteon 5" onclick ="buttonClicked(this.id)"  class="button">5</button></div>
+      <div><button id ="noteon 6" onclick ="buttonClicked(this.id)"  class="button">6</button></div>
+      <div><button id ="noteon 7" onclick ="buttonClicked(this.id)"  class="button">7</button></div>
+      
+      <!-- Simulator PL selection grid -->
+      <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><button id ="noteon 24" onclick ="buttonClicked(this.id)"  class="button:checked">PL 0</button></div>
+      <div><button id ="noteon 25" onclick ="buttonClicked(this.id)"  class="button">PL 1</button></div>
+      <div><button id ="noteon 26" onclick ="buttonClicked(this.id)"  class="button">PL 2</button></div>
+      <div><button id ="noteon 27" onclick ="buttonClicked(this.id)"  class="button">PL 3</button></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      
+      <!-- Laser selection grid -->
+      <div><img src="knobs/iconlaser.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconlaser.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconlaser.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconlaser.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><button id ="noteon 16" onclick ="buttonClicked(this.id)"  class="button:checked">0</button></div>
+      <div><button id ="noteon 17" onclick ="buttonClicked(this.id)"  class="button">1</button></div>
+      <div><button id ="noteon 18" onclick ="buttonClicked(this.id)"  class="button">2</button></div>
+      <div><button id ="noteon 19" onclick ="buttonClicked(this.id)"  class="button">3</button></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+
+      <!-- Hidden grid -->
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>
+      <div><img src="knobs/iconblack.png" alt=" " class="icongrid" /></div>  	    
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+  	</div>
+
+
+  <!--
+    Nozoid 
+  -->
+  
+  <div id = "mgnozoid" class="mgnozoid">
+    <div> 
+      <span  class="lasertext">X</span>
+      <select>
+        <option value="LFO1">LFO1</option>
+        <option value="LFO2">LFO2</option>
+        <option value="LFO3">LFO3</option>
+        <option value="LFO4">LFO4</option>
+      </select>
+      <span  class="lasertext">Y</span>
+      <select>
+        <option value="LFO1">LFO1</option>
+        <option value="LFO2">LFO2</option>
+        <option value="LFO3">LFO3</option>
+        <option value="LFO4">LFO4</option>
+      </select>
+    </div>
+  </div>
+
+
+  <!--
+    Planetarium
+  -->
+  
+  <div id = "mgplanet" class="mgplanet">
+
+      <!-- Simuator canvas --> 
+      <div>
+      <canvas id="canvas" width="500" height="400" style="border-color: #445;border-style:groove;border-width:1px;"></canvas>
+      </div>
+      
+      <!-- Selection buttons grid -->
+      <div id="cnvbuttons" class="cnvbuttons">      
+        <div><img src="knobs/client.png" alt=" " class="icongrid"  /></div>
+        <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
+        <div><img src="knobs/client.png" alt=" " class="icongrid"  /></div>
+        <div><img src="knobs/client.png" alt=" " class="icongrid"   /></div>
+        <div><button id ="noteon 0" onclick ="buttonClicked(this.id)"  class="button:checked">0</button></div>
+        <div><button id ="noteon 1" onclick ="buttonClicked(this.id)"  class="button">1</button></div>
+        <div><button id ="noteon 2" onclick ="buttonClicked(this.id)"  class="button">2</button></div>
+        <div><button id ="noteon 3" onclick ="buttonClicked(this.id)"  class="button">3</button></div>
+        <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+        <div><img src="knobs/iconljay2.png" alt=" " class="icongrid"  /></div>
+        <div><img src="knobs/iconljay2.png" alt=" " class="icongrid"  /></div>
+        <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
+        <div><button id ="noteon 24" onclick ="buttonClicked(this.id)"  class="button:checked">PL 0</button></div>
+        <div><button id ="noteon 25" onclick ="buttonClicked(this.id)"  class="button">PL 1</button></div>
+        <div><button id ="noteon 26" onclick ="buttonClicked(this.id)"  class="button">PL 2</button></div>
+        <div><button id ="noteon 27" onclick ="buttonClicked(this.id)"  class="button">PL 3</button></div>
+      </div>
+  </div>
+
+
+  <!-- 
+    Footer display events for debug 
+  -->
+  
   <div class="mgfooter">
         <div id="showin"></div>
 		<div id="showout"></div>
@@ -489,7 +612,9 @@
 </div>
 
 
-<!-- web audio animations -->
+<!-- 
+  web audio buttons scripts 
+-->
 <script type="text/javascript">
     var message="";
     var log=[];
@@ -547,7 +672,9 @@
 </script>
 
 
-<!-- Point list draw -->
+<!-- 
+  Simulator Point list drawing scripts 
+-->
 <script type="text/javascript">
 
 	// Store Reference To The Canvas & Set Context
@@ -655,7 +782,7 @@
 </script>
 </body>
 
-    <!-- non displayed items, for code reference
+    <!-- non displayed items, for code reference mainly for other type of webaudio buttons
         <div>
         	<span  class="lasertext">Swap X</span>
         	<span  class="lasertext">Swap Y</span>

@@ -74,8 +74,11 @@ swapY = [1,1,1,-1]
 # For glitch art : change position and number of points added by tracer.py
 # shortline is for distance with next point, shorter than 4000 (in etherdream coordinates) 
 # i.e (0.25,3) means add 3 points at 25% on the line.
-stepshortline = [(1.0, 8)]
-stepslongline = [(0.25, 3), (0.75, 3), (1.0, 10)]
+#stepshortline = [(1.0, 8)]
+#stepslongline = [(0.25, 3), (0.75, 3), (1.0, 10)]
+stepslongline = [(0.25,1), (0.75, 1), (1.0, 1)]
+#stepshortline = [(1.0, 8)]
+stepslongline = [(1.0, 1)]
 
 point = [0,0,0]
 
