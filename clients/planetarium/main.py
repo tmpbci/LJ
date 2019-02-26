@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # coding=UTF-8
 
 '''
@@ -5,7 +6,7 @@ Multi Laser planetarium in python3 for LJ.
 v0.01
 Sam Neurohack
 
-Accuracy tested against apparent data and starchart at https://www.calsky.com/cs.cgi?cha=7&sec=3&sub=2
+Accuracy could be tested against apparent data and starchart at https://www.calsky.com/cs.cgi?cha=7&sec=3&sub=2
 Remember to set the same observer position and time. 
 
 See Readme for more information
@@ -13,8 +14,10 @@ See Readme for more information
 
 Todo:
 
+- use debug mode and check altaz calculated values against online sites.
 - Validate aa2radec() with online calculator. Rewrite it to remove need for Astropy.
 - Findout how to use OSC in python 3.
+- 
 - Code WebUI page.
 - UpdateStars() in each laser sky. Get magnitude. See UpdateSolar for example.
 - All Draw operations should also check visibility in the given laser altitude range.
@@ -39,7 +42,11 @@ from skyfield.data import hipparcos
 
 from osc4py3.as_eventloop import *
 from osc4py3 import oscbuildparse
-from osc4py3 import oscmethod as osm
+#from osc4py3 import oscmethod as osm
+from osc4py3.oscmethod import * 
+
+
+
 
 
 import json
@@ -65,8 +72,8 @@ print ("Arguments parsing if needed...")
 argsparser = argparse.ArgumentParser(description="Planetarium for LJ")
 argsparser.add_argument("-r","--redisIP",help="IP of the Redis server used by LJ (127.0.0.1 by default) ",type=str)
 argsparser.add_argument("-c","--client",help="LJ client number (0 by default)",type=int)
-argsparser.add_argument("-l","--laser",help="Laser number to be displayed (0 by default)",type=int)
-argsparser.add_argument("-d","--debug",help="Verbosity level (0 by default)",type=int)
+argsparser.add_argument("-L","--Lasers",help="Number of lasers connected (1 by default).",type=int)
+argsparser.add_argument("-v","--verbose",help="Verbosity level (0 by default)",type=int)
 argsparser.add_argument("-i","--input",help="inputs OSC Port (8005 by default)",type=int)
 #argsparser.add_argument("-n","--name",help="City Name of the observer",type=str)
 #argsparser.add_argument("-r","--redisIP",help="Country code of the observer ",type=str)
@@ -79,13 +86,13 @@ if args.client:
 else:
 	ljclient = 0
 
-if args.laser:
-	lasernumber = args.laser
+if args.Lasers:
+	lasernumber = args.Lasers
 else:
-	lasernumber = 0
+	lasernumber = 1
 
-if args.debug:
-	debug = args.laser
+if args.verbose:
+	debug = args.verbose
 else:
 	debug = 0
 
@@ -322,7 +329,7 @@ def DrawSolar(laser):
 # Stars 
 #
 
-StarsObjectShape = [(-50,30), (-30,-30), (30,-30), (10,30), (-50,30)]
+StarsObjectShape = [(-10,10), (-10,-10), (10,-10), (10,10), (-10,10)]
 
 def LoadHipparcos(ts):
 	global hipdata
@@ -543,6 +550,26 @@ def InitObserver(SkyCity, SkyCountryCode, time,ts):
 	RadecSkies(LaserSkies, AstroSkyTime)
 
 
+# Change Observer position by adding deltas (Gpslong, gpslat, elevation in decimal degree/meters) 
+def UpdateObserver(gpslatdelta, gpslongdelta, elevationdelta,time,ts):
+	global LaserSkies, Skylat, Skylong, SkyfieldTime, AstrObserver, SkyObserver
+	
+	Skylat += gpslatdelta
+	Skylong += gpslongdelta	
+	Skyelevation += elevationdelta	
+	AstroSkyTime = time
+	print ("AstroPy time", AstroSkyTime)
+	SkyfieldTime = ts.from_astropy(AstroSkyTime)
+	print("SkyfieldTime from AstropyUTC",SkyfieldTime.utc_iso())
+
+	AstrObserver = EarthLocation(lat = Skylat * u.deg, lon = Skylong * u.deg, height = Skyelevation * u.m,)
+	SkyObserver = earth + Topos(Skylat, Skylong)
+	RadecSkies(LaserSkies, AstroSkyTime)
+
+	UpdateSolar()
+	UpdateStars()
+	UpdateAnything()
+
 def NewTime(timeshift):
 
 	 SkyfieldTime += timeshift
@@ -555,20 +582,17 @@ def NewTime(timeshift):
 	 	UpdateAnything()
 
 
-#def handlerfunction(s, x, y):
-    # Will receive message data unpacked in s, x, y
-#    pass
-
-def OSChandler(address, s, x, y):
+def OSCstart(value):
     # Will receive message address, and message data flattened in s, x, y
-    print("Planetarium OSC server got address", address,"s",s,"x",x,"y",y)
-    pass
+    print("Planetarium OSC server got /planet/start with value", value)
+    
 
-
+def OSCUI(value):
+    # Will receive message address, and message data flattened in s, x, y
+    print("Planetarium OSC server got /planet/planetUI with value", value)
 
 def WebStatus(message):
 	lj3.Send("/status",message)
-
 
 #
 # Main part 
@@ -576,39 +600,42 @@ def WebStatus(message):
 	
 try:
 
-	lj3.OSCstart()
-	# Make server channels to receive packets.
-	#osc_udp_server("127.0.0.1", 3721, "localhost")
-	osc_udp_server("0.0.0.0", OSCinPort, "InPort")
-	
-	# Associate Python functions with message address patterns, using default
-	# argument scheme OSCARG_DATAUNPACK.
-	#osc_method("/planet/*", handlerfunction)
-	# Too, but request the message address pattern before in argscheme
-	osc_method("/planet/*", OSChandler, argscheme=osm.OSCARG_ADDRESS + osm.OSCARG_DATAUNPACK)
+	WebStatus("Planetarium")
 
+	# OSC Server callbacks
+	print("Starting OSC at 127.0.0.1 port",OSCinPort,"...")
+	osc_startup()
+	osc_udp_server("127.0.0.1", OSCinPort, "InPort")
+	osc_method("/planet/start*", OSCstart)
+	osc_method("/planet/planetUI*", OSCUI)
+
+	WebStatus("Load Cities.")
 	ts = load.timescale()
 	LoadCities()
+
 	SkyCity = 'Paris'
 	SkyCountryCode = 'FR'
+	WebStatus(SkyCity)
+
+	WebStatus("Solar System..")
 	LoadSolar()
+
+	WebStatus("Observer..")
 	InitObserver(SkyCity, SkyCountryCode, Time.now(),ts)
 
-	
+	WebStatus("Load Stars..")
 	LoadHipparcos(ts)
-
-
 	StarSelect()
 
-	#print()
-	#print ("Updating Sky Objects for current observer...")
-	#print()
+	WebStatus("Updating...")
 	print("Updating solar system (de421) objects position for observer at", Skylat, Skylong, "time", SkyfieldTime.utc_iso())
 	UpdateSolar()
-	#print ("Done.")
-	#print()
+
 	print("Updating stars for observer at", Skylat, Skylong, "time", SkyfieldTime.utc_iso())
 	UpdateStars(ts)
+
+	WebStatus("Ready")
+	lj3.Send("/planet/start",1)
 	print ("Done.")
 
 	# UpdateStars()    Todo
@@ -617,19 +644,28 @@ try:
 	DisplaySolar = False
 	DisplayOrientation = True
 	DisplayAnything = False
+	print("Start displaying on",lasernumber,"lasers")
 
 	while 1:
 
 		for laser in range(lasernumber):
 
+			#print ("Drawing laser",lasernumber)
 			if DisplayOrientation:
 				DrawOrientation(laser)
+				lj3.OSCframe()
+
 			if DisplaySolar:
 				DrawSolar(laser)
+				lj3.OSCframe()
+
 			if DisplayStars:
 				DrawStars(laser)
+				lj3.OSCframe()
+
 			if DisplayAnything:
 				DrawAnything()
+				lj3.OSCframe()
 
 			lj3.DrawPL(laser)
 			lj3.OSCframe()
@@ -644,6 +680,8 @@ except KeyboardInterrupt:
 
 finally:
 
+	WebStatus("Planet Exit")
+	print("Stopping OSC...")
 	lj3.OSCstop()
 
 print ("Fin du planetarium.")

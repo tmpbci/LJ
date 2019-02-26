@@ -46,6 +46,7 @@ def OSCstart():
 	#osc_udp_client(redisIP, 8002, "LJ 8002")
 
 def OSCframe():
+	#print("OSCprocess")
 	osc_process()
 
 # Properly close the system. Todo
@@ -55,14 +56,11 @@ def OSCstop():
 
 def Send(oscaddress,oscargs=''):
         
-    oscmsg = OSCMessage()
-    oscmsg.setAddress(oscaddress)
-    oscmsg.append(oscargs)
-    
-    #print ("sending to bhorosc : ",oscmsg)
     try:
         msg = oscbuildparse.OSCMessage(oscaddress, None, [oscargs])
         osc_send(msg, "LJ 8002")
+       	OSCframe()
+
     except:
         print ('Connection to LJ refused : died ?')
         pass
@@ -80,11 +78,6 @@ osc_udp_server("127.0.0.1", 3721, "localhost")
 osc_udp_server("0.0.0.0", 3724, "anotherserver")
 '''
 
-
-
-
-
-  
 
 
 ASCII_GRAPHICS = [

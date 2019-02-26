@@ -73,7 +73,7 @@ Bob could use /pl/2/0 and /pl/2/1 and Lisa could use /pl/2/2 and /pl/2/3.
 
 
 """
-
+from __future__ import absolute_import
 import types, time
 import gstt
 import homographyp
@@ -159,144 +159,153 @@ def Mouse(x1,y1,x2,y2):
 def handler(oscpath, args):
 
     print ""
-    print "Handler"
+    print "OSC handler in commands.py got oscpath[1] :",oscpath[1], "with args :",args
 
-    if oscpath[1] == "client" or oscpath[1] =="noteon" or oscpath[1]=="mouse":
+    # 2 incoming cases : generic or specific for a given lasernumber
+    # Need better programming 
+    if oscpath[1] == "client" or oscpath[1] =="noteon" or oscpath[1]=="mouse" or oscpath[1]=="emergency" or oscpath[1]=="simu" or oscpath[1]=="status" or oscpath[1]=="run" or oscpath[1]=="nozoid" or oscpath[1]=="planet"  or oscpath[1]=="live"  or oscpath[1]=="planet" :
+        
         if oscpath[1] == "client":
             LasClientChange(int(args[0]))
+
         elif oscpath[1] == "noteon":
             NoteOn(int(args[0]))
+
         elif oscpath[1] == "mouse":
             Mouse(int(args[0]),int(args[1]),int(args[2]),int(args[3]))
+        
+        # /emergency value (0 or 1) 
+        if oscpath[1] == "emergency":
+        
+            if args[0] == "1":
+                print "EMERGENCY MODE"
+                for laser in range(gstt.lasernumber):
+                    print "Black requested for laser ", laser
+                    BlackOn(laser)        
+            else:
+                for laser in range(gstt.lasernumber):
+                    print "Back to normal for laser ", laser
+                    UserOn(laser)
+
 
     else:
         pathlength = len(oscpath)
+
         if pathlength == 3:
             laser = int(oscpath[2])
         else:
             laser = int(oscpath[3])
-
-    print "args[0] :",args[0]," ", type(args[0])
     
-    # /grid/lasernumber value (0 or 1) 
-    if oscpath[1] == "grid":
-    
-        if args[0] == "1":
-            print "Grid requested for laser ", laser
-            GridOn(laser)     
-        else:
-            print "No grid for laser ", laser
-            UserOn(laser)
-
-
-    # /black/lasernumber value (0 or 1) 
-    if oscpath[1] == "black":
-    
-        if args[0] == "1":
-            print "Black requested for laser ", laser
-            BlackOn(laser)        
-        else:
-            print "No black for laser ", laser
-            UserOn(laser)
-
-    
-    # /ip/lasernumber value
-    if oscpath[1] == "ip":
-        print "New IP for laser ", laser
-        gstt.lasersIPS[laser]= args[0]
-        settings.Write()
-
-
-    # /kpps/lasernumber value
-    # Live change of kpps is not implemented in newdac.py. Change will effect next startup.
-    if oscpath[1] == "kpps":
-        print "New kpps for laser ", laser, " next startup", int(args[0])
-        gstt.kpps[laser]= int(args[0])
-        settings.Write()
-
-    # /angle/lasernumber value 
-    if oscpath[1] == "angle":
-        print "New Angle modification for laser ", oscpath[2], ":",  float(args[0])
-        gstt.finANGLE[laser] += float(args[0])
-        NewEDH(laser)
-        "New angle", gstt.finANGLE[laser]
+        print "args[0] :",args[0]," ", type(args[0])
         
-    # /intens/lasernumber value 
-    if oscpath[1] == "intens":
-        print "New intensity requested for laser ", laser, ":",  int(args[0])
-        print "Change not implemented yet"
-
-
-
-    # /resampler/lasernumber lsteps
-    # lsteps is a string like "[ (1.0, 8),(0.25, 3), (0.75, 3), (1.0, 10)]"
-    if oscpath[1] == "resampler":
-        Resampler(laser,args[0])
+        # /grid/lasernumber value (0 or 1) 
+        if oscpath[1] == "grid":
         
-
-    # /mouse/lasernumber value (0 or 1) 
-    if oscpath[1] == "mouse":
+            if args[0] == "1":
+                print "Grid requested for laser ", laser
+                GridOn(laser)     
+            else:
+                print "No grid for laser ", laser
+                UserOn(laser)
+        
+        
+        # /ip/lasernumber value
+        if oscpath[1] == "ip":
+            print "New IP for laser ", laser
+            gstt.lasersIPS[laser]= args[0]
+            settings.Write()
     
-        if args[0] == "1":
-            print "Mouse requested for laser ", oscpath[2]
-            gstt.Laser = oscpath[2]
-        else:
-            print "No mouse for laser ",  oscpath[2]
-
-
-    # /swap/X/lasernumber value (0 or 1) 
-    if oscpath[1] == "swap" and oscpath[2] == "X":
     
-        print "swapX was", gstt.swapX[laser]
-        if args[0] == "0":
-            print "swap X -1 for laser ", laser
-            gstt.swapX[laser]= -1
-            NewEDH(laser)
-
-        else:
-            print "swap X 1 for laser ",  laser
-            gstt.swapX[laser]= 1
-            NewEDH(laser)
-
-    # /swap/Y/lasernumber value (0 or 1) 
-    if oscpath[1] == "swap" and oscpath[2] == "Y":
-
-        print "swapY was", gstt.swapX[laser]
-        if args[0] == "0":
-            print "swap Y -1 for laser ",  laser
-            gstt.swapY[laser]= -1
-            NewEDH(laser)
-        else:
-            print "swap Y 1 for laser ",  laser
-            gstt.swapY[laser]= 1
-            NewEDH(laser)
-
-    # /loffset/X/lasernumber value
-    if oscpath[1] == "loffset" and oscpath[2] == "X":
-        print "offset/X laser", laser, "modified to",  args[0]
-        gstt.centerX[laser] -=  int(args[0])
-        NewEDH(laser)
+        # /kpps/lasernumber value
+        # Live change of kpps is not implemented in newdac.py. Change will effect next startup.
+        if oscpath[1] == "kpps":
+            print "New kpps for laser ", laser, " next startup", int(args[0])
+            gstt.kpps[laser]= int(args[0])
+            settings.Write()
     
-    # /loffset/Y/lasernumber value
-    if oscpath[1] == "loffset" and oscpath[2] == "Y":
-        print "offset/Y laser", laser, "modified to",  args[0]
-        gstt.centerY[laser] -=  int(args[0])
-        NewEDH(laser)
-
-
-    # /scale/X/lasernumber value
-    if oscpath[1] == "scale" and oscpath[2] == "X":
-        if gstt.zoomX[laser] + int(args[0]) > 0:
-            gstt.zoomX[laser] += int(args[0])
-            print "scale/X laser", laser , "modified to",  gstt.zoomX[laser]
+        # /angle/lasernumber value 
+        if oscpath[1] == "angle":
+            print "New Angle modification for laser ", oscpath[2], ":",  float(args[0])
+            gstt.finANGLE[laser] += float(args[0])
             NewEDH(laser)
-
-    # /scale/Y/lasernumber value
-    if oscpath[1] == "scale" and oscpath[2] == "Y":
-        if gstt.zoomY[laser] + int(args[0]) > 0:
-            gstt.zoomY[laser] += int(args[0])
-            print "scale/Y laser",  laser, "modified to",  gstt.zoomY[laser]
+            "New angle", gstt.finANGLE[laser]
+            
+        # /intens/lasernumber value 
+        if oscpath[1] == "intens":
+            print "New intensity requested for laser ", laser, ":",  int(args[0])
+            print "Change not implemented yet"
+    
+    
+    
+        # /resampler/lasernumber lsteps
+        # lsteps is a string like "[ (1.0, 8),(0.25, 3), (0.75, 3), (1.0, 10)]"
+        if oscpath[1] == "resampler":
+            Resampler(laser,args[0])
+            
+    
+        # /mouse/lasernumber value (0 or 1) 
+        if oscpath[1] == "mouse":
+        
+            if args[0] == "1":
+                print "Mouse requested for laser ", oscpath[2]
+                gstt.Laser = oscpath[2]
+            else:
+                print "No mouse for laser ",  oscpath[2]
+    
+    
+        # /swap/X/lasernumber value (0 or 1) 
+        if oscpath[1] == "swap" and oscpath[2] == "X":
+        
+            print "swapX was", gstt.swapX[laser]
+            if args[0] == "0":
+                print "swap X -1 for laser ", laser
+                gstt.swapX[laser]= -1
+                NewEDH(laser)
+    
+            else:
+                print "swap X 1 for laser ",  laser
+                gstt.swapX[laser]= 1
+                NewEDH(laser)
+    
+        # /swap/Y/lasernumber value (0 or 1) 
+        if oscpath[1] == "swap" and oscpath[2] == "Y":
+    
+            print "swapY was", gstt.swapX[laser]
+            if args[0] == "0":
+                print "swap Y -1 for laser ",  laser
+                gstt.swapY[laser]= -1
+                NewEDH(laser)
+            else:
+                print "swap Y 1 for laser ",  laser
+                gstt.swapY[laser]= 1
+                NewEDH(laser)
+    
+        # /loffset/X/lasernumber value
+        if oscpath[1] == "loffset" and oscpath[2] == "X":
+            print "offset/X laser", laser, "modified to",  args[0]
+            gstt.centerX[laser] -=  int(args[0])
             NewEDH(laser)
+        
+        # /loffset/Y/lasernumber value
+        if oscpath[1] == "loffset" and oscpath[2] == "Y":
+            print "offset/Y laser", laser, "modified to",  args[0]
+            gstt.centerY[laser] -=  int(args[0])
+            NewEDH(laser)
+    
+    
+        # /scale/X/lasernumber value
+        if oscpath[1] == "scale" and oscpath[2] == "X":
+            if gstt.zoomX[laser] + int(args[0]) > 0:
+                gstt.zoomX[laser] += int(args[0])
+                print "scale/X laser", laser , "modified to",  gstt.zoomX[laser]
+                NewEDH(laser)
+    
+        # /scale/Y/lasernumber value
+        if oscpath[1] == "scale" and oscpath[2] == "Y":
+            if gstt.zoomY[laser] + int(args[0]) > 0:
+                gstt.zoomY[laser] += int(args[0])
+                print "scale/Y laser",  laser, "modified to",  gstt.zoomY[laser]
+                NewEDH(laser)
 
 '''
 For reference values of EDH modifier if assign to keyboard keys (was alignp)

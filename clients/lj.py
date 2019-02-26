@@ -20,7 +20,7 @@ Sam Neurohack
 
 import math
 import redis
-from OSC import OSCServer, OSCClient, OSCMessage
+#from OSC import OSCServer, OSCClient, OSCMessage
 
 redisIP = '127.0.0.1'
 r = redis.StrictRedis(host=redisIP, port=6379, db=0)
@@ -39,6 +39,7 @@ oscmsg = OSCMessage()
 osclientlj.connect((redisIP, 8002)) 
 '''
 
+'''
 def Send(oscaddress,oscargs=''):
         
     oscmsg = OSCMessage()
@@ -53,7 +54,7 @@ def Send(oscaddress,oscargs=''):
         print ('Connection to LJ refused : died ?')
         pass
     #time.sleep(0.001
-
+'''
 
 def WebStatus(message):
 	Send("/status",message)
@@ -249,7 +250,7 @@ def rPolyLineOneColor(xy_list, c, PL , closed, xpos = 0, ypos =0, resize =0.7, r
 
  
 def LinesPL(PL):
-	print "Stupido !! your code is to old : use DrawPL() instead of LinesPL()"
+	print ("Stupido !! your code is to old : use DrawPL() instead of LinesPL()")
 	DrawPL(PL)
 
 def DrawPL(PL):

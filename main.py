@@ -14,7 +14,7 @@ todo :
 
 
 '''
-from __future__ import absolute_import
+
 import time
 import gstt
 import redis
@@ -78,8 +78,8 @@ print "Laser client number :",gstt.LasClientNumber
 serverIP = gstt.LjayServerIP
 print "Redis IP :", serverIP
 
-bhoroscIP = gstt.oscIPin
-print "Bhorosc IP :", bhoroscIP
+extoscIP = gstt.oscIPin
+print "extosc IP :", extoscIP
 
 nozoscIP = gstt.nozoscip
 print "Nozosc IP :", nozoscIP
@@ -94,15 +94,15 @@ print "Lasers requested :", gstt.LaserNumber
 # Websocket listening port
 wsPORT = 9001
 
-# With Bhorosc
+# With extosc
 # OSC Server : accept OSC message on port 8002 
 #oscIPin = "192.168.1.10"s
-bhoroscIPin = serverIP
-bhoroscPORTin = 8002
+extoscIPin = serverIP
+extoscPORTin = 8002
 
 # OSC Client : to send OSC message to an IP port 8001
-bhoroscIPout = bhoroscIP 
-bhoroscPORTout = 8001
+extoscIPout = extoscIP 
+extoscPORTout = 8001
 
 
 # With Nozoid
@@ -110,9 +110,14 @@ bhoroscPORTout = 8001
 NozoscIPout = nozoscIP
 NozoscPORTout = 8003
 
-#print bhoroscIPin
 
-oscserver = OSCServer( (bhoroscIPin, bhoroscPORTin) )
+# With Planetarium
+# OSC Client : to send OSC message to planetarium inport 8005
+planetIPout = nozoscIP
+planetPORTout = 8005
+
+
+oscserver = OSCServer( (extoscIPin, extoscPORTin) )
 oscserver.timeout = 0
 OSCRunning = True
 
@@ -122,33 +127,36 @@ def handle_timeout(self):
 
 oscserver.handle_timeout = types.MethodType(handle_timeout, oscserver)
 
-osclientbhorosc = OSCClient()
+osclientext = OSCClient()
 oscmsg = OSCMessage()
-osclientbhorosc.connect((bhoroscIPout, bhoroscPORTout)) 
+osclientext.connect((extoscIPout, extoscPORTout)) 
 
-# send UI string as OSC message to Bhorosc 8001
-# sendbhorosc(oscaddress, [arg1, arg2,...])
+# send UI string as OSC message to extosc 8001
+# sendextosc(oscaddress, [arg1, arg2,...])
 
-def sendbhorosc(oscaddress,oscargs=''):
+def sendextosc(oscaddress,oscargs=''):
         
     oscmsg = OSCMessage()
     oscmsg.setAddress(oscaddress)
     oscmsg.append(oscargs)
     
-    #print ("sending to bhorosc : ",oscmsg)
+    #print ("sending to extosc : ",oscmsg)
     try:
-        osclientbhorosc.sendto(oscmsg, (bhoroscIPout, bhoroscPORTout))
+        osclientext.sendto(oscmsg, (extoscIPout, extoscPORTout))
         oscmsg.clearData()
     except:
-        print ('Connection to bhorosc refused : died ?')
+        print ('Connection to extosc IP', extoscIPout, 'port', extoscPORTout,'refused : died ?')
         sendWSall("/on 0")
         sendWSall("/status NoLJay")
-        pass
+        
     #time.sleep(0.001)
 
 
 # send UI string as OSC message to Nozosc 8003
 # sendnozosc(oscaddress, [arg1, arg2,...])
+
+osclientnozoid = OSCClient()
+osclientnozoid.connect((NozoscIPout, NozoscPORTout)) 
 
 def sendnozosc(oscaddress,oscargs=''):
         
@@ -156,30 +164,53 @@ def sendnozosc(oscaddress,oscargs=''):
     oscmsg.setAddress(oscaddress)
     oscmsg.append(oscargs)
     
-    #print ("sending to nozosc : ",oscmsg)
+    print "Sending OSC to Nozosc server :", oscaddress,'with args', oscargs 
     try:
-        osclientnozosc.sendto(oscmsg, (NozoscIPout, NozoscPORTout))
+        osclientnozoid.sendto(oscmsg, (NozoscIPout, NozoscPORTout))
         oscmsg.clearData()
     except:
-        print ('Connection to nozosc refused : died ?')
+        print 'Connection to nozosc IP', NozoscIPout,'port', NozoscPORTout,' refused : died ?'
         sendWSall("/on 0")
         sendWSall("/status No Nozosc ")
-        pass
+    
     #time.sleep(0.001)
 
+# send UI string as OSC message to Planet 8005
+# sendplanet(oscaddress, [arg1, arg2,...])
+
+osclientplanet = OSCClient()
+osclientplanet.connect((planetIPout, planetPORTout)) 
+
+def sendplanet(oscaddress,oscargs=''):
+        
+    oscmsg = OSCMessage()
+    oscmsg.setAddress(oscaddress)
+    oscmsg.append(oscargs)
+    
+    print "Sending OSC to Planet server :", oscaddress,'with args :', oscargs 
+    try:
+        osclientplanet.sendto(oscmsg, (planetIPout, planetPORTout))
+        oscmsg.clearData()
+    except:
+        print 'OSC send to planet IP', planetIPout, 'port', planetPORTout, "refused : died ?"
+        sendWSall("/planet/start 0")
+        sendWSall("/status No Planet")
+        
+    #time.sleep(0.001)
 
 # OSC default path handler : send incoming OSC message to UI via websocket 9001
 def handler(path, tags, args, source):
 
     oscpath = path.split("/")
     print ""
-    print "OSC said : ", path, oscpath, args
+    print "OSC default handler in main said : path", path," oscpath ", oscpath," args", args
     #print "debug", gstt.debug
-    if gstt.debug >0:
-        print ""
-        print "default handler"
-        print "OSC said : ", path, oscpath, args
+    #if gstt.debug >0:
+    #    print "default handler"
+    #    print "OSC said  path", path," oscpath ", oscpath," args", args
+    
     sendWSall(path + " " + str(args[0]))
+    
     commands.handler(oscpath,args)
 
 
@@ -216,8 +247,8 @@ def osc_thread():
                 
                     
                     lack= r.get('/lack/'+str(laserid))
-                    if gstt.debug >0:
-                        print "laserid", laserid,"lack",lack
+                    if gstt.debug >1:
+                        print "laserid", laserid, "lack", lack
                     if lack == 'a':                             # Dac sent ACK ("a") -> led is green (1)
                         sendWSall("/lack/" + str(laserid) +" 1")
                     if lack == 'F':                             # Dac sent FULL ("F") -> led is orange (5)
@@ -280,27 +311,61 @@ def client_left(client, server):
     print("WS Client(%d) disconnected" % client['id'])
 
 
-# Called when a WS client sends a message
+# Called for each ws received message.
 def message_received(client, server, message):
     if len(message) > 200:
         message = message[:200]+'..'    
 
-    if gstt.debug >0:
-        print ("")
-        print("WS Client(%d) said: %s" % (client['id'], message))
+    #if gstt.debug >0:
+    #    print ("")
+    #    print("WS Client(%d) said: %s" % (client['id'], message))
     
-    print("WS Client(%d) said: %s" % (client['id'], message))
+    print("")
+   
     oscpath = message.split(" ")
-    args[0] = str(oscpath[1]) 
-    #print oscpath[0].split("/"),oscpath[1]
-    commands.handler(oscpath[0].split("/"),args)
-    
-    # current UI has no dedicated off button so /on 0 trigs /off to bhorosc
-    if oscpath[0] == "/on":
-        if oscpath[1] == "1":
-            sendbhorosc("/on")
+    print "WS Client", client['id'], "said :", message, "splitted in an oscpath :", oscpath
+
+    # If message included "planet" forward the message as OSC to planet IP port 8005
+    if oscpath[0].find("planet") != -1:
+        if len(oscpath) == 1:
+            sendplanet(oscpath[0], oscargs='noargs')
         else:
-            sendbhorosc("/off")
+            sendplanet(oscpath[0], oscargs=oscpath[1])
+
+    # If message included "nozoid" forward the message as OSC to nozoid IP port 8003
+    elif oscpath[0].find("nozoid") != -1:
+        if len(oscpath) == 1:
+            sendnozosc(oscpath[0], oscargs='noargs')
+        else:
+            sendnozosc(oscpath[0], oscargs=oscpath[1])
+
+     # If message included "ai" do something
+    elif oscpath[0].find("ai") != -1:
+        print "ai order ", oscpath
+
+    # If message included "lissa" do something
+    elif oscpath[0].find("lissa") != -1:
+        print "lissa order ", oscpath
+
+     # If message included "vj" do something
+    elif oscpath[0].find("vj") != -1:
+        print "VJ order ", oscpath
+
+    elif len(oscpath) > 1:
+        args[0] = str(oscpath[1]) 
+        #print oscpath[0].split("/"),oscpath[1]
+
+    # current UI has no dedicated off button so /on 0 trigs /off to extosc
+    elif oscpath[0] == "/on":
+        if oscpath[1] == "1":
+            sendextosc("/on")
+        else:
+            sendextosc("/off")
+
+    else:
+        args[0] = "noargs"
+        commands.handler(oscpath[0].split("/"),args)
+
     
     # if needed a loop back : WS Client -> server -> WS Client
     #sendWSall("ws"+message)
@@ -367,10 +432,10 @@ try:
     # Websocket startup
     server = WebsocketServer(wsPORT,host=serverIP)
     
-    # Launch OSC thread listening to Bhorosc
+    # Launch OSC thread listening to extosc
     print ""
     print "Launching OSC server..."
-    print "at", bhoroscIPin, "port",str(bhoroscPORTin)
+    print "at", extoscIPin, "port",str(extoscPORTin)
     print "Will update webUI dac status every second"
     oscserver.addMsgHandler( "/noteon", commands.NoteOn )
     # Default OSC handler for all OSC incoming message
