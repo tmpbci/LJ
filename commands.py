@@ -43,6 +43,9 @@ lsteps is a string like "[ (1.0, 8),(0.25, 3), (0.75, 3), (1.0, 10)]"
 
 /order value : instruct tracer what to do.
 
+/planet will be forwarded to planetarium client.
+/nozoid will be forwarded to nozoid client.
+
 0 : display user pointlist with current client key. See below for client key.
 1 : pull in redis a new correction matrix (EDH) 
 2 : display black 
@@ -82,6 +85,8 @@ import redis
 
 
 r = redis.StrictRedis(host=gstt.LjayServerIP , port=6379, db=0)
+
+GenericCommands = ["start","ljclient","clientnumber","noteon","pong","mouse","emergency","simu","status","run","nozoid","planet","live","words","ai","bank0"]
 
 
     
@@ -161,16 +166,22 @@ def handler(oscpath, args):
     print ""
     print "OSC handler in commands.py got oscpath[1] :",oscpath[1], "with args :",args
 
-    # 2 incoming cases : generic or specific for a given lasernumber
-    # Need better programming 
-    if oscpath[1] == "client" or oscpath[1] =="noteon" or oscpath[1]=="mouse" or oscpath[1]=="emergency" or oscpath[1]=="simu" or oscpath[1]=="status" or oscpath[1]=="run" or oscpath[1]=="nozoid" or oscpath[1]=="planet"  or oscpath[1]=="live"  or oscpath[1]=="planet" :
-        
-        if oscpath[1] == "client":
+    # 2 incoming cases : generic or specific for a given lasernumber :
+    # Generic : Commands without a laser number
+    #if oscpath[1] == "client" or oscpath[1]=="clientnumber" or oscpath[1] =="noteon" or oscpath[1]=="pong" or oscpath[1]=="mouse" or oscpath[1]=="emergency" or oscpath[1]=="simu" or oscpath[1]=="status" or oscpath[1]=="run" or oscpath[1]=="nozoid" or oscpath[1]=="planet"  or oscpath[1]=="live"  or oscpath[1]=="planet" :
+    
+    if oscpath[1] in GenericCommands:   
+
+        if oscpath[1] == "ljclient":
             LasClientChange(int(args[0]))
 
         elif oscpath[1] == "noteon":
             NoteOn(int(args[0]))
 
+        elif oscpath[1] == "pong":
+            print ""
+            print "Got pong from ",args
+            
         elif oscpath[1] == "mouse":
             Mouse(int(args[0]),int(args[1]),int(args[2]),int(args[3]))
         
@@ -187,7 +198,7 @@ def handler(oscpath, args):
                     print "Back to normal for laser ", laser
                     UserOn(laser)
 
-
+    # Commands with a laser number
     else:
         pathlength = len(oscpath)
 
@@ -207,7 +218,7 @@ def handler(oscpath, args):
             else:
                 print "No grid for laser ", laser
                 UserOn(laser)
-        
+
         
         # /ip/lasernumber value
         if oscpath[1] == "ip":

@@ -10,10 +10,17 @@ LICENCE : CC
 '''
 
 import redis
-import lj
+import lj3
 import math
 import time
 import argparse
+
+from osc4py3.as_eventloop import *
+from osc4py3 import oscbuildparse
+#from osc4py3 import oscmethod as osm
+from osc4py3.oscmethod import * 
+
+OSCinPort = 8004
 
 print ("")
 print ("Arguments parsing if needed...")
@@ -21,6 +28,7 @@ argsparser = argparse.ArgumentParser(description="Text Cycling for LJ")
 argsparser.add_argument("-r","--redisIP",help="IP of the Redis server used by LJ (127.0.0.1 by default) ",type=str)
 argsparser.add_argument("-c","--client",help="LJ client number (0 by default)",type=int)
 argsparser.add_argument("-l","--laser",help="Laser number to be displayed (0 by default)",type=int)
+argsparser.add_argument("-v","--verbose",help="Verbosity level (0 by default)",type=int)
 
 args = argsparser.parse_args()
 
@@ -41,7 +49,14 @@ if args.redisIP  != None:
 else:
 	redisIP = '127.0.0.1'
 
-lj.Config(redisIP,ljclient)
+
+if args.verbose:
+	debug = args.verbose
+else:
+	debug = 0
+
+
+lj3.Config(redisIP,ljclient)
 
 
 width = 800
@@ -94,6 +109,13 @@ def rgb2int(r,g,b):
 	return int('0x%02x%02x%02x' % (r,g,b),0)
 	
 
+def OSCljclient(value):
+	# Will receive message address, and message data flattened in s, x, y
+	print("I got /glyph/ljclient with value", value)
+	ljclient = value
+	lj3.LjClient(ljclient)
+
+
 def Proj(x,y,z,angleX,angleY,angleZ):
 
 		rad = angleX * math.pi / 180
@@ -130,57 +152,81 @@ def Run():
 	Left = []
 	Right = []
 	counter =0
+	WebStatus("LaserGlyph")
 
-	while 1:
+	# OSC Server callbacks
+	print("Starting OSC at 127.0.0.1 port",OSCinPort,"...")
+	osc_startup()
+	osc_udp_server("127.0.0.1", OSCinPort, "InPort")
+	osc_method("/ping*", lj3.OSCping)
+	osc_method("/glyph/ljclient", OSCljclient)
 
-		Left = []
-		Right = []
+	try:
 
-		x = vertices[0][0]
-		y = vertices[0][1]
-		z = vertices[0][2]
+		while 1:
+			Left = []
+			Right = []
+	
+			x = vertices[0][0]
+			y = vertices[0][1]
+			z = vertices[0][2]
+	
+			# The cube start always with vertice 0
+			# LJ tracers will "move" the laser to this first point in black, then move to the next with second point color.
+			# For more accuracy in dac emulator, repeat this first point.
+	
+			# Cube Y axis rotation of 'counter' angle and 3d-2d Proj function. 
+			#Left.append( Proj(x+LeftShift(z*5),y,z,0,counter,0))
+			#Right.append(Proj(x+RightShift(z*5),y,z,0,counter,0))	
+	
+	
+			# Add all the cube points face by face.
+			for fa in faces:
+				for point in fa:
+					x = vertices[point][0]
+					y = vertices[point][1]
+					z = vertices[point][2]
+	
+					Left.append(Proj(x+LeftShift(z*25),y,z,0,counter,0))
+					Right.append(Proj(x+RightShift(z*25),y,z,0,counter,0))	
+	
+	
+			# Drawing step, 2 possibilities 
+	
+			# Red and Green drawn by laser 0
+			lj3.PolyLineOneColor(Left,  c = red,    PL = 0, closed = True)
+			lj3.PolyLineOneColor(Right, c = green,   PL = 0, closed = True)
+			lj3.DrawPL(0)
+	
+			'''
+			# Red on laser 1 and green on laser 2
+			lj3.PolyLineOneColor(Left,  c = red,    PL = 1, closed = True)
+			lj3.PolyLineOneColor(Right, c = green,   PL = 2, closed = True)
+			lj3.DrawPL(1)
+			lj3.DrawPL(2)		
+	
+			'''
+			
+			time.sleep(0.1)
+	
+			counter += 1
+			if counter >360:
+				counter =0
 
-		# The cube start always with vertice 0
-		# LJ tracers will "move" the laser to this first point in black, then move to the next with second point color.
-		# For more accuracy in dac emulator, repeat this first point.
+	except KeyboardInterrupt:
+		pass
 
-		# Cube Y axis rotation of 'counter' angle and 3d-2d Proj function. 
-		#Left.append( Proj(x+LeftShift(z*5),y,z,0,counter,0))
-		#Right.append(Proj(x+RightShift(z*5),y,z,0,counter,0))	
+	# Gently stop on CTRL C
 
+	finally:
 
-		# Add all the cube points face by face.
-		for fa in faces:
-			for point in fa:
-				x = vertices[point][0]
-				y = vertices[point][1]
-				z = vertices[point][2]
+		WebStatus("Glyph Exit")
+		print("Stopping OSC...")
+		lj3.OSCstop()
+		pass
 
-				Left.append( Proj(x+LeftShift(z*25),y,z,0,counter,0))
-				Right.append(Proj(x+RightShift(z*25),y,z,0,counter,0))	
+	print ("LaserGlyph Stopped.")
 
-
-		# Drawing step, 2 possibilities 
-
-		# Red and Green drawn by laser 0
-		lj.PolyLineOneColor(Left,  c = red,    PL = 0, closed = True)
-		lj.PolyLineOneColor(Right, c = green,   PL = 0, closed = True)
-		lj.DrawPL(0)
-
-		'''
-		# Red on laser 1 and green on laser 2
-		lj.PolyLineOneColor(Left,  c = red,    PL = 1, closed = True)
-		lj.PolyLineOneColor(Right, c = green,   PL = 2, closed = True)
-		lj.DrawPL(1)
-		lj.DrawPL(2)		
-
-		'''
-		
-		time.sleep(0.1)
-
-		counter += 1
-		if counter >360:
-			counter =0
 
 white = rgb2int(255,255,255)
 red = rgb2int(255,0,0)

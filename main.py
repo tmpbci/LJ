@@ -2,16 +2,26 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Python -*-
 '''
-LJ Laser Server v0.8
+LJ Laser Server v0.8.1
 
 Laser server + webUI servers (ws + OSC)
 
 - get point list to draw : /pl/lasernumber
 - for report /lstt/lasernumber /lack/lasernumber /cap/lasernumber
 - A nice ws debug tool : websocat 
+- a "plugin" is a code that send point to LJ. Plugins if they have an open OSC port can be checked and restart if in the same computer. 
 
-todo :
+Todo : 
 
+- If no plugin ping is not received, restart the plugin.
+- upgrade to python3
+
+
+All used ports: 
+
+8002 OSC incoming
+9001 WS communication with WebGUI 
+Plugins Ports (see LJ.conf)
 
 '''
 
@@ -22,8 +32,8 @@ import redis
 
 print ""
 print ""
-print "LJ Laser Servers"
-print "v0.8.0"
+print "LJ Laser Server"
+print "v0.8.1"
 print ""
 
 import settings
@@ -39,11 +49,15 @@ import homographyp
 import commands
 import font1
 
+import subprocess
+import sys
+import os
 
 from OSC import OSCServer, OSCClient, OSCMessage
 from websocket_server import WebsocketServer
 #import socket
 import types, thread, time
+import plugins
 
 r = redis.StrictRedis(host=gstt.LjayServerIP , port=6379, db=0)
 args =[0,0]
@@ -108,14 +122,18 @@ extoscPORTout = 8001
 # With Nozoid
 # OSC Client : to send OSC message to Nozoid inport 8003
 NozoscIPout = nozoscIP
-NozoscPORTout = 8003
+NozoscPORTout = plugins.Port("nozoid")
 
 
 # With Planetarium
 # OSC Client : to send OSC message to planetarium inport 8005
 planetIPout = nozoscIP
-planetPORTout = 8005
+planetPORTout = plugins.Port("planet")
 
+# With Bank0
+# OSC Client : to send OSC message to bank0 inport 8010
+bank0IPout = nozoscIP
+bank0PORTout = plugins.Port("bank0")
 
 oscserver = OSCServer( (extoscIPin, extoscPORTin) )
 oscserver.timeout = 0
@@ -127,6 +145,7 @@ def handle_timeout(self):
 
 oscserver.handle_timeout = types.MethodType(handle_timeout, oscserver)
 
+'''
 osclientext = OSCClient()
 oscmsg = OSCMessage()
 osclientext.connect((extoscIPout, extoscPORTout)) 
@@ -198,6 +217,31 @@ def sendplanet(oscaddress,oscargs=''):
         
     #time.sleep(0.001)
 
+# send UI string as OSC message to Bank 0 8010
+# sendbank0(oscaddress, [arg1, arg2,...])
+
+osclientbank0 = OSCClient()
+osclientbank0.connect((planetIPout, planetPORTout)) 
+
+def sendbank0(oscaddress,oscargs=''):
+        
+    oscmsg = OSCMessage()
+    oscmsg.setAddress(oscaddress)
+    oscmsg.append(oscargs)
+    
+    print "Sending OSC to Bank0 server :", oscaddress,'with args :', oscargs 
+    try:
+        osclientbank0.sendto(oscmsg, (bank0IPout, bank0PORTout))
+        oscmsg.clearData()
+    except:
+        print 'OSC send to bank0 IP', bank0IPout, 'port', bank0PORTout, "refused : died ?"
+        sendWSall("/bank0/start 0")
+        sendWSall("/status No Bank0")
+        
+    #time.sleep(0.001)
+
+'''
+
 # OSC default path handler : send incoming OSC message to UI via websocket 9001
 def handler(path, tags, args, source):
 
@@ -210,7 +254,6 @@ def handler(path, tags, args, source):
     #    print "OSC said  path", path," oscpath ", oscpath," args", args
     
     sendWSall(path + " " + str(args[0]))
-    
     commands.handler(oscpath,args)
 
 
@@ -280,14 +323,12 @@ def osc_thread():
             traceback.print_tb(sys.exc_info()[2])
             print "\n"
 
-
-
 #
 # Websocket part
 # 
 
 # Called for every WS client connecting (after handshake)
-def new_client(client, server):
+def new_client(client, wserver):
 
     print("New WS client connected and was given id %d" % client['id'])
     sendWSall("/status Hello %d" % client['id'])
@@ -307,12 +348,13 @@ def new_client(client, server):
             sendWSall("/swap/Y/" + str(laserid)+ " 0")
 
 # Called for every WS client disconnecting
-def client_left(client, server):
+def client_left(client, wserver):
     print("WS Client(%d) disconnected" % client['id'])
 
 
-# Called for each ws received message.
-def message_received(client, server, message):
+# Called for each WS received message.
+def message_received(client, wserver, message):
+
     if len(message) > 200:
         message = message[:200]+'..'    
 
@@ -325,19 +367,65 @@ def message_received(client, server, message):
     oscpath = message.split(" ")
     print "WS Client", client['id'], "said :", message, "splitted in an oscpath :", oscpath
 
-    # If message included "planet" forward the message as OSC to planet IP port 8005
-    if oscpath[0].find("planet") != -1:
-        if len(oscpath) == 1:
-            sendplanet(oscpath[0], oscargs='noargs')
-        else:
-            sendplanet(oscpath[0], oscargs=oscpath[1])
+    for plugin in gstt.plugins.keys():
+         if plugins.Send(plugin,oscpath):
+            print "Plugin", plugin, "processed",oscpath
+    '''
+    if plugins.Send("planet",oscpath):
+        pass
 
-    # If message included "nozoid" forward the message as OSC to nozoid IP port 8003
-    elif oscpath[0].find("nozoid") != -1:
-        if len(oscpath) == 1:
-            sendnozosc(oscpath[0], oscargs='noargs')
+    elif plugins.Send("nozoid",oscpath):
+        pass
+
+    elif plugins.Send("ai",oscpath):
+        pass
+
+    elif plugins.Send("lissa",oscpath):
+        pass
+
+    elif plugins.Send("bank0",oscpath):
+        pass
+
+    elif plugins.Send("simu",oscpath):
+        pass
+
+    elif len(oscpath) > 1:
+        args[0] = str(oscpath[1]) 
+        commands.handler(oscpath[0].split("/"),args)
+        #print oscpath[0].split("/"),oscpath[1]
+                                                                                               
+    
+    # current UI has no dedicated off button so /on 0 trigs /off to extosc
+    if oscpath[0] == "/on":
+        if oscpath[1] == "1":
+            sendextosc("/on")
         else:
-            sendnozosc(oscpath[0], oscargs=oscpath[1])
+            sendextosc("/off")
+    '''
+
+    if len(oscpath) == 1:
+        args[0] = "noargs"
+        commands.handler(oscpath[0].split("/"),args)
+    
+
+    '''
+    # I message included "nozoid" forward the message as OSC to nozoid IP port 8003
+    elif oscpath[0].find("nozoid") != -1:
+
+        if plugins.Ping("nozoid"):
+
+            sendWSall("/nozoid/start 1")
+
+            if oscpath[0].find("start") != -1:
+                print "Nozoid 0",oscpath[0],"1", oscpath[1]
+            
+            if len(oscpath) == 1:
+                sendnozosc(oscpath[0], oscargs='noargs')
+            else:
+                sendnozosc(oscpath[0], oscargs=oscpath[1])
+        else:
+            sendWSall("/status Nozoid offline")
+            sendWSall("/planet/start 0")
 
      # If message included "ai" do something
     elif oscpath[0].find("ai") != -1:
@@ -347,26 +435,19 @@ def message_received(client, server, message):
     elif oscpath[0].find("lissa") != -1:
         print "lissa order ", oscpath
 
-     # If message included "vj" do something
-    elif oscpath[0].find("vj") != -1:
-        print "VJ order ", oscpath
+    # If message included "bank0" do something
+    elif oscpath[0].find("bank0") != -1:
 
-    elif len(oscpath) > 1:
-        args[0] = str(oscpath[1]) 
-        #print oscpath[0].split("/"),oscpath[1]
-
-    # current UI has no dedicated off button so /on 0 trigs /off to extosc
-    elif oscpath[0] == "/on":
-        if oscpath[1] == "1":
-            sendextosc("/on")
+        if plugins.Ping("bank0"):
+           if len(oscpath) == 1:
+               sendbank0(oscpath[0], oscargs='noargs')
+           else:
+               sendbank0(oscpath[0], oscargs=oscpath[1])
         else:
-            sendextosc("/off")
+            sendWSall("/status Bank0 offline")
+    '''
 
-    else:
-        args[0] = "noargs"
-        commands.handler(oscpath[0].split("/"),args)
-
-    
+ 
     # if needed a loop back : WS Client -> server -> WS Client
     #sendWSall("ws"+message)
 
@@ -378,7 +459,7 @@ def handle_timeout(self):
 def sendWSall(message):
     #if gstt.debug >0:
         #print("WS sending %s" % (message))
-    server.send_message_to_all(message)
+    wserver.send_message_to_all(message)
     
 
 
@@ -425,12 +506,14 @@ if lasernumber >2:
     print "Launching Laser 3 Process..."
     dac_worker3.start()
 
+
 # Main loop do nothing. Maybe do the webui server ?
 try:
     #while True:
     
     # Websocket startup
-    server = WebsocketServer(wsPORT,host=serverIP)
+    wserver = WebsocketServer(wsPORT,host=serverIP)
+    plugins.Init(wserver)
     
     # Launch OSC thread listening to extosc
     print ""
@@ -444,13 +527,13 @@ try:
     
 
 
-    #print server
+    #print wserver
     print ""
     print "Launching webUI Websocket server..."
     print "at", serverIP, "port",wsPORT
-    server.set_fn_new_client(new_client)
-    server.set_fn_client_left(client_left)
-    server.set_fn_message_received(message_received)
+    wserver.set_fn_new_client(new_client)
+    wserver.set_fn_client_left(client_left)
+    wserver.set_fn_message_received(message_received)
     print ""
     print "Resetting all Homographies.."
     for laserid in range(0,gstt.LaserNumber):  
@@ -458,7 +541,7 @@ try:
         
     print ""
     print "ws server running forver..."
-    server.run_forever()
+    wserver.run_forever()
 
 
 except KeyboardInterrupt:

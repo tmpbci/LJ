@@ -8,7 +8,7 @@
 
 	function noMenu() {
 		// Set all central menu buttons with normal button style
-	   var x = document.getElementById("align");
+	  var x = document.getElementById("align");
 	    x.value = 0 ;
 		var x = document.getElementById("run");
 		  x.value = 0 ;
@@ -16,26 +16,17 @@
       x.value = 0 ;
 		var x = document.getElementById("live");
       x.value = 0 ;
-    var x = document.getElementById("nozoid");
-      x.value = 0 ;
-    var x = document.getElementById("planet");
-      x.value = 0 ;
 
 		// Hide all possible main central grids.
 		var x = document.getElementById("mgalign");
        	x.style.display = "none";
 		var x = document.getElementById("mgsimu");
     	x.style.display = "none";
-    var x = document.getElementById("cnvbuttons");
-        x.style.display = "none";
     var x = document.getElementById("mgrun");
       	x.style.display = "none";
     var x = document.getElementById("mglive");
       	x.style.display = "none";
-    var x = document.getElementById("mgnozoid");
-        x.style.display = "none";
-    var x = document.getElementById("mgplanet");
-        x.style.display = "none";
+ 
 		}
 
 	function showAlign() {
@@ -58,7 +49,7 @@
       noMenu();
      	var x = document.getElementById("mgsimu");
         	x.style.display = "grid";
-       var x = document.getElementById("cnvbuttons");
+      var x = document.getElementById("cnvbuttons");
          x.style.display = "grid";
      	var x = document.getElementById("simu");
           x.value = 1 ;
@@ -72,23 +63,70 @@
          x.value = 1 ;
      	}
 
-  function showNozoid() {
-      noMenu();
-      var x = document.getElementById("mgnozoid");
-        x.style.display = "grid";
-      var x = document.getElementById("nozoid");
-      x.value = 1 ;
-      } 
 
-  function showPlanet() {
-      noMenu();
-      var x = document.getElementById("mgplanet");
+//
+// SimuUIs 
+//
+
+  function nosimuUI() {
+    // Hide all possible main central grids.
+      var x = document.getElementById("planetUI");
+        x.style.display = "none";
+      var x = document.getElementById("nozoidUI");
+        x.style.display = "none";
+      var x = document.getElementById("aiUI");
+        x.style.display = "none";
+      var x = document.getElementById("lissaUI");
+        x.style.display = "none";
+      var x = document.getElementById("vjUI");
+        x.style.display = "none";
+      var x = document.getElementById("wordsUI");
+        x.style.display = "none";
+    }
+
+  function showplanetUI() {
+      nosimuUI();
+      var x = document.getElementById("planetUI");
        x.style.display = "grid";
-      var x = document.getElementById("cnvbuttons");
-        x.style.display = "grid";
-      var x = document.getElementById("planet");
-        x.value = 1 ;
+       _WS.send("/planet/ping");
       }
+
+  function shownozoidUI() {
+      nosimuUI();
+      var x = document.getElementById("nozoidUI");
+       x.style.display = "grid";
+       _WS.send("/nozoid/ping");
+      }
+
+  function showaiUI() {
+      nosimuUI();
+      var x = document.getElementById("aiUI");
+       x.style.display = "grid";
+      }
+
+  function showlissaUI() {
+      nosimuUI();
+      var x = document.getElementById("lissaUI");
+       x.style.display = "grid";
+      }
+
+  function showvjUI() {
+      nosimuUI();
+      var x = document.getElementById("vjUI");
+       x.style.display = "grid";
+       _WS.send("/bank0/ping");
+      }
+
+  function showwordsUI() {
+      nosimuUI();
+      var x = document.getElementById("wordsUI");
+       x.style.display = "grid";
+       _WS.send("/words/ping");
+      }
+
+//
+// Button clicked 
+//
 
   function buttonClicked(clicked_id) {
 
@@ -108,61 +146,15 @@
          showlissaUI();
          }
       if (clicked_id === "vj/vjUI") {
-         showlissaUI();
+         showvjUI();
+         }
+      if (clicked_id === "words/wordsUI") {
+         showwordsUI();
          }
       if (clicked_id === "nozoid/down 50") {
           var x = document.getElementById("nozoid/down 50");
           x.value = 0 ;
          }
-    	}
-
-
-//
-// SimuUIs 
-//
-
-  function nosimuUI() {
-    // Hide all possible main central grids.
-      var x = document.getElementById("planetUI");
-        x.style.display = "none";
-      var x = document.getElementById("nozoidUI");
-        x.style.display = "none";
-      var x = document.getElementById("aiUI");
-        x.style.display = "none";
-      var x = document.getElementById("lissaUI");
-        x.style.display = "none";
-      var x = document.getElementById("vjUI");
-        x.style.display = "none";
-    }
-
-  function showplanetUI() {
-      nosimuUI();
-      var x = document.getElementById("planetUI");
-       x.style.display = "grid";
-      }
-
-  function shownozoidUI() {
-      nosimuUI();
-      var x = document.getElementById("nozoidUI");
-       x.style.display = "grid";
-      }
-
-  function showaiUI() {
-      nosimuUI();
-      var x = document.getElementById("aiUI");
-       x.style.display = "grid";
-      }
-
-  function showlissaUI() {
-      nosimuUI();
-      var x = document.getElementById("lissaUI");
-       x.style.display = "grid";
-      }
-
-  function showvjUI() {
-      nosimuUI();
-      var x = document.getElementById("vjUI");
-       x.style.display = "grid";
       }
 
 

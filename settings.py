@@ -24,6 +24,7 @@ def Write():
 	config.set('General', 'nozoscip', str(gstt.nozoscIP))
 	config.set('General', 'debug', str(gstt.debug))
 
+
 	for i in range(gstt.LaserNumber):
 		laser = 'laser' + str(i)
 		config.set(laser, 'ip', str(gstt.lasersIPS[i]))
@@ -49,7 +50,10 @@ def Read():
 	gstt.oscIPin = config.get('General', 'bhoroscip')
 	gstt.nozoscip = config.get('General', 'nozoscip')
 	gstt.debug = config.get('General', 'debug')
+	gstt.plugins  = ast.literal_eval(config.get('plugins', 'plugins'))
 
+
+	print ""
 	for i in range(4):
 		laser = 'laser' + str(i)
 		gstt.lasersIPS[i]= config.get(laser, 'ip')

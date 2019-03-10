@@ -25,7 +25,7 @@ def handle():
 	argsparser = argparse.ArgumentParser(description="LJ v0.8")
 	argsparser.add_argument("-r","--redisIP",help="IP address to bind builtin servers (OSC and websocket) also must be the Redis server IP ",type=str)
 	argsparser.add_argument("-L","--Lasers",help="Number of lasers connected.",type=int)
-	argsparser.add_argument("-v","--verbose",help="Debug mode 0,1 or 2.",type=int)
+	argsparser.add_argument("-v","--verbose",help="Debug mode 0,1 or 2 (0 by default)",type=int)
 	argsparser.add_argument("-x","--invx",help="Invert laser 0 X axis again",action="store_true")
 	argsparser.add_argument("-y","--invy",help="Invert laser 0 Y axis again",action="store_true")
 	argsparser.add_argument("-d","--display",help="Point List number displayed in simulator",type=int)
@@ -47,6 +47,8 @@ def handle():
 	if args.verbose  != None:
 		#print "setting gstt.debug to", args.verbose
 		gstt.debug = args.verbose
+	else:
+		gstt.debug = 0
 
 	# Ports arguments
 	if args.iport:
@@ -62,7 +64,7 @@ def handle():
 		oport = gstt.oport
 
 	if gstt.debug > 0:
-		print "gstt.oport:",gstt.oport
+		print "Accept OSC on port",gstt.oport
 		print "gstt.iport:",gstt.iport
 
 

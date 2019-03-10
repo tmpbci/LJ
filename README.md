@@ -1,4 +1,4 @@
-LJ v0.7.1
+LJ v0.8.1
 
 By Sam Neurohack, Loloster, Cocoa
 
@@ -33,6 +33,7 @@ LJ supports Linux and OS X. Windows is unkown but welcome, if someone want to ju
 - "Optimisation" points automatically added, can be changed live for glitch art. Search "resampler" commands.
 - A compiled version for os x and linux of nannou.org etherdream+laser emulator is included. For more informations, like license see https://github.com/nannou-org/ether-dream
 - Some fancy examples are available : 3D anaglyph, Laser Pong, Laser Wars 
+
 
 
 
@@ -86,7 +87,7 @@ Check in your client code if the laser server IP is the good one
 
 Run your client
 
-to monitor redis server :
+to monitor redis server, there is app for that or :
 
 redis-cli monitor
 
@@ -110,9 +111,21 @@ to monitor redis server :
 redis-cli -h redisserverIP monitor
 
 
+#
+# Plugins 
+#
+
+LJ comes with different plugins :
+
+- LiveWords 	: Fill the input form and it's displayed. One word / laser.
+- Textcycl		: Cycle some words with adjustable length on one laser.
+- Anaglyph  	: A green/red rotating cube. Try it with green/red 3D glasses !
+- Planetarium 	: A 4 lasers planetarium.
+- LaserPong		: Our laser Pong is back !
+
 
 #
-# Program your own "Client" 
+# Program your own "Plugin" 
 #
 
 
@@ -122,7 +135,12 @@ The server approach is based on redis, so you write and run your laser client so
 - There is a clients folders with examples in different languages.
 - Generate at least one point list array (say a square). 
 - Feed your point list array in string format to redis server.
-- 
+- Tell LJ.conf your plugin configuration : OSC port and command line to start it.
+
+#
+# Nannou etherdeam simulator
+#
+
 
 
 #

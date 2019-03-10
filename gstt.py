@@ -102,8 +102,8 @@ JumpFlag =0
 
 # OSC ports
 #temporaray fix hack : iport=nozoport
-iport = 8001 #LJay (bhorosc) input port
-oport = 8002 #LJay (bhorosc) output port
+iport = 8002 # LJ input port
+oport = 8001 # LJ output port
 noziport=8003 #nozosc.py receiving commands port
 nozoport=8001 #nozosc.py sending port to LJay (main.py)
 nozuport=0 #linux serial usb port connecting nozoid devices ACM0 by default
