@@ -9,11 +9,13 @@ LICENCE : CC BY
 
 A software laser server with GUI for up to 4 lasers live actions. Think creative like Laser "battles", planetarium,... 
 
+ 
+
 LJ has 3 main components : 
 
 - A "tracer" per etherdream/laser that take its point list, correct geometry, recompute in etherdreams coordinates, send it to its controller,... and report etherdream status to the manager.
 - A "manager" that talk to all tracers (which client number point lists to draw, new geometry correction,...), handle the webui functions, OSC commands,...
-- Up to ten clients, that simultaneously send one point list per laser.
+- To share the lasers between people, LJ accept up to 4 virtual "clients" that can simultaneously send one point list per laser. You select in WebUI wich client is actually sent to lasers.
 
 Needs at least : an etherdream DAC connected to an ILDA laser, RJ 45 IP network (gigabits only !!  no wifi, 100 mpbs doesn't work well with several lasers)
 
@@ -32,7 +34,7 @@ LJ supports Linux and OS X. Windows is unkown but welcome, if someone want to ju
 - Status update every 0.5 seconds : every etherdream DAC state, number of buffer points sent,...
 - "Optimisation" points automatically added, can be changed live for glitch art. Search "resampler" commands.
 - A compiled version for os x and linux of nannou.org etherdream+laser emulator is included. For more informations, like license see https://github.com/nannou-org/ether-dream
-- Some fancy examples are available : 3D anaglyph, Laser Pong, Laser Wars 
+- Some fancy examples are available : 3D anaglyph, Laser Pong,...
 
 
 
@@ -68,45 +70,51 @@ There is a nice ws debug tool websocat.
 # To run
 #
 
-Order is :
+Correct launch order is :
 
 - Dac/Laser (emulator or IRL)
 - Redis server once.
 - This server. see below.
 - Load/reload webUI page from disk in a browser (webui/index.html). Javascript must be enabled.
-- Run a client, see in clients folder for examples.
+- Run a plugin, see in clients/plugins folder for examples.
 
 
-A typical start is python main.py -L numberoflasers. Use -h to display all possible arguments. 
+A typical server start is python main.py -L numberoflasers. 
+Use also -h to display all possible arguments, like -v for debug informations.
 
-Case 1 : the laser server computer is the same that the computer running a client :
 
-python main.py
+CASE 1 : the laser server computer is the same that the computer running a client :
 
-Check in your client code if the laser server IP is the good one
+
+1/ Run LJ
+
+python main.py -L 1
+
+2/ Check in your client code if the laser server IP is the good one
 
 Run your client
 
-to monitor redis server, there is app for that or :
+3/ to monitor redis server, there is app for that or :
 
 redis-cli monitor
 
 
-Case 2 : Server and Client computers are different :
+
+CASE 2 : Server and Client computers are different :
 
 
-Say the laser server computer (running LJ) IP is 192.138.1.13, the client computer is 192.168.1.52 
+1/ Say the laser server computer (running LJ) IP is 192.138.1.13, the client computer is 192.168.1.52, First remember to check on the server computer if the redis server is listening to the right IP :
 
-On the server computer :
 edit /etc/redis/redis.conf
-use -r argument :
-python main.py -r 192.168.1.13
 
-run the client on client computer, like :
+2/ Launch LJ with -r argument :
+python main.py -r 192.168.1.13 -L 1
 
-node testredis.js
+3/ run a client/plugin on client computer, like :
 
-to monitor redis server :
+node nodeclient.js
+
+4/ to monitor redis server :
 
 redis-cli -h redisserverIP monitor
 
@@ -115,27 +123,27 @@ redis-cli -h redisserverIP monitor
 # Plugins 
 #
 
-LJ comes with different plugins :
+LJ comes with different plugins in python 3 :
 
 - LiveWords 	: Fill the input form and it's displayed. One word / laser.
 - Textcycl		: Cycle some words with adjustable length on one laser.
 - Anaglyph  	: A green/red rotating cube. Try it with green/red 3D glasses !
 - Planetarium 	: A 4 lasers planetarium.
-- LaserPong		: Our laser Pong is back !
+- LaserPong		: Our laser Pong is back ! (python 2.7)
 
 
 #
-# Program your own "Plugin" 
+# Program your own "plugin" 
 #
 
 
 The server approach is based on redis, so you write and run your laser client software in any redis capable programming langage (50+ : https://redis.io/clients).
 
 - Read the Introduction part in this readme.
-- There is a clients folders with examples in different languages.
+- There is a client and plugin folders with examples in different languages.
 - Generate at least one point list array (say a square). 
 - Feed your point list array in string format to redis server.
-- Tell LJ.conf your plugin configuration : OSC port and command line to start it.
+- Tell LJ.conf your plugin configuration : OSC port and command line to start it ()
 
 #
 # Nannou etherdeam simulator
@@ -150,7 +158,8 @@ The server approach is based on redis, so you write and run your laser client so
 (Doc in Progress)
 
 - kpps live modification for glitch art.
-- A grid style warp correction process in webUI
+- A grid style warp correction process in webUI.
+- IP change should not need a LJ relaunch
 
 
 #
@@ -171,9 +180,9 @@ By default LJ uses on 127.0.0.1 (localhost) :
 
 - A websocket on port 9001 for WebUI interaction.
 - The redis server on port 6379 ('ljayserverip')
-- An OSC server on port 8002.
-- An OSC client as output on port 8001.
-- An OSC client for Nozoids support on 'nozoscIP', port 8003.
+- An OSC server on port 8002 for remote control via OSC and plugins.
+- Some OSC clients defined in LJ.conf to forward commands to defined plugins
+
 
 You need to update LJ.conf to your network/etherdreams IPs and be sure to check command arguments : python main.py --help
 
