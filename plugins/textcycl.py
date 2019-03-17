@@ -1,8 +1,12 @@
 # coding=UTF-8
 
 '''
+
+LJ v0.8.1
+
 Cycling text on one LJ laser.
 LICENCE : CC
+
 '''
 
 import redis
@@ -27,7 +31,7 @@ if is_py2:
 else:
 	from queue import Queue
 '''
-print ("")
+
 print ("Arguments parsing if needed...")
 argsparser = argparse.ArgumentParser(description="Text Cycling for LJ")
 argsparser.add_argument("-r","--redisIP",help="IP of the Redis server used by LJ (127.0.0.1 by default) ",type=str)
@@ -70,7 +74,7 @@ def rgb2int(r,g,b):
 
 
 def WebStatus(message):
-	lj3.Send("/status",message)
+	lj3.SendLJ("/status",message)
 
 def OSCljclient(value):
 	# Will receive message address, and message data flattened in s, x, y
@@ -79,14 +83,26 @@ def OSCljclient(value):
 	lj3.LjClient(ljclient)
 
 
+# /ping
+def OSCping():
+
+	lj3.OSCping("cycl")
+
+# /quit
+def OSCquit():
+
+	lj3.OSCquit("Cycl")
+
 osc_startup()
 osc_udp_server("127.0.0.1", OSCinPort, "InPort")
 
-osc_method("/ping*", lj3.OSCping)
+osc_method("/ping*", OSCping)
+osc_method("/quit", OSCquit)
 osc_method("/cycl/ljclient", OSCljclient)
 
 
-WebStatus("Textcycl")
+WebStatus("Textcycl Ready")
+lj3.SendLJ("/cycl/start 1")
 
 def Run():
 

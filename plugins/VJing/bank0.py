@@ -607,9 +607,16 @@ def OSCrun(value):
     print("I got /run with value", value)
     doit = value
 
+# /quit
+def OSCquit():
+
+    WebStatus("Bank0 stopping")
+    print("Stopping OSC...")
+    lj3.OSCstop()
+    sys.exit()
 
 def WebStatus(message):
-    lj3.Send("/status",message)
+    lj3.SendLJ("/status",message)
 
 
 #doit = Starfield
@@ -629,6 +636,7 @@ osc_udp_server("127.0.0.1", OSCinPort, "InPort")
 osc_method("/bank0/run*", OSCrun)
 osc_method("/bank0/ping*", lj3.OSCping)
 osc_method("/bank0/ljclient", OSCljclient)
+osc_method("/quit", OSCquit)
 
 
 import pygame

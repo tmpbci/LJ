@@ -59,15 +59,19 @@ def Start(name):
         sendWSall("/status Starting...")
         # Get LJ path
         ljpath = r'%s' % os.getcwd().replace('\\','/')
+
         print ""
-        print "Starting plugin :", name
-        print "LJ path :", ljpath
+        print "LJ is starting plugin :", name
+        
         # Construct the command with absolute path.
         
         PluginPath = command.split(" ")
         # Launch as a subprocess
         PluginProcess = subprocess.Popen([PluginPath[0], ljpath + "/" + PluginPath[1]])
-        print "New process pid for ", name, ":", PluginProcess.pid
+        
+        if gstt.debug >0:
+            print "LJ path :", ljpath
+            print "New process pid for ", name, ":", PluginProcess.pid
 
         data = Data(name)
 
@@ -81,11 +85,11 @@ def OSCsend(name, oscaddress, oscargs =''):
 
     PluginPort = Port(name)
     sendWSall("/status Checking "+ name + "...")
-    if gstt.debug >0:
+    if gstt.debug >1:
             print ""
-            print "Checking plugin ",name, "..."
-            print "Plugin ", name, "is at", gstt.LjayServerIP, "and has OSC port : " + str(PluginPort)
-            print "Sending", oscaddress, oscargs,"to plugin ", name
+            print "OSCSend is checking plugin", name, "..."
+            print "Plugin", name, "is at", gstt.LjayServerIP, ":" + str(PluginPort)
+            print "Sending", oscaddress, oscargs,"to plugin", name
     
     osclientplugin = OSCClient()
     osclientplugin.connect((gstt.LjayServerIP, PluginPort)) 
@@ -96,15 +100,16 @@ def OSCsend(name, oscaddress, oscargs =''):
     try:
         osclientplugin.sendto(oscmsg, (gstt.LjayServerIP, PluginPort))
         oscmsg.clearData()
-        if gstt.debug >0:
-            print oscaddress, oscargs, "was sent to",name     
+        #if gstt.debug >0:
+        #    print oscaddress, oscargs, "was sent to",name     
         return True
 
     except:
-        print ""
-        print 'Connection to plugin IP', gstt.LjayServerIP   ,'port', PluginPort,' refused : died ?'
+        if gstt.debug > 0:
+            print 'OSCSend : Connection to plugin IP', gstt.LjayServerIP ,':', PluginPort,'refused : died ?'
         #sendWSall("/status No plugin.")
-        sendWSall("/status No plugin.")
+        sendWSall("/status " + name + " is offline")
+        sendWSall("/" + name + "/start 0")
         #PluginStart(name)
         return False
 
@@ -166,8 +171,8 @@ def Send(name,oscpath):
         else:
             
             if gstt.debug >0:
-                print "Plugin " + name + " offline."
-                print "Command", oscpath
+                print "Send says plugin " + name + " is offline."
+                #print "Command", oscpath
 
             sendWSall("/status Plugin " + name + " offline")
             sendWSall("/"+ name + "/start 0")

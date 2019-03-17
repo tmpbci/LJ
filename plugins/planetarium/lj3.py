@@ -54,7 +54,7 @@ def OSCstop():
 	osc_terminate()
 
 
-def Send(oscaddress,oscargs=''):
+def SendLJ(oscaddress,oscargs=''):
         
     try:
         msg = oscbuildparse.OSCMessage(oscaddress, None, [oscargs])
@@ -64,6 +64,13 @@ def Send(oscaddress,oscargs=''):
     except:
         print ('Connection to LJ refused : died ?')
         pass
+
+# Answer to LJ pings
+def OSCping(value):
+    # Will receive message address, and message data flattened in s, x, y
+    print("I got /ping with value", value)
+    SendLJ("/pong",value)
+
 '''
 def handlerfunction(s, x, y):
     # Will receive message data unpacked in s, x, y

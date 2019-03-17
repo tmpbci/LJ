@@ -581,18 +581,20 @@ def NewTime(timeshift):
 	 if DisplayAnything:
 	 	UpdateAnything()
 
+# /quit
+def OSCquit():
 
-def OSCstart(value):
-    # Will receive message address, and message data flattened in s, x, y
-    print("Planetarium OSC server got /planet/start with value", value)
-    
+	WebStatus("Planet stopping")
+	print("Stopping OSC...")
+	lj3.OSCstop()
+	sys.exit() 
 
 def OSCUI(value):
     # Will receive message address, and message data flattened in s, x, y
     print("Planetarium OSC server got /planet/planetUI with value", value)
 
 def WebStatus(message):
-	lj3.Send("/status",message)
+	lj3.SendLJ("/status",message)
 
 #
 # Main part 
@@ -606,8 +608,9 @@ try:
 	print("Starting OSC at 127.0.0.1 port",OSCinPort,"...")
 	osc_startup()
 	osc_udp_server("127.0.0.1", OSCinPort, "InPort")
-	osc_method("/planet/start*", OSCstart)
 	osc_method("/planet/planetUI*", OSCUI)
+	osc_method("/ping*", lj3.OSCping)
+	osc_method("/quit", OSCquit)
 
 	WebStatus("Load Cities.")
 	ts = load.timescale()
@@ -635,7 +638,7 @@ try:
 	UpdateStars(ts)
 
 	WebStatus("Ready")
-	lj3.Send("/planet/start",1)
+	lj3.SendLJ("/planet/start",1)
 	print ("Done.")
 
 	# UpdateStars()    Todo

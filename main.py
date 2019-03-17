@@ -247,7 +247,7 @@ def handler(path, tags, args, source):
 
     oscpath = path.split("/")
     print ""
-    print "OSC default handler in main said : path", path," oscpath ", oscpath," args", args
+    print "OSC handler in main said : path", path," oscpath ", oscpath," args", args
     #print "debug", gstt.debug
     #if gstt.debug >0:
     #    print "default handler"
@@ -367,9 +367,25 @@ def message_received(client, wserver, message):
     oscpath = message.split(" ")
     print "WS Client", client['id'], "said :", message, "splitted in an oscpath :", oscpath
 
+    # Ping all plugins connexion and send message if right plugin is online.
     for plugin in gstt.plugins.keys():
-         if plugins.Send(plugin,oscpath):
-            print "Plugin", plugin, "processed",oscpath
+
+        # Plugin Online
+        if plugins.Ping(plugin):
+            
+            sendWSall("/"+ plugin + "/start 1")
+            if gstt.debug >0:
+                print "plugin", plugin, "answered."
+
+            if oscpath[0].find(plugin) != -1 and plugins.Send(plugin,oscpath):
+                print "message sent correctly to", plugin
+
+        # Plugin Offline
+        else:
+            sendWSall("/"+ plugin + "/start 0")
+            if gstt.debug >0:
+                print "plugin", plugin, "didn't answered."
+
     '''
     if plugins.Send("planet",oscpath):
         pass
@@ -395,7 +411,6 @@ def message_received(client, wserver, message):
         #print oscpath[0].split("/"),oscpath[1]
                                                                                                
     
-    # current UI has no dedicated off button so /on 0 trigs /off to extosc
     if oscpath[0] == "/on":
         if oscpath[1] == "1":
             sendextosc("/on")
@@ -405,7 +420,14 @@ def message_received(client, wserver, message):
 
     if len(oscpath) == 1:
         args[0] = "noargs"
-        commands.handler(oscpath[0].split("/"),args)
+        #print "noargs command"
+
+
+    elif len(oscpath) > 1:
+        args[0] = str(oscpath[1]) 
+        #print "arg",oscpath[1]
+    
+    commands.handler(oscpath[0].split("/"),args)
     
 
     '''

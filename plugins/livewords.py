@@ -20,10 +20,10 @@ duration = 300
 
 OSCinPort = 8006
 
-Word0 = "0"
-Word1 = "1"
-Word2 = "2"
-Word3 = "3"
+Word0 = "LASER"
+Word1 = "LASER"
+Word2 = "LASER"
+Word3 = "LASER"
 
 '''
 is_py2 = sys.version[0] == '2'
@@ -32,8 +32,7 @@ if is_py2:
 else:
 	from queue import Queue
 '''
-print ("")
-print ("Arguments parsing if needed...")
+print ("Words is checking arguments parsing if needed...")
 argsparser = argparse.ArgumentParser(description="Text Cycling for LJ")
 argsparser.add_argument("-r","--redisIP",help="IP of the Redis server used by LJ (127.0.0.1 by default) ",type=str)
 argsparser.add_argument("-c","--client",help="LJ client number (0 by default)",type=int)
@@ -65,55 +64,74 @@ lj3.Config(redisIP,ljclient)
 
 
 def OSCword0(value):
+	global Word0
+
 	# Will receive message address, and message data flattened in s, x, y
-	print("I got /words with value", value)
+	print("Words 0 got /words/text/0 with value", value)
 	Word0 = value
 
 def OSCword1(value):
+	global Word1
+
 	# Will receive message address, and message data flattened in s, x, y
-	print("I got /words with value", value)
+	print("Words 1 got /words/text/1 with value", value)
 	Word1 = value
 
 def OSCword2(value):
+	global Word2
+
 	# Will receive message address, and message data flattened in s, x, y
-	print("I got /words with value", value)
+	print("Words 2 got /words/text/2 with value", value)
 	Word3 = value
 
 def OSCword3(value):
+	global Words3
+
 	# Will receive message address, and message data flattened in s, x, y
-	print("I got /words with value", value)
+	print("Words 3 got /words/text/3 with value", value)
 	Word3 = value
 
 def OSCljclient(value):
 	# Will receive message address, and message data flattened in s, x, y
-	print("I got /words/ljclient with value", value)
+	print("Words got /words/ljclient with value", value)
 	ljclient = value
 	lj3.LjClient(ljclient)
 
 
-def WebStatus(message):
-	lj3.Send("/status",message)
+# /ping
+def OSCping():
 
+	lj3.OSCping("words")
+	lj3.SendLJ("words/text/0",Word0)
+	lj3.SendLJ("words/text/1",Word1)
+
+# /quit
+def OSCquit():
+
+	lj3.OSCquit("Words")
 
 
 def Run():
 
-	WebStatus("Load Words")
-
 	# OSC Server callbacks
-	print("Starting OSC at 127.0.0.1 port",OSCinPort,"...")
+	print("Words starting its OSC server at 127.0.0.1 port",OSCinPort,"...")
 	osc_startup()
 	osc_udp_server("127.0.0.1", OSCinPort, "InPort")
-	osc_method("/words/0*", OSCword0)
-	osc_method("/words/1*", OSCword1)
-	osc_method("/words/2*", OSCword2)
-	osc_method("/words/3*", OSCword3)
-	osc_method("/ping*", lj3.OSCping)
+	osc_method("/words/text/0*", OSCword0)
+	osc_method("/words/text/1*", OSCword1)
+	osc_method("/words/text/2*", OSCword2)
+	osc_method("/words/text/3*", OSCword3)
+	osc_method("/ping*", OSCping)
 	osc_method("/words/ljclient", OSCljclient)
+	osc_method("/quit", OSCquit)
 
 	color = lj3.rgb2int(255,255,255)
-
-	WebStatus("Words ready.")
+	lj3.WebStatus("Loading Words...")
+	lj3.WebStatus("Words ready.")
+	lj3.SendLJ("/words/start 1")
+	
+	lj3.SendLJ("words/text/0",Word0)
+	lj3.SendLJ("words/text/1",Word1)
 
 	try:
 
@@ -142,8 +160,8 @@ def Run():
 
 	finally:
 
-		WebStatus("Words Exit")
-		print("Stopping OSC...")
+		lj3.WebStatus("Words Exit")
+		print("Stopping Words OSC...")
 		lj3.OSCstop()
 
 	print ("Words Stopped.")

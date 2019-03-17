@@ -82,6 +82,8 @@
         x.style.display = "none";
       var x = document.getElementById("wordsUI");
         x.style.display = "none";
+      var x = document.getElementById("pluginsUI");
+        x.style.display = "none";
     }
 
   function showplanetUI() {
@@ -124,6 +126,13 @@
        _WS.send("/words/ping");
       }
 
+  function showpluginsUI() {
+      nosimuUI();
+      var x = document.getElementById("pluginsUI");
+       x.style.display = "grid";
+       //_WS.send("/words/ping");
+      }
+
 //
 // Button clicked 
 //
@@ -150,6 +159,9 @@
          }
       if (clicked_id === "words/wordsUI") {
          showwordsUI();
+         }
+      if (clicked_id === "lj/pluginsUI") {
+         showpluginsUI();
          }
       if (clicked_id === "nozoid/down 50") {
           var x = document.getElementById("nozoid/down 50");
@@ -214,8 +226,9 @@
       //console.log(res[0].substring(0,6))
 
 		  switch (res[0].substring(0,6)) {
-    			case "/statu":
-    				_WS.showstatus(e.data.slice(8));
+    			
+          case "/statu":
+    				  _WS.showstatus(e.data.slice(8));
         			break;
           case "/simul":
         			pl = e.data.slice(7);

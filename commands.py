@@ -82,23 +82,26 @@ import gstt
 import homographyp
 import settings
 import redis
+import plugins
 
 
 r = redis.StrictRedis(host=gstt.LjayServerIP , port=6379, db=0)
 
-GenericCommands = ["start","ljclient","clientnumber","noteon","pong","mouse","emergency","simu","status","run","nozoid","planet","live","words","ai","bank0"]
+GenericCommands = ["start","ljclient","clientnumber","noteon","pong","mouse","emergency","simu","status","run","nozoid","planet","live","words","ai","bank0","lj"]
 
 
     
 def UserOn(laser):
 
     print "User for laser ", laser
+    plugins.sendWSall("/status User on laser " + str(laser))
     r.set('/order/'+str(laser), 0)
 
 
 def NewEDH(laser):
 
     print "New EDH requested for laser ", laser
+    plugins.sendWSall("/status New EDH on laser " + str(laser))
     settings.Write()
     print "Settings saving swapX ", gstt.swapX[laser]
     print "Settings saving swapY ", gstt.swapY[laser]
@@ -108,12 +111,14 @@ def NewEDH(laser):
 def BlackOn(laser):
 
     print "Black for laser ", laser
+    plugins.sendWSall("/status Black on laser " + str(laser))
     r.set('/order/'+str(laser), 2)
     
 
 def GridOn(laser):
 
     print "Grid for laser ", laser
+    plugins.sendWSall("/status Grid on laser " + str(laser))
     r.set('/order/'+str(laser), 3)
 
 
@@ -127,11 +132,12 @@ def Resampler(laser,lsteps):
 
 def LasClientChange(clientnumber):
 
-    # 
     if r.get("/pl/"+str(clientnumber)+"/0") != None:
 
         print "Switching to laser client", clientnumber
         gstt.LasClientNumber = clientnumber
+        plugins.sendWSall("/status Client " + str(gstt.LasClientNumber) + " laser " + str(gstt.Laser))
+
         r.set('/clientkey', "/pl/"+str(clientnumber)+"/")
         print "clientkey set to", "/pl/"+str(clientnumber)+"/"
         for laserid in xrange(0,gstt.LaserNumber):
@@ -152,9 +158,12 @@ def NoteOn(note):
     if  note > 23 and note < 32:
         if note - 24 > gstt.LaserNumber -1:
             print "Only",gstt.LaserNumber,"lasers asked, you dum ass !"
+            plugins.sendWSall("/status Not Enough Laser")
+
         else: 
             gstt.Laser = note -24
-            print "Current Laser switched to",gstt.Laser
+            plugins.sendWSall("/status Client " + str(gstt.LasClientNumber) + " laser " + str(gstt.Laser))
+            print "Current Laser switched to", gstt.Laser
 
 def Mouse(x1,y1,x2,y2):
     print "Mouse", x1,y1,x2,y2
@@ -163,8 +172,8 @@ def Mouse(x1,y1,x2,y2):
 
 def handler(oscpath, args):
 
-    print ""
-    print "OSC handler in commands.py got oscpath[1] :",oscpath[1], "with args :",args
+    #print ""
+    print "OSC handler in commands.py got /"+ str(oscpath)+ " with args :",args
 
     # 2 incoming cases : generic or specific for a given lasernumber :
     # Generic : Commands without a laser number
@@ -179,8 +188,9 @@ def handler(oscpath, args):
             NoteOn(int(args[0]))
 
         elif oscpath[1] == "pong":
-            print ""
-            print "Got pong from ",args
+            print "LJ commands got pong from", args
+            plugins.sendWSall("/" + args[0] + "start 1")
+            plugins.sendWSall("/status got pong from "+ args[0] +".")
             
         elif oscpath[1] == "mouse":
             Mouse(int(args[0]),int(args[1]),int(args[2]),int(args[3]))
@@ -189,10 +199,12 @@ def handler(oscpath, args):
         if oscpath[1] == "emergency":
         
             if args[0] == "1":
-                print "EMERGENCY MODE"
+                
                 for laser in range(gstt.lasernumber):
                     print "Black requested for laser ", laser
-                    BlackOn(laser)        
+                    BlackOn(laser)
+                print "EMERGENCY MODE"
+                plugins.sendWSall("/status EMERGENCY MODE")   
             else:
                 for laser in range(gstt.lasernumber):
                     print "Back to normal for laser ", laser
@@ -239,7 +251,7 @@ def handler(oscpath, args):
             print "New Angle modification for laser ", oscpath[2], ":",  float(args[0])
             gstt.finANGLE[laser] += float(args[0])
             NewEDH(laser)
-            "New angle", gstt.finANGLE[laser]
+            print "New angle", gstt.finANGLE[laser]
             
         # /intens/lasernumber value 
         if oscpath[1] == "intens":

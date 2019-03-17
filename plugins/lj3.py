@@ -1,7 +1,9 @@
 # coding=UTF-8
 
 '''
-LJ v0.8.1 in python3
+
+lj3 v0.8.1
+
 Some LJ functions useful for python clients (was framy.py)
 
 OSC functions commented, waiting working on OSC in python3 
@@ -11,24 +13,25 @@ PolyLineOneColor
 rPolyLineOneColor
 
 Text(word, color, PL, xpos, ypos, resize, rotx, roty, rotz) : Display a word
-Send(adress,message) : remote control. See commands.py
-WebStatus(message) : display message on webui
+SendLJ(adress,message) : 	LJ remote control. See commands.py
+WebStatus(message) : 		display message on webui
 DrawPL(point list number) : once you stacked all wanted elements, like 2 polylines, send them to lasers.
 rgb2int(r,g,b)
 
-OSCstart(): Start the OSC system.
-OSCframe():
-OSCstop(): Properly close the OSC system
-OSCping(value): Answer to LJ pings
+OSCstart(): 	Start the OSC system.
+OSCframe():		Handle incoming OSC message. Calling the right callback
+OSCstop(): 		Properly close the OSC system
+OSCping(value): Answer to LJ pings by sending /pong value
+OSCquit(name): 	Exit calling script using name in terminal
 
 setup_controls(joystick) 
 
-XboxController : getLeftHori, getLeftVert, getRightHori, getRightVert, getLeftTrigger, getRightTrigger
-Ps3Controller : getLeftHori, getLeftVert, getRightHori, getRightVert, getLeftTrigger, getRightTrigger, getUp, getDown, getLeft, getRight, getFire1, getFire2(self):
+XboxController : 	 getLeftHori, getLeftVert, getRightHori, getRightVert, getLeftTrigger, getRightTrigger
+Ps3Controller : 	 getLeftHori, getLeftVert, getRightHori, getRightVert, getLeftTrigger, getRightTrigger, getUp, getDown, getLeft, getRight, getFire1, getFire2(self):
 MySaitekController : getLeftHori,getLeftVert, getRightHori,getRightVert, getLeftTrigger,getRightTrigger
 MyThrustController : getLeftHori, getLeftVert, getRightHori, getRightVert, getLeftTrigger, getRightTrigger
-CSLController : getLeftHori,getLeftVert,getRightHori, getRightVert,getLeftTrigger,getRightTrigger,getFire1,getFire2
-my USB Joystick : getUp,getDown,getLeft,getRight,etLeftTrigger, getRightTrigger,getFire1, getFire2
+CSLController :      getLeftHori,getLeftVert,getRightHori, getRightVert,getLeftTrigger,getRightTrigger,getFire1,getFire2
+my USB Joystick :    getUp,getDown,getLeft,getRight,etLeftTrigger, getRightTrigger,getFire1, getFire2
 
 
 LICENCE : CC
@@ -72,14 +75,7 @@ def OSCstop():
 	osc_terminate()
 
 
-# Answer to LJ pings
-def OSCping(value):
-    # Will receive message address, and message data flattened in s, x, y
-    print("I got /ping with value", value)
-    Send("/pong",value)
-
-
-def Send(oscaddress,oscargs=''):
+def SendLJ(oscaddress,oscargs=''):
         
     try:
         msg = oscbuildparse.OSCMessage(oscaddress, None, [oscargs])
@@ -89,6 +85,26 @@ def Send(oscaddress,oscargs=''):
     except:
         print ('Connection to LJ refused : died ?')
         pass
+
+def WebStatus(message):
+	SendLJ("/status", message)
+
+
+# Answer to LJ pings
+def OSCping(value):
+    # Will receive message address, and message data flattened in s, x, y
+    print("Got /ping with value", value)
+    SendLJ("/pong",value)
+
+# /quit
+def OSCquit(name):
+
+	WebStatus(name + " quit.")
+	print("Stopping OSC...")
+	
+	OSCstop()
+	sys.exit()
+
 '''
 def handlerfunction(s, x, y):
     # Will receive message data unpacked in s, x, y
@@ -321,7 +337,6 @@ def ResetPL(self, PL):
 	pl[PL] = []
 
 
-
 def DigitsDots(number,color):
 	dots =[]
 	for dot in ASCII_GRAPHICS[number]:
@@ -330,12 +345,14 @@ def DigitsDots(number,color):
 		#self.point_list.append((xy + (c,)))
 	return dots
 
+
 def CharDots(char,color):
 
 	dots =[]
 	for dot in ASCII_GRAPHICS[ord(char)-46]:
 		dots.append((dot[0],dot[1],color))
 	return dots
+
 
 def Text(message,c, PL, xpos, ypos, resize, rotx, roty, rotz):
 

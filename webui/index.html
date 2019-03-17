@@ -146,7 +146,7 @@
       <webaudio-switch id="simu" value="1" height="27" width="75" tooltip="Switch-B" src="knobs/simu.png"></webaudio-switch>
       <webaudio-switch id="live" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/live.png"></webaudio-switch>
       <webaudio-switch id="run" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/run.png"></webaudio-switch>
-      <webaudio-switch id="pysimu/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/pysimu.png"></webaudio-switch>
+
       <!--
 			<button class="button" id="showrun"  onclick="showRun()">Run</button>
       <button class="button" id="shownozoid"  onclick="showNozoid()">Nozoid</button>
@@ -157,7 +157,7 @@
       
      <div>
        <span class="lasertext">Virtual</span>
-       <select onclick="buttonClicked(this.value) value="0">
+       <select onclick="buttonClicked(this.value)" id="virtual" value="0">
          <option value="noteon 0">0</option>
          <option value="noteon 1">1</option>
          <option value="noteon 2">2</option>
@@ -181,13 +181,14 @@
        </select>
        -->
 
-       <select onclick="buttonClicked(this.value)"  value="planet/planetUI">
-         <option value="planet/planetUI">Planetarium</option>
-         <option value="nozoid/nozoidUI">Nozoid</option>
-        <option value="bank0/vjUI">VJing</option>
-        <option value="words/wordsUI">Words</option>
-         <option value="ai/aiUI">AI</option>
-         <option value="lissa/lissaUI">Lissa</option>
+       <select onclick="buttonClicked(this.value)"  value="lj/pluginsUI">
+          <option value="lj/pluginsUI">Plugins</option>
+          <option value="planet/planetUI">Planetarium</option>
+          <option value="nozoid/nozoidUI">Nozoid</option>
+          <option value="bank0/vjUI">VJing</option>
+          <option value="words/wordsUI">Words</option>
+          <option value="ai/aiUI">AI</option>
+          <option value="lissa/lissaUI">Lissa</option>
        </select>
 
      </div>
@@ -530,7 +531,7 @@
 
      <!-- sub right part : planetarium -->
 
-     <div id ="planetUI" style = "display: grid;justify-items: center;">
+     <div id ="planetUI" style = "display: none;justify-items: center;">
         <!-- Stop and start switch -->
         <div>
             <div><webaudio-switch id="planet/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/planet.png"></webaudio-switch>
@@ -663,8 +664,28 @@
   </div>
 
 
+  <!-- sub right part : pluginsUI -->
 
-  <!-- sub right part : vjUI -->
+    <div id ="pluginsUI" style = "display: grid;justify-items: center;">
+    <!-- Plugins choice Interface -->
+
+      <div>
+        <webaudio-switch id="pysimu/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/pysimu.png"></webaudio-switch>
+      </div>
+      <div>
+        <webaudio-switch id="glyph/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/glyph.png"></webaudio-switch>
+        <webaudio-switch id="cycl/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/cycl.png"></webaudio-switch>
+      </div>  
+      <div>
+        <webaudio-switch id="ljpong/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/ljpong.png"></webaudio-switch>
+        <webaudio-switch id="ljwars/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/ljwars.png"></webaudio-switch>
+      </div>
+     </div>
+
+
+
+
+  <!-- sub right part : vjUI bank0 -->
 
   <div id ="vjUI"  class="cnvbuttons">
 
@@ -707,61 +728,59 @@
             </select>
           </div>   
           <form onsubmit="onSubmit(); return false;">
-              <span class="lasertext">Laser 0 word : </span>
-              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/0">
-              <span  class="lasertext">Color</span>
+              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/text/0" value=" ">
               <select onclick="buttonClicked(this.value)">
-                <option value="words/0 red" selected >Red</option>
-                <option value="words/0 green">Green</option>
-                <option value="words/0 blue">Blue</option>
-                <option value="words/0 white">White</option>
-                <option value="words/0 yellow">Yellow</option>
-                <option value="words/0 cyan">Cyan</option>
-                <option value="words/0 pink">Pink</option>
+                <option value="words/color/0 red" selected >Red</option>
+                <option value="words/color/0 green">Green</option>
+                <option value="words/color/0 blue">Blue</option>
+                <option value="words/color/0 white">White</option>
+                <option value="words/color/0 yellow">Yellow</option>
+                <option value="words/color/0 cyan">Cyan</option>
+                <option value="words/color/0 pink">Pink</option>
               </select>
+              <span class="lasertext">Laser 0</span>
           </form>
           <form onsubmit="onSubmit(); return false;">
-              <span class="lasertext">Laser 1 word : </span>
-              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/1">
-              <span  class="lasertext">Color</span>
+              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/text/1" value=" ">
               <select onclick="buttonClicked(this.value)">
-                <option value="words/1 red" selected >Red</option>
-                <option value="words/1 green">Green</option>
-                <option value="words/1 blue">Blue</option>
-                <option value="words/0 white">White</option>
-                <option value="words/0 yellow">Yellow</option>
-                <option value="words/0 cyan">Cyan</option>
-                <option value="words/0 pink">Pink</option>
+                <option value="words/color/1 red" selected >Red</option>
+                <option value="words/color/1 green">Green</option>
+                <option value="words/color/1 blue">Blue</option>
+                <option value="words/color/1 white">White</option>
+                <option value="words/color/1 yellow">Yellow</option>
+                <option value="words/color/1 cyan">Cyan</option>
+                <option value="words/color/1 pink">Pink</option>
               </select>
+              <span class="lasertext">Laser 1</span>
           </form>
           <form onsubmit="onSubmit(); return false;">
-              <span class="lasertext">Laser 2 word : </span>
-              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/2">
-              <span  class="lasertext">Color</span>
+              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/text/2" value=" ">
               <select onclick="buttonClicked(this.value)">
-                <option value="words/2 red" selected >Red</option>
-                <option value="words/2 green">Green</option>
-                <option value="words/2 blue">Blue</option>
-                <option value="words/0 white">White</option>
-                <option value="words/0 yellow">Yellow</option>
-                <option value="words/0 cyan">Cyan</option>
-                <option value="words/0 pink">Pink</option>
+                <option value="words/color/2/color red" selected >Red</option>
+                <option value="words/color/2 green">Green</option>
+                <option value="words/color/2 blue">Blue</option>
+                <option value="words/color/2 white">White</option>
+                <option value="words/color/2 yellow">Yellow</option>
+                <option value="words/color/2 cyan">Cyan</option>
+                <option value="words/color/2 pink">Pink</option>
               </select>
+              <span class="lasertext">Laser 2</span>
           </form>
           <form onsubmit="onSubmit(); return false;">
-              <span class="lasertext">Laser 3 word : </span>
-              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/3">
-              <span  class="lasertext">Color</span>
+              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/text/3" value=" ">
               <select onclick="buttonClicked(this.value)">
-                <option value="words/3 red" selected >Red</option>
-                <option value="words/3 green">Green</option>
-                <option value="words/3 blue">Blue</option>
-                <option value="words/0 white">White</option>
-                <option value="words/0 yellow">Yellow</option>
-                <option value="words/0 cyan">Cyan</option>
-                <option value="words/0 pink">Pink</option>
+                <option value="words/color/3 red" selected >Red</option>
+                <option value="words/color/3 green">Green</option>
+                <option value="words/color/3 blue">Blue</option>
+                <option value="words/color/3 white">White</option>
+                <option value="words/color/3 yellow">Yellow</option>
+                <option value="words/color/3 cyan">Cyan</option>
+                <option value="words/color/3 pink">Pink</option>
               </select>
+              <span class="lasertext">Laser 3</span>
           </form>
+              
+        
      </div>
 
 

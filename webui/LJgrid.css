@@ -20,7 +20,7 @@
 }
 .mgstatus {
   display: grid;  
-  grid-template-columns: 390px 150px  1fr;
+  grid-template-columns: 313px 150px  1fr;
   grid-template-raw: 30px;
   grid-column-gap: 1px;
   grid-row-gap: 1px;
