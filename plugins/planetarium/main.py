@@ -17,7 +17,7 @@ Todo:
 - use debug mode and check altaz calculated values against online sites.
 - Validate aa2radec() with online calculator. Rewrite it to remove need for Astropy.
 - Findout how to use OSC in python 3.
-- 
+- North sky is hardcoded.
 - Code WebUI page.
 - UpdateStars() in each laser sky. Get magnitude. See UpdateSolar for example.
 - All Draw operations should also check visibility in the given laser altitude range.
@@ -33,10 +33,12 @@ import lj3
 import numpy as np
 import math,time
 
+print("Importing astropy...")
 from astropy.coordinates import SkyCoord, EarthLocation, AltAz
 from astropy import units as u
 from astropy.time import Time
 
+print("Importing skyfield...")
 from skyfield.api import Star, load, Topos,Angle
 from skyfield.data import hipparcos
 
@@ -44,10 +46,6 @@ from osc4py3.as_eventloop import *
 from osc4py3 import oscbuildparse
 #from osc4py3 import oscmethod as osm
 from osc4py3.oscmethod import * 
-
-
-
-
 
 import json
 
@@ -65,14 +63,12 @@ else:
 
 import argparse
 
-
-
 print ("")
 print ("Arguments parsing if needed...")
 argsparser = argparse.ArgumentParser(description="Planetarium for LJ")
 argsparser.add_argument("-r","--redisIP",help="IP of the Redis server used by LJ (127.0.0.1 by default) ",type=str)
 argsparser.add_argument("-c","--client",help="LJ client number (0 by default)",type=int)
-argsparser.add_argument("-L","--Lasers",help="Number of lasers connected (1 by default).",type=int)
+argsparser.add_argument("-L","--Lasers",help="Number of lasers connected (4 by default).",type=int)
 argsparser.add_argument("-v","--verbose",help="Verbosity level (0 by default)",type=int)
 argsparser.add_argument("-i","--input",help="inputs OSC Port (8005 by default)",type=int)
 #argsparser.add_argument("-n","--name",help="City Name of the observer",type=str)
@@ -89,7 +85,7 @@ else:
 if args.Lasers:
 	lasernumber = args.Lasers
 else:
-	lasernumber = 1
+	lasernumber = 4
 
 if args.verbose:
 	debug = args.verbose
@@ -178,10 +174,17 @@ def Proj(x,y,z,angleX,angleY,angleZ):
 def aa2radec(azimuth, altitude, t):
 
     #AstrObserver = EarthLocation(lat=lati * u.deg, lon=longi *u.deg, height= elevation*u.m,)
-    ObjectCoord = SkyCoord(alt = altitude * u.deg, az = azimuth *u.deg, obstime = t, frame = 'altaz', location = AstrObserver)
+    #print("Oserver",AstrObserver )
+    print("time",t)
+    ObjectCoord = SkyCoord(alt = altitude * u.deg, az = azimuth * u.deg, obstime = t, frame = 'altaz', location = AstrObserver)
     #print("icrs",ObjectCoord.icrs)
+    print("Altitude", altitude)
+    print("Altitude", altitude * u.deg)
+    print("Azimuth", azimuth)
+    print("Azimuth", azimuth * u.deg)
     #print("ICRS Right Ascension", ObjectCoord.icrs.ra)
     #print("ICRS Declination", ObjectCoord.icrs.dec)
+    #print()
     return ObjectCoord.icrs.ra.degree, ObjectCoord.icrs.dec.degree
 
 
@@ -227,16 +230,20 @@ def RadecSkies(LaserSkies, AstroSkyTime):
 	print()
 	print("Converting", lasernumber, "LaserSkies limits in Right Ascension & Declination (radec) coordinates ")
 	for laser in range(lasernumber):
+	
 		if debug > 0:
+			print ("")
 			print("Laser",laser)
 		# Left top point
 		LaserSkies[laser][4],LaserSkies[laser][6] = aa2radec(azimuth = LaserSkies[laser][0], altitude =LaserSkies[laser][2], t =AstroSkyTime)
-		if debug > 0:
-		 print(LaserSkies[laser][4],LaserSkies[laser][6])
+
 		# Right Bottom point
 		LaserSkies[laser][5],LaserSkies[laser][7] = aa2radec(azimuth = LaserSkies[laser][1], altitude =LaserSkies[laser][3], t =AstroSkyTime)
 		if debug > 0:
-			print(LaserSkies[laser][5],LaserSkies[laser][7])
+			print("Top left Altaz :",LaserSkies[laser][2],LaserSkies[laser][0])
+			print("Top left radec :",LaserSkies[laser][4],LaserSkies[laser][6])
+			print("Bottom right Altaz :",LaserSkies[laser][3],LaserSkies[laser][1])
+			print("Bottom right radec :",LaserSkies[laser][5],LaserSkies[laser][7])
 	if debug > 0:
 		print(LaserSkies)
 	print ("Done.")
@@ -248,7 +255,10 @@ def azimuth2scrX(leftAzi,rightAzi,s):
     b1, b2 = 0, width
     #if debug > 0:
     #    print(leftAzi, rightAzi, s, b1 + ((s - a1) * (b2 - b1) / (a2 - a1)))
-    return  b1 + ((s - a1) * (b2 - b1) / (a2 - a1))
+    if s != 0:
+    	return  b1 + ((s - a1) * (b2 - b1) / (a2 - a1))
+    else:
+    	return width/2
 
 	
 
@@ -297,7 +307,7 @@ def LoadSolar():
 def UpdateSolar():
 	global SolarObjects
 
-	# Compute Alt Az coordinates for all solar objects for obsehttps://www.startpage.com/do/searchrver.
+	# Compute Alt Az coordinates for all solar objects for Observer.
 	for number,object in enumerate(SolarObjects):
 		
 		#print(object[0],number)
@@ -305,12 +315,10 @@ def UpdateSolar():
 	if debug > 0:
 		PrintSolar()
 	
-
 def PrintSolar():
 
 	for number,object in enumerate(SolarObjects):
 		print (SolarObjects[number][0],"is at (alt,az)",SolarObjects[number][1],SolarObjects[number][2])
-
 
 # Draw the SolarShapeObject for any Solar object is in the laser Sky
 def DrawSolar(laser):
@@ -363,12 +371,11 @@ def StarSelect():
 	for index in range(len(Starnames)-1):
 		StarsObjects.append([Starnames[index+1],0,0])
 
-
 def UpdateStars(ts):
 	global StarsObjects
 
 	hipparcos_epoch = ts.tt(1991.25)
-	# Compute Alt Az coordinates for all solar objects for obsehttps://www.startpage.com/do/searchrver.
+	# Compute Alt Az coordinates for all stars objects for Observer.
 	for number,object in enumerate(StarsObjects):
 		
 		#print(object[0],number)
@@ -405,7 +412,7 @@ def DrawStars(laser):
 
 
 #
-# Anything system. Say you want 
+# Template for Anything you want system. 
 #
 
 AnythingObjectShape = [(-50,30), (-30,-30), (30,-30), (10,30), (-50,30)]
@@ -433,12 +440,10 @@ def UpdateAnything():
 	if debug > 0:
 		PrintAnything()
 	
-
 def PrintAnything():
 
 	for number,object in enumerate(AnythingObjects):
 		print (AnythingObjects[number][0],"is at (alt,az)",AnythingObjects[number][1],AnythingObjects[number][2])
-
 
 # Draw the AnythingShapeObject for any Anything object is in the laser Sky
 def DrawAnything(laser):
@@ -453,12 +458,11 @@ def DrawAnything(laser):
 
 
 
-
-
 # 
 # On Earth Gps positions 
 # from https://github.com/lutangar/cities.json
 # 
+
 def LoadCities():
 	global world
 
@@ -493,8 +497,7 @@ def DrawOrientation(laser):
 	# North direction is in given laser sky azimuth range?
 	if LaserSkies[laser][1] <  LaserSkies[laser][0]:
 		#print ("N az",azimuth2scrX(LaserSkies[laser][0],LaserSkies[laser][1],0))
-		lj3.Text("NORTH",white,laser,azimuth2scrX(LaserSkies[laser][0],LaserSkies[laser][1],359), 770, resize = 0.5, rotx =0, roty =0 , rotz=0)
-
+		lj3.Text("NORTH",white,laser,azimuth2scrX(LaserSkies[laser][0],LaserSkies[laser][1],0), 770, resize = 0.5, rotx =0, roty =0 , rotz=0)
 
 	# East direction is in given laser sky azimuth range ?
 	if LaserSkies[laser][0] <= 90 < LaserSkies[laser][1]:	
@@ -546,7 +549,9 @@ def InitObserver(SkyCity, SkyCountryCode, time,ts):
 	# to later select their visible objects in radec catalogs like hipparcos. 
 	# LaserSky definition for one laser (in decimal degrees) : [RightAzi, LeftAzi, TopAlt, BotAlt, LeftRa, RightRa, TopDec, BottomDec]
 	# With 4 lasers with each one a quarter of the 360 ° real sky, there is 4 LaserSky :
-	LaserSkies = [[45,135.0,90.0,0.0,0.0,0.0,0.0,0.0],[135,225,90,0,0,0,0,0],[225,315,90,0,0,0,0,0],[305,0,90,0,0,0,0,0]]
+	print()
+	print("LaserSkies Radec conversion")
+	LaserSkies = [[45,135.0,90.0,0.0,0.0,0.0,0.0,0.0],[135,225,90,0,0,0,0,0],[225,315,90.0,0,0,0,0,0],[315,45,90.0,0,0,0,0,0]]
 	RadecSkies(LaserSkies, AstroSkyTime)
 
 
@@ -612,7 +617,7 @@ try:
 	osc_method("/ping*", lj3.OSCping)
 	osc_method("/quit", OSCquit)
 
-	WebStatus("Load Cities.")
+	WebStatus("Loading Cities...")
 	ts = load.timescale()
 	LoadCities()
 
@@ -620,17 +625,17 @@ try:
 	SkyCountryCode = 'FR'
 	WebStatus(SkyCity)
 
-	WebStatus("Solar System..")
+	WebStatus("Loading Solar System...")
 	LoadSolar()
 
-	WebStatus("Observer..")
+	WebStatus("Finding observer position..")
 	InitObserver(SkyCity, SkyCountryCode, Time.now(),ts)
 
-	WebStatus("Load Stars..")
+	WebStatus("Loading Stars...")
 	LoadHipparcos(ts)
 	StarSelect()
 
-	WebStatus("Updating...")
+	WebStatus("Computing observer skies")
 	print("Updating solar system (de421) objects position for observer at", Skylat, Skylong, "time", SkyfieldTime.utc_iso())
 	UpdateSolar()
 

@@ -7,10 +7,11 @@ VJing Bank 0
 
 was Franken for compo laser at coockie 2018 demoparty
 
-0 : many Starfields
+0 : Starfields
 1 : generic pose animations
 2 : Faces
 3 : Dancers
+4 : IdiotIA
 
 LICENCE : CC
 Sam Neurohack, Loloster, 
@@ -28,6 +29,7 @@ from random import randrange
 import redis
 import lj3
 import sys,time
+import os
 
 from osc4py3.as_eventloop import *
 from osc4py3 import oscbuildparse
@@ -76,11 +78,6 @@ else:
 
 lj3.Config(redisIP,ljclient)
 
-def OSCljclient(value):
-    # Will receive message address, and message data flattened in s, x, y
-    print("I got /bank0/ljclient with value", value)
-    ljclient = value
-    lj3.LjClient(ljclient)
 
 def hex2rgb(hexcode):
     return tuple(map(ord,hexcode[1:].decode('hex')))
@@ -440,7 +437,8 @@ CurrentPose = 1
 def prepareFACES():
 
 
-    # anim format (name, xpos,ypos, resize, currentframe, totalframe, count, speed)
+    # anim format (name, xpos, ypos, resize, currentframe, totalframe, count, frame repeat)
+    #               0     1     2      3           4           5         6         7
     # total frame is fetched from directory file count
     
     anims[0] = [['detroit1', 300,300, 100,0,0,0,1]]
@@ -470,32 +468,40 @@ def prepareFACES():
     #by this one
     #thanks to https://stackoverflow.com/questions/19184335/is-there-a-need-for-rangelena
 
+
     for laseranims in anims:
-      if debug > 1:
-          print("anims:",laseranims)
-          for anim in laseranims:
-            anim[5]=lengthPOSE(anim[0])
-          if debug > 1:
-            print(anim[5])
+
+        for anim in laseranims:
+            anim[5] = lengthPOSE(anim[0])
+
+            if debug > 0:
+              print("anim :", anim)
+              print("length :", anim[5])
     
 
 
 # display the face animation describe in PoseDir
 def Faces():
-
+    
   for laseranims in range(3):
     for anim in anims[laseranims]:
         PL = laseranims
         #print PL, anim
+
         dots = []
-        #print anim, anim[5]
-        # repeat anim[7] time the same frame
+
+        # increase counter [6] 
+        # compare to repeat [7] time the same frame
         anim[6] +=1
         if anim[6] == anim[7]:
 
+            # reset repeat
             anim[6] = 0
-            # increase current frame and compare to total frame 
+
+            # increase current frame [4]
             anim[4] += 1
+
+            # compare to total frame [5]
             if anim[4] == anim[5]:
                 anim[4] = 0
 
@@ -509,7 +515,7 @@ def Faces():
 
         for people in range(len(pose_json['people'])):
 
-            #lj3.PolyLineOneColor(face(pose), c=color,  PL = 0, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            #lj3.rPolyLineOneColor(face(pose_json, people), c=color, PL = laseranims, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
             lj3.rPolyLineOneColor(browL(pose_json, people), c=color, PL = laseranims, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
             lj3.rPolyLineOneColor(browR(pose_json, people), c=color, PL = laseranims, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
             lj3.rPolyLineOneColor(eyeR(pose_json, people), c=color, PL = laseranims, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
@@ -594,11 +600,106 @@ def Dancers():
             PL[PL] = fwork.LinesPL(PL)
              '''
 
+
+# Curve 4 IdiotIA
+import json
+CurrentPose = 1
+
+def prepareIdiotIA():
+
+
+    # anim format (name, xpos,ypos, resize, currentframe, totalframe, count, speed)
+    # total frame is fetched from directory file count
+    
+    anims[0] = [['detroit1', 300,300, 100,0,0,0,1]]
+    anims[1] = [['detroit1', 400,200, 200,0,0,0,1]]
+    anims[2] = [['detroit1', 500,200, 300,0,0,0,1]]
+
+    '''
+    # read anims number of frames from disk.
+    for anim in range(len(anims0)):
+        anims0[anim][5]= lengthPOSE(anims0[anim][0])
+    for anim in range(len(anims1)):
+        anims1[anim][5]= lengthPOSE(anims1[anim][0])
+    for anim in range(len(anims2)):
+        anims2[anim][5]= lengthPOSE(anims2[anim][0])
+    '''
+
+    #replace code below
+    ''' 
+    for laseranims in range(3):
+    if debug > 0:
+            print "anims:",anims[laseranims],
+        for anim in range(len(anims[laseranims])):
+            anims[laseranims][anim][5]= lengthPOSE(anims[laseranims][anim][0])
+        if debug > 1:
+        print anims[laseranims][anim][5]
+    '''
+    #by this one
+    #thanks to https://stackoverflow.com/questions/19184335/is-there-a-need-for-rangelena
+
+    for laseranims in anims:
+      if debug > 1:
+          print("anims:",laseranims)
+          for anim in laseranims:
+            anim[5]=lengthPOSE(anim[0])
+          if debug > 1:
+            print(anim[5])
+    
+
+
+# display the face animation describe in PoseDir
+def Faces():
+
+  for laseranims in range(3):
+    for anim in anims[laseranims]:
+        PL = laseranims
+        #print PL, anim
+        dots = []
+        #print anim, anim[5]
+        # repeat anim[7] time the same frame
+        anim[6] +=1
+        if anim[6] == anim[7]:
+
+            anim[6] = 0
+            # increase current frame and compare to total frame 
+            anim[4] += 1
+            if anim[4] == anim[5]:
+                anim[4] = 0
+
+
+        posename = 'poses/' + anim[0] + '/' + anim[0] +'-'+str("%05d"%anim[4])+'.json'
+        posefile = open(posename , 'r') 
+        posedatas = posefile.read()
+        pose_json = json.loads(posedatas)
+
+        # Face
+
+        for people in range(len(pose_json['people'])):
+
+            #lj3.rPolyLineOneColor(face(pose_json, people), c=color, PL = laseranims, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            lj3.rPolyLineOneColor(browL(pose_json, people), c=color, PL = laseranims, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            lj3.rPolyLineOneColor(browR(pose_json, people), c=color, PL = laseranims, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            lj3.rPolyLineOneColor(eyeR(pose_json, people), c=color, PL = laseranims, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            lj3.rPolyLineOneColor(eyeL(pose_json, people), c=color, PL = laseranims, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            lj3.rPolyLineOneColor(nose(pose_json, people), c=color, PL = laseranims, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])  
+            lj3.rPolyLineOneColor(mouth(pose_json, people), c=color, PL = laseranims, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+        
+        lj3.DrawPL(PL)
+        time.sleep(0.02)
+
+
 def OSCljclient(value):
     # Will receive message address, and message data flattened in s, x, y
-    print("I got /bank0/ljclient with value", value)
+    print("Bank0 got /bank0/ljclient with value", value)
     ljclient = value
     lj3.LjClient(ljclient)
+
+def OSCpl(value):
+
+    print("Bank0 got /bank0/pl with value", value)
+    lj3.WebStatus("Bank0 to pl "+ str(value))
+    lj3.LjPl(value)
 
 
 # Dancers, Starfield, Pose, Face
@@ -619,10 +720,6 @@ def WebStatus(message):
     lj3.SendLJ("/status",message)
 
 
-#doit = Starfield
-doit = Pose
-#doit = Faces
-#doit = Dancers
 
 print('Loading Bank0...')
 
@@ -636,15 +733,16 @@ osc_udp_server("127.0.0.1", OSCinPort, "InPort")
 osc_method("/bank0/run*", OSCrun)
 osc_method("/bank0/ping*", lj3.OSCping)
 osc_method("/bank0/ljclient", OSCljclient)
+osc_method("/bank0/ljpl", OSCpl)
 osc_method("/quit", OSCquit)
 
-
+'''
 import pygame
 pygame.init()
 Nbpads = pygame.joystick.get_count()
 print ("Joypads : ", str(Nbpads))
 
-'''
+
 if Nbpads != 2:
 
     print ('')
@@ -652,7 +750,6 @@ if Nbpads != 2:
     print ("THIS VERSION NEEDS 2 PADS. PLEASE CONNECT THEM.")
     print ('')
     sys.exit()
-''' 
 
 
 if Nbpads > 1:
@@ -678,15 +775,21 @@ if Nbpads > 0:
     #print ("Buttons Pad 1 :" , str(numButtons))
 
 
-
+'''
 
 anims =[[],[],[],[]]
 color = lj3.rgb2int(255,255,255)
 
-prepareSTARFIELD()
-preparePOSE()
-prepareDANCERS()
+#prepareSTARFIELD()
+#preparePOSE()
+#prepareDANCERS()
 prepareFACES()
+
+
+#doit = Starfield
+#doit = Pose
+doit = Faces
+#doit = Dancers
 
 WebStatus("Bank0 ready.")
 print("Bank0 ready")

@@ -1,15 +1,21 @@
 # coding=UTF-8
 
 '''
-LJ v0.8.0
-Some LJ functions useful for python clients (was framy.py)
+LJ v0.8.1
+Some LJ functions useful for python 2.7 clients (was framy.py)
+Functions and documentation here is low priority as python 2 support will stop soon.
+Better code your plugin with python 3 and lj3.py.
+
 
 Config 
 PolyLineOneColor
 rPolyLineOneColor
 Text
-sendlj : remote control
+SendLJ 				: remote control
+LjClient			: 
+LjPl				 : 
 DrawPL
+WebStatus
 
 LICENCE : CC
 Sam Neurohack
@@ -29,21 +35,14 @@ point_list = []
 pl = [[],[],[],[]]
 
 
-'''
-LJIP = "127.0.0.1"
 
-osclientlj = OSCClient()
-oscmsg = OSCMessage()
-osclientlj.connect((redisIP, 8002)) 
-'''
-
-def sendlj(oscaddress,oscargs=''):
+def SendLJ(oscaddress,oscargs=''):
         
     oscmsg = OSCMessage()
     oscmsg.setAddress(oscaddress)
     oscmsg.append(oscargs)
     
-    #print ("sending to bhorosc : ",oscmsg)
+    print ("sending OSC message : ",oscmsg)
     try:
         osclientlj.sendto(oscmsg, (redisIP, 8002))
         oscmsg.clearData()
@@ -52,7 +51,8 @@ def sendlj(oscaddress,oscargs=''):
         pass
     #time.sleep(0.001
 
-
+def WebStatus(message):
+	SendLJ("/status", message)
 
 
 ASCII_GRAPHICS = [
@@ -158,6 +158,17 @@ def Config(redisIP,client):
 	ClientNumber = client
 	#print "client configured",ClientNumber
 
+
+def LjClient(client):
+	global ClientNumber
+
+	ClientNumber = client
+
+def LjPl(pl):
+	global PL
+
+	PL = pl
+	
  
 def LineTo(xy, c, PL):
  
@@ -247,6 +258,7 @@ def rPolyLineOneColor(xy_list, c, PL , closed, xpos = 0, ypos =0, resize =0.7, r
 def LinesPL(PL):
 	print "Stupido !! your code is to old : use DrawPL() instead of LinesPL()"
 	DrawPL(PL)
+
 
 def DrawPL(PL):
 	#print '/pl/0/'+str(PL), str(pl[PL])

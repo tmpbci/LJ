@@ -385,6 +385,7 @@ def message_received(client, wserver, message):
             sendWSall("/"+ plugin + "/start 0")
             if gstt.debug >0:
                 print "plugin", plugin, "didn't answered."
+    plugins.sendWSall("/status Running...")
 
     '''
     if plugins.Send("planet",oscpath):

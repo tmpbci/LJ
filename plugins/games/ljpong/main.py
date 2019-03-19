@@ -13,6 +13,7 @@ import math
 import itertools
 import sys
 import os
+import types
 
 '''
 is_py2 = sys.version[0] == '2'
@@ -30,6 +31,9 @@ import entities
 from controller import setup_controls
 import argparse
 
+from OSC import OSCServer, OSCClient, OSCMessage
+OSCIP = "127.0.0.1"
+OSCPort = 8020
 
 score = None
 
@@ -87,6 +91,9 @@ red = rgb2int(255,0,0)
 blue = rgb2int(0,0,255)
 green = rgb2int(0,255,0)
 
+#
+# Arguments handling
+#
 
 print ("")
 print ("Arguments parsing if needed...")
@@ -129,10 +136,16 @@ def StartPlaying(first_time = False):
 
 app_path = os.path.dirname(os.path.realpath(__file__))
 
+# 
+# Pads via pygame
+#
+
+print "Pygame init..."
 pygame.init()
 #sounds.InitSounds()
 
 clock = pygame.time.Clock()
+
 
 Nbpads = pygame.joystick.get_count()
 print ("Joypads : ", str(Nbpads))
@@ -184,6 +197,66 @@ y = ball_origin[1]
 
 keystates = pygame.key.get_pressed()
 
+#
+# OSC
+# 
+
+oscserver = OSCServer( (OSCIP, OSCPort) )
+oscserver.timeout = 0
+OSCRunning = True
+
+
+def OSCljclient(path, tags, args, source):
+
+
+	print("LJ Pong got /ljpong/ljclient with value", args[0])
+	lj.WebStatus("LJPong to virtual "+ str(args[0]))
+	ljclient = args[0]
+	lj.LjClient(ljclient)
+
+def OSCpl(path, tags, args, source):
+
+	print("LJ Pong got /ljpong/pl with value", args[0])
+	lj.WebStatus("LJPong to pl "+ str(args[0]))
+	plnumber = args[0]
+
+# /ping
+def OSCping(path, tags, args, source):
+
+	print("LJ Pong got /ping")
+	lj.SendLJ("/pong","ljpong")
+	lj.SendLJ("/ljpong/start",1)
+
+
+def OSC_frame():
+    # clear timed_out flag
+    oscserver.timed_out = False
+    # handle all pending requests then return
+    while not oscserver.timed_out:
+		oscserver.handle_request()
+
+
+def handle_timeout(self):
+    self.timed_out = True
+
+print ""
+print "Launching OSC server..."
+print "at", OSCIP, "port",str(OSCPort)
+
+oscserver.handle_timeout = types.MethodType(handle_timeout, oscserver)
+
+# OSC callbacks
+
+oscserver.addMsgHandler( "/ljpong/ljclient", OSCljclient )
+oscserver.addMsgHandler("/ljpong/pl", OSCpl)
+oscserver.addMsgHandler("/ping", OSCping)
+
+print "Running..."
+
+#
+# Game main loop
+#
+
 
 while fs != GAME_FS_QUIT:
 
@@ -192,6 +265,8 @@ while fs != GAME_FS_QUIT:
 		if event.type == pygame.QUIT:
 			fs = GAME_FS_QUIT
 	
+	OSC_frame()
+
 	keystates_prev = keystates[:]
 	keystates = pygame.key.get_pressed()[:]
 
@@ -346,21 +421,19 @@ while fs != GAME_FS_QUIT:
 		
 	if fs == GAME_FS_PLAY or fs == GAME_FS_GAMEOVER or fs == GAME_FS_LAUNCH:
 
-		entities.Score1Draw(lscore)
-		entities.Score2Draw(rscore)
-		entities.FlipsDraw()
-		entities.BallDraw()
-		entities.FiletDraw()
-		lj.DrawPL(0)
+		entities.Score1Draw(lscore, plnumber)
+		entities.Score2Draw(rscore, plnumber)
+		entities.FlipsDraw(plnumber)
+		entities.BallDraw(plnumber)
+		entities.FiletDraw(plnumber)
+		lj.DrawPL(plnumber)
 
 	if fs == GAME_FS_MENU:
 		
-		entities.LogoDraw()
-		lj.DrawPL(0)
+		entities.LogoDraw(plnumber)
+		lj.DrawPL(plnumber)
 
 	
-	# TODO : rendre indépendante la fréquence de rafraîchissement de l'écran par
-	# rapport à celle de l'animation du jeu
 	clock.tick(100)
 
 pygame.quit()

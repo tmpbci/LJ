@@ -67,7 +67,7 @@ def SendLJ(oscaddress,oscargs=''):
 
 # Answer to LJ pings
 def OSCping(value):
-    # Will receive message address, and message data flattened in s, x, y
+	
     print("I got /ping with value", value)
     SendLJ("/pong",value)
 
@@ -190,6 +190,9 @@ def Config(redisIP,client):
 	ClientNumber = client
 	osc_udp_client(redisIP, 8002, "LJ 8002")
 
+# If you want to use rgb for color :
+def rgb2int(r,g,b):
+	return int('0x%02x%02x%02x' % (r,g,b),0)
  
 def LineTo(xy, c, PL):
  
@@ -308,13 +311,13 @@ def CharDots(char,color):
 		dots.append((dot[0],dot[1],color))
 	return dots
 
-def Text(message,c, PL, xpos, ypos, resize, rotx, roty, rotz):
+def Text(message, c, PL, xpos, ypos, resize, rotx, roty, rotz):
 
 	dots =[]
 
 	l = len(message)
 	i= 0
-	#print message
+	#print (message)
 	
 	for ch in message:
 		
@@ -333,10 +336,10 @@ def Text(message,c, PL, xpos, ypos, resize, rotx, roty, rotz):
 
 		for xy in char_pl_list:
 			char_draw.append((xy[0] + x_offset,xy[1],c))
-		i +=1
+		i += 1
 		#print ch,char_pl_list,char_draw			
 		rPolyLineOneColor(char_draw, c, PL , False, xpos, ypos, resize, rotx, roty, rotz)
-		#print ("laser",PL,"message",message)
+		# print ("laser",PL,"message",message)
 		#dots.append(char_draw)
 
 

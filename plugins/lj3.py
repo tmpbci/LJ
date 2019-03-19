@@ -17,6 +17,9 @@ SendLJ(adress,message) : 	LJ remote control. See commands.py
 WebStatus(message) : 		display message on webui
 DrawPL(point list number) : once you stacked all wanted elements, like 2 polylines, send them to lasers.
 rgb2int(r,g,b)
+LjClient(client):			Change Client number in redis keys
+LjPl(pl):					Change pl number in redis keys = laser target.
+
 
 OSCstart(): 	Start the OSC system.
 OSCframe():		Handle incoming OSC message. Calling the right callback
@@ -233,7 +236,11 @@ def LjClient(client):
 	global ClientNumber
 
 	ClientNumber = client
- 
+
+def LjPl(pl):
+	global PL
+
+	PL = pl
 
  
 def LineTo(xy, c, PL):

@@ -80,6 +80,8 @@
         x.style.display = "none";
       var x = document.getElementById("vjUI");
         x.style.display = "none";
+      var x = document.getElementById("poseUI");
+        x.style.display = "none";
       var x = document.getElementById("wordsUI");
         x.style.display = "none";
       var x = document.getElementById("pluginsUI");
@@ -119,6 +121,15 @@
        _WS.send("/bank0/ping");
       }
 
+
+  function showposeUI() {
+      nosimuUI();
+      var x = document.getElementById("poseUI");
+       x.style.display = "grid";
+       _WS.send("/pose/ping");
+      }
+
+
   function showwordsUI() {
       nosimuUI();
       var x = document.getElementById("wordsUI");
@@ -154,8 +165,11 @@
       if (clicked_id === "lissa/lissaUI") {
          showlissaUI();
          }
-      if (clicked_id === "vj/vjUI") {
+      if (clicked_id === "bank0/vjUI") {
          showvjUI();
+         }
+      if (clicked_id === "pose/poseUI") {
+         showposeUI();
          }
       if (clicked_id === "words/wordsUI") {
          showwordsUI();
@@ -238,6 +252,7 @@
         			//console.log("plpoint");
         			break;
         	default:
+              //console.log(e);
         			document.getElementById(res[0].slice(1)).value = res[1];
               _WS.showin(e.data);
               }

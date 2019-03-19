@@ -112,7 +112,7 @@ LOGO = [
 LOGO_OFFSET_X = 460
 LOGO_OFFSET_Y = 250
 
-def LogoDraw():
+def LogoDraw(plnumber):
 	'''
 	Dessine le logo
 	'''
@@ -122,8 +122,7 @@ def LogoDraw():
 		for xy in pl_color[0]:
 			xy_list.append((LOGO_OFFSET_X + xy[0], LOGO_OFFSET_Y + xy[1]))
 		#print xy_list
-		lj.PolyLineOneColor(xy_list, c,0, False)
-
+		lj.PolyLineOneColor(xy_list, c, plnumber, False)
 
 
 
@@ -190,23 +189,23 @@ def FlipsMoveJoy(left_key,right_key,up_key,down_key,lvertax):
 				FlipsLy = screen_size[1]  - PADDLE_height
 	return FlipsLy, FlipsRy
 
-def FlipsDraw():
+def FlipsDraw(plnumber):
 
-	lj.PolyLineOneColor([(FlipsLx,FlipsLy),(FlipsLx,FlipsLy + PADDLE_height),(FlipsLx + PADDLE_width , FlipsLy + PADDLE_height),(FlipsLx + PADDLE_width,FlipsLy)], white,0,True)
-	lj.PolyLineOneColor([(FlipsRx,FlipsRy),(FlipsRx,FlipsRy + PADDLE_height),(FlipsRx + PADDLE_width , FlipsRy + PADDLE_height),(FlipsRx + PADDLE_width,FlipsRy)], white,0,True)
-
-
-def FiletDraw():
-	lj.PolyLineOneColor([(screen_size[0]/2,screen_size[1]),(screen_size[0]/2,0)], white, 0,True)
+	lj.PolyLineOneColor([(FlipsLx,FlipsLy),(FlipsLx,FlipsLy + PADDLE_height),(FlipsLx + PADDLE_width , FlipsLy + PADDLE_height),(FlipsLx + PADDLE_width,FlipsLy)], white, plnumber, True)
+	lj.PolyLineOneColor([(FlipsRx,FlipsRy),(FlipsRx,FlipsRy + PADDLE_height),(FlipsRx + PADDLE_width , FlipsRy + PADDLE_height),(FlipsRx + PADDLE_width,FlipsRy)], white, plnumber, True)
 
 
-def Score1Draw(score):
+def FiletDraw(plnumber):
+	lj.PolyLineOneColor([(screen_size[0]/2,screen_size[1]),(screen_size[0]/2,0)], white, plnumber,True)
+
+
+def Score1Draw(score, plnumber):
 	#print "score1",score
-	lj.Text(str(score),white, 0, 350, 50, 1, 0, 0, 0)
+	lj.Text(str(score),white, plnumber, 350, 50, 1, 0, 0, 0)
 	
-def Score2Draw(score):
+def Score2Draw(score, plnumber):
 	#print "score2",score
-	lj.Text(str(score),white, 0, 500, 50, 1, 0, 0, 0)
+	lj.Text(str(score),white, plnumber, 500, 50, 1, 0, 0, 0)
 	
 		
 	
@@ -235,7 +234,7 @@ def BallMove(xcoord,ycoord):
 	elif BallY >= screen_size[1]:
 		BallY = screen_size[1]
 
-def BallDraw():
+def BallDraw(plnumber):
 	global BallX,BallY
 
 	xmin = 0
@@ -255,5 +254,5 @@ def BallDraw():
 
 	#print "ball position",xmin,xmax,ymin,ymax
 		
-	lj.PolyLineOneColor([(xmin,ymin),(xmin,ymax),(xmax,ymax),(xmax,ymin)], white,0,True)
+	lj.PolyLineOneColor([(xmin,ymin),(xmin,ymax),(xmax,ymax),(xmax,ymin)], white, plnumber, True)
 

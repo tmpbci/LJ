@@ -74,13 +74,21 @@ def rgb2int(r,g,b):
 
 
 def WebStatus(message):
+
 	lj3.SendLJ("/status",message)
 
 def OSCljclient(value):
-	# Will receive message address, and message data flattened in s, x, y
-	print("I got /cycl/ljclient with value", value)
+
+	print("Cycl got /cycl/ljclient with value", value)
+	lj3.WebStatus("Cycl to virtual "+ str(value))
 	ljclient = value
 	lj3.LjClient(ljclient)
+
+def OSCpl(value):
+
+	print("Cycl got /cycl/pl with value", value)
+	lj3.WebStatus("Cycl to pl "+ str(value))
+	lj3.LjPl(value)
 
 
 # /ping
@@ -91,15 +99,15 @@ def OSCping():
 # /quit
 def OSCquit():
 
-	lj3.OSCquit("Cycl")
+	lj3.OSCquit("cycl")
 
 osc_startup()
 osc_udp_server("127.0.0.1", OSCinPort, "InPort")
 
 osc_method("/ping*", OSCping)
 osc_method("/quit", OSCquit)
-osc_method("/cycl/ljclient", OSCljclient)
-
+osc_method("/cycl/ljclient*", OSCljclient)
+osc_method("/cycl/pl*", OSCpl)
 
 WebStatus("Textcycl Ready")
 lj3.SendLJ("/cycl/start 1")

@@ -110,10 +110,17 @@ def rgb2int(r,g,b):
 	
 
 def OSCljclient(value):
-	# Will receive message address, and message data flattened in s, x, y
-	print("I got /glyph/ljclient with value", value)
+
+	print("Glyph got /glyph/ljclient with value", value)
+	lj3.WebStatus("Glyph to virtual "+ str(value))
 	ljclient = value
 	lj3.LjClient(ljclient)
+
+def OSCpl(value):
+
+	print("Glyph got /glyph/pl with value", value)
+	lj3.WebStatus("Glyph to pl "+ str(value))
+	lj3.LjPl(value)
 
 
 def Proj(x,y,z,angleX,angleY,angleZ):

@@ -87,7 +87,7 @@ import plugins
 
 r = redis.StrictRedis(host=gstt.LjayServerIP , port=6379, db=0)
 
-GenericCommands = ["start","ljclient","clientnumber","noteon","pong","mouse","emergency","simu","status","run","nozoid","planet","live","words","ai","bank0","lj"]
+GenericCommands = ["start","ljclient","clientnumber","noteon","ljpong","ljwars","mouse","emergency","simu","status","run","nozoid","planet","live","words","ai","bank0","pose","lj","cycl","glyph"]
 
 
     
@@ -177,7 +177,6 @@ def handler(oscpath, args):
 
     # 2 incoming cases : generic or specific for a given lasernumber :
     # Generic : Commands without a laser number
-    #if oscpath[1] == "client" or oscpath[1]=="clientnumber" or oscpath[1] =="noteon" or oscpath[1]=="pong" or oscpath[1]=="mouse" or oscpath[1]=="emergency" or oscpath[1]=="simu" or oscpath[1]=="status" or oscpath[1]=="run" or oscpath[1]=="nozoid" or oscpath[1]=="planet"  or oscpath[1]=="live"  or oscpath[1]=="planet" :
     
     if oscpath[1] in GenericCommands:   
 

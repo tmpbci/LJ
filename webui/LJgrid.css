@@ -69,6 +69,22 @@
   transition: all .3s ease;
   background-color: #151515;
 }
+.posebuttons {
+  display: none;
+  height: 400px;
+  width: 400px;
+  grid-template-columns: 66px 66px 66px 66px 66px 66px;
+  grid-template-rows: 30px 67px 67px 67px 30px;
+  background-color: #000;
+  justify-items: center;
+  align-items: center;
+  border-color: #445;
+  border-style: groove;
+  border-width: 1px;
+  grid-gap: 1px;
+  transition: all .3s ease;
+  background-color: #151515;
+}
 .mglive {
   display: none;
   height: 400px;

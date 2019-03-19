@@ -94,8 +94,10 @@ def OSCword3(value):
 def OSCljclient(value):
 	# Will receive message address, and message data flattened in s, x, y
 	print("Words got /words/ljclient with value", value)
+	lj3.WebStatus("Words to virtual "+ str(value))
 	ljclient = value
 	lj3.LjClient(ljclient)
+
 
 
 # /ping
@@ -108,7 +110,7 @@ def OSCping():
 # /quit
 def OSCquit():
 
-	lj3.OSCquit("Words")
+	lj3.OSCquit("words")
 
 
 def Run():
@@ -122,7 +124,7 @@ def Run():
 	osc_method("/words/text/2*", OSCword2)
 	osc_method("/words/text/3*", OSCword3)
 	osc_method("/ping*", OSCping)
-	osc_method("/words/ljclient", OSCljclient)
+	osc_method("/words/ljclient*", OSCljclient)
 	osc_method("/quit", OSCquit)
 
 	color = lj3.rgb2int(255,255,255)
