@@ -153,10 +153,10 @@ def prepareIdiotIA():
     #               0     1     2      3           4           5         6      7
     # total frames is fetched from directory by lengthPOSE()
     
-    anims[0] = [['detroit1', xy_center[0], xy_center[1], 300,0,0,0,5]]
-    anims[1] = [['detroit1', xy_center[0], xy_center[1] + 50, 400,0,0,0,15]]
-    anims[2] = [['detroit1', xy_center[0], xy_center[1] + 50, 500,0,0,0,25]]
-    anims[3] = [['detroit1', xy_center[0], xy_center[1], 500,0,0,0,25]]
+    anims[0] = [['idiotia1', xy_center[0], xy_center[1], 300,0,0,0,5]]
+    anims[1] = [['idiotia1', xy_center[0], xy_center[1] + 50, 400,0,0,0,15]]
+    anims[2] = [['idiotia1', xy_center[0], xy_center[1] + 50, 500,0,0,0,25]]
+    anims[3] = [['idiotia1', xy_center[0], xy_center[1], 500,0,0,0,25]]
 
     for laseranims in anims:
 
