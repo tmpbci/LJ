@@ -204,7 +204,7 @@
 		var  pl = "";
 		var  pl2 = new Array();
     var _WS = {
-    uri: 'ws://127.0.0.1:9001/',
+    uri: 'ws://192.168.2.13:9001/',
     ws: null,
 
     init : function (e) {

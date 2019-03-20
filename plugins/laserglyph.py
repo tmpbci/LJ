@@ -21,6 +21,7 @@ from osc4py3 import oscbuildparse
 from osc4py3.oscmethod import * 
 
 OSCinPort = 8004
+myIP = "192.168.2.52"
 
 print ("")
 print ("Arguments parsing if needed...")
@@ -49,6 +50,7 @@ if args.redisIP  != None:
 else:
 	redisIP = '127.0.0.1'
 
+print("redisIP",redisIP)
 
 if args.verbose:
 	debug = args.verbose
@@ -56,9 +58,9 @@ else:
 	debug = 0
 
 
-lj3.Config(redisIP,ljclient)
+r = lj3.Config(redisIP,ljclient)
 
-
+print("r :",r)
 width = 800
 height = 600
 centerX = width / 2
@@ -159,12 +161,12 @@ def Run():
 	Left = []
 	Right = []
 	counter =0
-	WebStatus("LaserGlyph")
+	lj3.WebStatus("LaserGlyph")
 
 	# OSC Server callbacks
-	print("Starting OSC at 127.0.0.1 port",OSCinPort,"...")
+	print("Starting OSC at",myIP," port",OSCinPort,"...")
 	osc_startup()
-	osc_udp_server("127.0.0.1", OSCinPort, "InPort")
+	osc_udp_server(myIP, OSCinPort, "InPort")
 	osc_method("/ping*", lj3.OSCping)
 	osc_method("/glyph/ljclient", OSCljclient)
 
@@ -227,7 +229,7 @@ def Run():
 
 	finally:
 
-		WebStatus("Glyph Exit")
+		lj3.WebStatus("Glyph Exit")
 		print("Stopping OSC...")
 		lj3.OSCstop()
 		pass

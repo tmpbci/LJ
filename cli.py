@@ -114,7 +114,7 @@ def handle():
 	if args.bhoroscIP  != None:
 		gstt.oscIPin = args.bhoroscIP
 	else:
-		gstt.oscIPin = '127.0.0.1'
+		gstt.oscIPin = gstt.LjayServerIP
 
 	if args.nozoidIP  != None:
 		gstt.nozoscIP = args.nozoidIP
