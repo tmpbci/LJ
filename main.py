@@ -112,6 +112,8 @@ wsPORT = 9001
 # OSC Server : accept OSC message on port 8002 
 #oscIPin = "192.168.1.10"s
 extoscIPin = serverIP
+
+print "extoscIPin", extoscIPin
 extoscPORTin = 8002
 
 # OSC Client : to send OSC message to an IP port 8001

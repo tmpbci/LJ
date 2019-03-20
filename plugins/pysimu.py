@@ -31,7 +31,9 @@ import pdb
 import types, ast, argparse
 from OSC import OSCServer, OSCClient, OSCMessage
 
+
 pl = [[],[],[],[]]
+
 
 print ("")
 print ("LJ v0.8.0 : Pygame simulator")
@@ -44,6 +46,7 @@ print ("Arguments parsing if needed...")
 
 argsparser = argparse.ArgumentParser(description="Available commands")
 argsparser.add_argument("-r","--redisIP",help="IP of the Redis server used by LJ (127.0.0.1 by default) ",type=str)
+argsparser.add_argument("-m","--myIP",help="Local IP (127.0.0.1 by default) ",type=str)
 argsparser.add_argument("-c","--client",help="LJ client number (0 by default)",type=int)
 argsparser.add_argument("-l","--laser",help="Laser number to be displayed (0 by default)",type=int)
 argsparser.add_argument("-v","--verbose",help="Verbosity level (0 by default)",type=int)
@@ -76,14 +79,22 @@ else:
 r = redis.StrictRedis(host=redisIP, port=6379, db=0)
 
 
+# myIP
+if args.myIP  != None:
+    myIP  = args.myIP
+else:
+    myIP = '127.0.0.1'
+
+
+
 #
 # OSC 
 #
 
-oscIPin = "127.0.0.1"
+oscIPin = myIP
 oscPORTin = 8008
 
-ljIP = "127.0.0.1"
+ljIP = redisIP
 ljPort = 8002
 
 print ("")

@@ -28,8 +28,8 @@ from osc4py3.as_eventloop import *
 from osc4py3 import oscbuildparse
 
 
-redisIP = '127.0.0.1'
-r = redis.StrictRedis(host=redisIP, port=6379, db=0)
+#redisIP = '127.0.0.1'
+#r = redis.StrictRedis(host=redisIP, port=6379, db=0)
 
 ClientNumber = 0
 
@@ -67,7 +67,7 @@ def SendLJ(oscaddress,oscargs=''):
 
 # Answer to LJ pings
 def OSCping(value):
-	
+
     print("I got /ping with value", value)
     SendLJ("/pong",value)
 

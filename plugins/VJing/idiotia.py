@@ -340,8 +340,9 @@ def Starfield(hori=0,verti=0):
     lj3.DrawPL(3)
 
 
-def OSCidiotia(address, value):
-    print("Pose bank idiotia got", address, "with value", value)
+def OSCidiotia(address,value):
+        print("idiotia",address,value)
+
 
 
 def OSCfield(address, value):
@@ -399,6 +400,10 @@ osc_method("/pose/field*", OSCfield, argscheme=OSCARG_ADDRESS + OSCARG_DATA)
 
 anims =[[],[],[],[]]
 color = lj3.rgb2int(255,255,255)
+
+
+
+
 
 
 prepareIdiotIA()

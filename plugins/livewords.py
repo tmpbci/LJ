@@ -15,6 +15,7 @@ from osc4py3 import oscbuildparse
 #from osc4py3 import oscmethod as osm
 from osc4py3.oscmethod import * 
 
+myIP = "127.0.0.1"
 
 duration = 300
 
@@ -35,6 +36,7 @@ else:
 print ("Words is checking arguments parsing if needed...")
 argsparser = argparse.ArgumentParser(description="Text Cycling for LJ")
 argsparser.add_argument("-r","--redisIP",help="IP of the Redis server used by LJ (127.0.0.1 by default) ",type=str)
+argsparser.add_argument("-m","--myIP",help="Local IP (127.0.0.1 by default) ",type=str)
 argsparser.add_argument("-c","--client",help="LJ client number (0 by default)",type=int)
 argsparser.add_argument("-v","--verbose",help="Verbosity level (0 by default)",type=int)
 
@@ -51,6 +53,12 @@ if args.redisIP  != None:
 	redisIP  = args.redisIP
 else:
 	redisIP = '127.0.0.1'
+
+# myIP
+if args.myIP  != None:
+	myIP  = args.myIP
+else:
+	myIP = '127.0.0.1'
 
 
 if args.verbose:
@@ -116,9 +124,9 @@ def OSCquit():
 def Run():
 
 	# OSC Server callbacks
-	print("Words starting its OSC server at 127.0.0.1 port",OSCinPort,"...")
+	print("Words starting its OSC server at", myIP, "port",OSCinPort,"...")
 	osc_startup()
-	osc_udp_server("127.0.0.1", OSCinPort, "InPort")
+	osc_udp_server(myIP, OSCinPort, "InPort")
 	osc_method("/words/text/0*", OSCword0)
 	osc_method("/words/text/1*", OSCword1)
 	osc_method("/words/text/2*", OSCword2)

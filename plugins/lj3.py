@@ -52,8 +52,8 @@ from osc4py3 import oscbuildparse
 from osc4py3.oscmethod import * 
 
 
-redisIP = '127.0.0.1'
-r = redis.StrictRedis(host=redisIP, port=6379, db=0)
+#redisIP = '127.0.0.1'
+#r = redis.StrictRedis(host=redisIP, port=6379, db=0)
 
 ClientNumber = 0
 
@@ -225,11 +225,12 @@ def rgb2int(r,g,b):
 
 
 def Config(redisIP,client):
-	global ClientNumber
+	global ClientNumber, r
 
 	r = redis.StrictRedis(host=redisIP, port=6379, db=0)	
 	ClientNumber = client
 	osc_udp_client(redisIP, 8002, "LJ 8002")
+	return r
 
 
 def LjClient(client):
