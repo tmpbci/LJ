@@ -1,41 +1,21 @@
 # coding=UTF-8
 
 '''
+LJ v0.8.1
+Some LJ functions useful for python 2.7 clients (was framy.py)
+Functions and documentation here is low priority as python 2 support will stop soon.
+Better code your plugin with python 3 and lj3.py.
 
-lj3 v0.8.1
 
-Some LJ functions useful for python clients (was framy.py)
-
-OSC functions commented, waiting working on OSC in python3 
-
-Config(redisIP, client number) 
+Config 
 PolyLineOneColor
 rPolyLineOneColor
-
-Text(word, color, PL, xpos, ypos, resize, rotx, roty, rotz) : Display a word
-SendLJ(adress,message) : 	LJ remote control. See commands.py
-WebStatus(message) : 		display message on webui
-DrawPL(point list number) : once you stacked all wanted elements, like 2 polylines, send them to lasers.
-rgb2int(r,g,b)
-LjClient(client):			Change Client number in redis keys
-LjPl(pl):					Change pl number in redis keys = laser target.
-
-
-OSCstart(): 	Start the OSC system.
-OSCframe():		Handle incoming OSC message. Calling the right callback
-OSCstop(): 		Properly close the OSC system
-OSCping(value): Answer to LJ pings by sending /pong value
-OSCquit(name): 	Exit calling script using name in terminal
-
-setup_controls(joystick) 
-
-XboxController : 	 getLeftHori, getLeftVert, getRightHori, getRightVert, getLeftTrigger, getRightTrigger
-Ps3Controller : 	 getLeftHori, getLeftVert, getRightHori, getRightVert, getLeftTrigger, getRightTrigger, getUp, getDown, getLeft, getRight, getFire1, getFire2(self):
-MySaitekController : getLeftHori,getLeftVert, getRightHori,getRightVert, getLeftTrigger,getRightTrigger
-MyThrustController : getLeftHori, getLeftVert, getRightHori, getRightVert, getLeftTrigger, getRightTrigger
-CSLController :      getLeftHori,getLeftVert,getRightHori, getRightVert,getLeftTrigger,getRightTrigger,getFire1,getFire2
-my USB Joystick :    getUp,getDown,getLeft,getRight,etLeftTrigger, getRightTrigger,getFire1, getFire2
-
+Text
+SendLJ 				: remote control
+LjClient			: 
+LjPl				 : 
+DrawPL
+WebStatus
 
 LICENCE : CC
 Sam Neurohack
@@ -44,90 +24,40 @@ Sam Neurohack
 
 import math
 import redis
+from OSC import OSCServer, OSCClient, OSCMessage
 
-# Import needed modules from osc4py3
-from osc4py3.as_eventloop import *
-from osc4py3 import oscbuildparse
-#from osc4py3 import oscmethod as osm
-from osc4py3.oscmethod import * 
-
-
-#redisIP = '127.0.0.1'
-#r = redis.StrictRedis(host=redisIP, port=6379, db=0)
+redisIP = '127.0.0.1'
+r = redis.StrictRedis(host=redisIP, port=6379, db=0)
 
 ClientNumber = 0
 
 point_list = []
 pl = [[],[],[],[]]
 
-#
-# OSC interaction with LJ
-#
-
-def OSCstart():
-	# Start the system.
-	osc_startup()
-	#osc_udp_client(redisIP, 8002, "LJ 8002")
-
-def OSCframe():
-	#print("OSCprocess")
-	osc_process()
-
-# Properly close the system. Todo
-def OSCstop():
-	osc_terminate()
 
 
 def SendLJ(oscaddress,oscargs=''):
         
+    oscmsg = OSCMessage()
+    oscmsg.setAddress(oscaddress)
+    oscmsg.append(oscargs)
+    
+    print ("sending OSC message : ",oscmsg)
     try:
-        msg = oscbuildparse.OSCMessage(oscaddress, None, [oscargs])
-        osc_send(msg, "LJ 8002")
-       	OSCframe()
-
+        osclientlj.sendto(oscmsg, (redisIP, 8002))
+        oscmsg.clearData()
     except:
         print ('Connection to LJ refused : died ?')
         pass
+    #time.sleep(0.001
 
 def WebStatus(message):
 	SendLJ("/status", message)
 
 
-# Answer to LJ pings
-def OSCping(value):
-    # Will receive message address, and message data flattened in s, x, y
-    print("Got /ping with value", value)
-    SendLJ("/pong",value)
-
-
-# /quit
-def OSCquit(name):
-
-	WebStatus(name + " quit.")
-	print("Stopping OSC...")
-	
-	OSCstop()
-	sys.exit()
-
-'''
-def handlerfunction(s, x, y):
-    # Will receive message data unpacked in s, x, y
-    pass
-
-def handlerfunction2(address, s, x, y):
-    # Will receive message address, and message data flattened in s, x, y
-    pass
-
-# Make server channels to receive packets.
-osc_udp_server("127.0.0.1", 3721, "localhost")
-osc_udp_server("0.0.0.0", 3724, "anotherserver")
-'''
-
-
-
 ASCII_GRAPHICS = [
 
-# caracteres corrects
+#implementé
 
 	[(-50,30), (-30,-30), (30,-30), (10,30), (-50,30)],							#0
 	[(-20,30), (0,-30), (-20,30)], 												#1
@@ -140,7 +70,7 @@ ASCII_GRAPHICS = [
 	[(-30,30), (-30,-30), (30,-30), (30,30), (-30,30), (-30,0), (30,0)],			#8
 	[(30,0), (-30,0), (-30,-10), (0,-30), (30,-30), (30,10), (0,30), (-30,30)],	#9
 
-# caracteres a implementer	
+# A implementer	
 	[(-30,10), (30,-10), (30,10), (0,30), (-30,10), (-30,-10), (0,-30), (30,-10)], #:
 	[(-30,-10), (0,-30), (0,30)], [(-30,30), (30,30)],							#;
 	[(-30,-10), (0,-30), (30,-10), (30,0), (-30,30), (30,30)],					#<
@@ -149,7 +79,7 @@ ASCII_GRAPHICS = [
 	[(30,-30), (-30,-30), (-30,0), (0,0), (30,10), (0,30), (-30,30)],				#?
 	[(30,-30), (0,-30), (-30,-10), (-30,30), (0,30), (30,10), (30,0), (-30,0)],	#@
 
-# Caracteres corrects
+# Implementé
 	
 
 	[(-30,30), (-30,-30), (30,-30), (30,30), (30,0), (-30,0)],				#A
@@ -221,17 +151,12 @@ ASCII_GRAPHICS = [
 	[(-2,15), (2,15)]															# Point a la place de {
 ]
 
-def rgb2int(r,g,b):
-    return int('0x%02x%02x%02x' % (r,g,b),0)
-
-
 def Config(redisIP,client):
-	global ClientNumber, r
+	global ClientNumber
 
 	r = redis.StrictRedis(host=redisIP, port=6379, db=0)	
 	ClientNumber = client
-	osc_udp_client(redisIP, 8002, "LJ 8002")
-	return r
+	#print "client configured",ClientNumber
 
 
 def LjClient(client):
@@ -243,7 +168,7 @@ def LjPl(pl):
 	global PL
 
 	PL = pl
-
+	
  
 def LineTo(xy, c, PL):
  
@@ -280,7 +205,7 @@ def Pointransf(xy, xpos = 0, ypos =0, resize =1, rotx =0, roty =0 , rotz=0):
 		y = xy[1] * resize
 		z = 0
 
-		rad = rotx * math.pi / 180
+		rad = math.radians(rotx)
 		cosaX = math.cos(rad)
 		sinaX = math.sin(rad)
 
@@ -288,7 +213,7 @@ def Pointransf(xy, xpos = 0, ypos =0, resize =1, rotx =0, roty =0 , rotz=0):
 		y = y2 * cosaX - z * sinaX
 		z = y2 * sinaX + z * cosaX
 
-		rad = roty * math.pi / 180
+		rad = math.radians(roty)
 		cosaY = math.cos(rad)
 		sinaY = math.sin(rad)
 
@@ -296,7 +221,7 @@ def Pointransf(xy, xpos = 0, ypos =0, resize =1, rotx =0, roty =0 , rotz=0):
 		z = z2 * cosaY - x * sinaY
 		x = z2 * sinaY + x * cosaY
 
-		rad = rotz * math.pi / 180
+		rad = math.radians(rotz)
 		cosZ = math.cos(rad)
 		sinZ = math.sin(rad)
 
@@ -331,12 +256,14 @@ def rPolyLineOneColor(xy_list, c, PL , closed, xpos = 0, ypos =0, resize =0.7, r
 
  
 def LinesPL(PL):
-	print ("Stupido !! your code is to old : use DrawPL() instead of LinesPL()")
+	print "Stupido !! your code is to old : use DrawPL() instead of LinesPL()"
 	DrawPL(PL)
+
 
 def DrawPL(PL):
 	#print '/pl/0/'+str(PL), str(pl[PL])
 	if r.set('/pl/'+str(ClientNumber)+'/'+str(PL), str(pl[PL])) == True:
+		#print '/pl/'+str(ClientNumber)+'/'+str(PL), str(pl[PL])
 		pl[PL] = []
 		return True
 	else:
@@ -344,6 +271,7 @@ def DrawPL(PL):
 
 def ResetPL(self, PL):
 	pl[PL] = []
+
 
 
 def DigitsDots(number,color):
@@ -354,14 +282,12 @@ def DigitsDots(number,color):
 		#self.point_list.append((xy + (c,)))
 	return dots
 
-
 def CharDots(char,color):
 
 	dots =[]
 	for dot in ASCII_GRAPHICS[ord(char)-46]:
 		dots.append((dot[0],dot[1],color))
 	return dots
-
 
 def Text(message,c, PL, xpos, ypos, resize, rotx, roty, rotz):
 
@@ -376,13 +302,11 @@ def Text(message,c, PL, xpos, ypos, resize, rotx, roty, rotz):
 		#print ""
 		# texte centre en x automatiquement selon le nombre de lettres l
 		x_offset = 26 * (- (0.9*l) + 3*i)
-		#print i,x_offset
-		# if digit 
+		# Digits
 		if ord(ch)<58:
 			char_pl_list = ASCII_GRAPHICS[ord(ch) - 48]
 		else: 
-			char_pl_list = ASCII_GRAPHICS[ord(ch) - 46 ]
-			
+			char_pl_list = ASCII_GRAPHICS[ord(ch) - 46]
 		char_draw = []
 		#dots.append((char_pl_list[0][0] + x_offset,char_pl_list[0][1],0))
 
@@ -391,255 +315,7 @@ def Text(message,c, PL, xpos, ypos, resize, rotx, roty, rotz):
 		i +=1
 		#print ch,char_pl_list,char_draw			
 		rPolyLineOneColor(char_draw, c, PL , False, xpos, ypos, resize, rotx, roty, rotz)
-		#print ("laser",PL,"message",message)
 		#dots.append(char_draw)
-
-
-
-import re
-
-def setup_controls(joystick):
-	"""
-	Joystick wrapper.
-	"""
-	if re.search('playstation', joystick.get_name(), re.I):
-		return Ps3Controller(joystick)
-
-	elif re.search('X-box', joystick.get_name(), re.I):
-		return XboxController(joystick)
-
-	elif re.search('Saitek', joystick.get_name(), re.I):
-		return MySaitekController(joystick)
-	
-	elif re.search('Thrustmaster dual analog 3.2', joystick.get_name(), re.I):
-		return MyThrustController(joystick)
-		
-	elif re.search('2n1 USB', joystick.get_name(), re.I):
-		return CSLController(joystick)
-
-	elif re.search('Joystick', joystick.get_name(), re.I):
-		return USBController(joystick)
-
-	return Controller(joystick)
-
-class Controller(object):
-
-	def __init__(self, joystick):
-		"""Pass a PyGame joystick instance."""
-		self.js = joystick
-
-	def getLeftHori(self):
-		return self.js.get_axis(2)
-
-	def getLeftVert(self):
-		return self.js.get_axis(3)
-
-	def getRightHori(self):
-		return self.js.get_axis(0)
-
-	def getRightVert(self):
-		return self.js.get_axis(1)
-
-	def getLeftTrigger(self):
-		return self.js.get_button(9)
-
-	def getRightTrigger(self):
-		return self.js.get_button(2)
-
-class XboxController(Controller):
-
-	def __init__(self, joystick):
-		super(XboxController, self).__init__(joystick)
-
-	def getLeftHori(self):
-		return self.js.get_axis(0)
-
-	def getLeftVert(self):
-		return self.js.get_axis(1)
-
-	def getRightHori(self):
-		return self.js.get_axis(3)
-
-	def getRightVert(self):
-		return self.js.get_axis(4)
-
-	def getLeftTrigger(self):
-		return self.js.get_axis(2)
-
-	def getRightTrigger(self):
-		return self.js.get_button(11)
-
-class Ps3Controller(Controller):
-
-#up  4 _DOWN   6 left  7 right 5 croix  14 rond 13 triangle 12
-
-	def __init__(self, joystick):
-		super(Ps3Controller, self).__init__(joystick)
-
-	def getLeftHori(self):
-		return self.js.get_axis(0)
-
-	def getLeftVert(self):
-		return self.js.get_axis(1)
-
-	def getRightHori(self):
-		return self.js.get_axis(2)
-
-	def getRightVert(self):
-		return self.js.get_axis(3)
-
-	def getLeftTrigger(self):
-		# TODO: Verify
-		return self.js.get_button(8)
-
-	def getRightTrigger(self):
-		# TODO: Verify
-		return self.js.get_button(9)
-
-	def getUp(self):
-		return self.js.get_button(4)
-
-	def getDown(self):
-		return self.js.get_button(6)
-
-	def getLeft(self):
-		return self.js.get_button(7)
-
-	def getRight(self):
-		return self.js.get_button(5)
-
-	def getFire1(self):
-		return self.js.get_button(14)
-
-	def getFire2(self):
-		return self.js.get_button(13)
-
-
-class MySaitekController(Controller):
-
-	def __init__(self, joystick):
-		super(MySaitekController, self).__init__(joystick)
-
-	def getLeftHori(self):
-		return self.js.get_axis(0)
-
-	def getLeftVert(self):
-		return self.js.get_axis(1)
-
-	def getRightHori(self):
-		return self.js.get_axis(3)
-
-	def getRightVert(self):
-		return self.js.get_axis(2)
-
-	def getLeftTrigger(self):
-		return self.js.get_button(6)
-
-	def getRightTrigger(self):
-		return self.js.get_button(7)
-
-class MyThrustController(Controller):
-
-	def __init__(self, joystick):
-		super(MyThrustController, self).__init__(joystick)
-
-	def getLeftHori(self):
-		return self.js.get_axis(0)
-
-	def getLeftVert(self):
-		return self.js.get_axis(1)
-
-	def getRightHori(self):
-		return self.js.get_axis(2)
-
-	def getRightVert(self):
-		return self.js.get_axis(3)
-
-	def getLeftTrigger(self):
-		return self.js.get_button(5)
-
-	def getRightTrigger(self):
-		return self.js.get_button(7)
-
-
-class CSLController(Controller):
-
-	def __init__(self, joystick):
-		super(CSLController, self).__init__(joystick)
-
-	def getLeftHori(self):
-		return self.js.get_axis(2)
-
-	def getLeftVert(self):
-		return self.js.get_axis(3)
-
-	def getRightHori(self):
-		return self.js.get_axis(0)
-
-	def getRightVert(self):
-		return self.js.get_axis(1)
-
-	def getLeftTrigger(self):
-		return self.js.get_button(6)
-
-	def getRightTrigger(self):
-		return self.js.get_button(7)
-
-	def getFire1(self):
-		return self.js.get_button(2)
-
-	def getFire2(self):
-		return self.js.get_button(1)
-
-class USBController(Controller):
-
-
-# my USB Joystick 
-#up  axis 0 -1 DOWN axis 0 1 left axis 1 1 right axis 1 -1 bouton gauche 10 bouton droite 9
-
-	def __init__(self, joystick):
-		super(USBController, self).__init__(joystick)
-
-
-	def getUp(self):
-		if self.js.get_axis(0) == -1:
-			return  1
-		else:
-			return 0
-
-	def getDown(self):
-		if self.js.get_axis(0) > 0.9:
-			return  1
-		else:
-			return 0
-
-	def getLeft(self):
-		if self.js.get_axis(1) == 1:
-			return  1
-		else:
-			return 0
-
-	def getRight(self):
-		if self.js.get_axis(1) == -1:
-			return  1
-		else:
-			return 0
-
-	def getLeftTrigger(self):
-		return self.js.get_button(10)
-
-	def getRightTrigger(self):
-		return self.js.get_button(9)
-
-	def getFire1(self):
-		if self.js.get_button(10) == 1:
-			print ("fire 1")
-		return self.js.get_button(10)
-
-	def getFire2(self):
-		if self.js.get_button(9) == 1:
-			print ("fire 2")
-		return self.js.get_button(9)
 
 
 

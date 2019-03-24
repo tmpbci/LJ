@@ -30,6 +30,7 @@ argsparser.add_argument("-r","--redisIP",help="IP of the Redis server used by LJ
 argsparser.add_argument("-c","--client",help="LJ client number (0 by default)",type=int)
 argsparser.add_argument("-l","--laser",help="Laser number to be displayed (0 by default)",type=int)
 argsparser.add_argument("-v","--verbose",help="Verbosity level (0 by default)",type=int)
+argsparser.add_argument("-m","--myIP",help="Local IP (127.0.0.1 by default) ",type=str)
 
 args = argsparser.parse_args()
 
@@ -52,15 +53,23 @@ else:
 
 print("redisIP",redisIP)
 
+# myIP
+if args.myIP  != None:
+	myIP  = args.myIP
+else:
+	myIP = '127.0.0.1'
+
+print("redisIP",redisIP)
+
 if args.verbose:
 	debug = args.verbose
 else:
 	debug = 0
 
 
-r = lj3.Config(redisIP,ljclient)
+lj3.Config(redisIP,ljclient)
 
-print("r :",r)
+
 width = 800
 height = 600
 centerX = width / 2

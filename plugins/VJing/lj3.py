@@ -99,6 +99,7 @@ def OSCping(value):
     print("Got /ping with value", value)
     SendLJ("/pong",value)
 
+
 # /quit
 def OSCquit(name):
 
@@ -225,7 +226,7 @@ def rgb2int(r,g,b):
 
 
 def Config(redisIP,client):
-	global ClientNumber
+	global ClientNumber, r
 
 	r = redis.StrictRedis(host=redisIP, port=6379, db=0)	
 	ClientNumber = client

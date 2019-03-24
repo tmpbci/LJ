@@ -74,7 +74,7 @@
   height: 400px;
   width: 400px;
   grid-template-columns: 66px 66px 66px 66px 66px 66px;
-  grid-template-rows: 30px 67px 67px 67px 30px;
+  grid-template-rows: 30px 67px 67px 67px 30px 30px;
   background-color: #000;
   justify-items: center;
   align-items: center;

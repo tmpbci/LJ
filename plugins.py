@@ -117,6 +117,7 @@ def OSCsend(name, oscaddress, oscargs =''):
 def Ping(name):
     
     return OSCsend(name,"/ping")
+    #return True
 
         
 def Kill(name):

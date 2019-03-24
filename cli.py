@@ -24,7 +24,7 @@ def handle():
 	#have to be done before importing bhorosc.py to get correct port assignment
 	argsparser = argparse.ArgumentParser(description="LJ v0.8")
 	argsparser.add_argument("-r","--redisIP",help="IP address to bind builtin servers (OSC and websocket) also must be the Redis server IP ",type=str)
-	argsparser.add_argument("-L","--Lasers",help="Number of lasers connected.",type=int)
+	argsparser.add_argument("-L","--Lasers",help="Number of lasers connected (4 by default).",type=int)
 	argsparser.add_argument("-v","--verbose",help="Debug mode 0,1 or 2 (0 by default)",type=int)
 	argsparser.add_argument("-x","--invx",help="Invert laser 0 X axis again",action="store_true")
 	argsparser.add_argument("-y","--invy",help="Invert laser 0 Y axis again",action="store_true")
@@ -109,12 +109,15 @@ def handle():
 	# Lasers = number of laser connected
 	if args.Lasers  != None:
 		gstt.LaserNumber = args.Lasers
-	
+	else:
+		gstt.LaserNumber = 4
+
 	
 	if args.bhoroscIP  != None:
 		gstt.oscIPin = args.bhoroscIP
 	else:
-		gstt.oscIPin = gstt.LjayServerIP
+		gstt.oscIPin = '127.0.0.1'
+		
 
 	if args.nozoidIP  != None:
 		gstt.nozoscIP = args.nozoidIP

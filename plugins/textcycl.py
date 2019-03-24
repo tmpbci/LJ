@@ -35,6 +35,7 @@ else:
 print ("Arguments parsing if needed...")
 argsparser = argparse.ArgumentParser(description="Text Cycling for LJ")
 argsparser.add_argument("-r","--redisIP",help="IP of the Redis server used by LJ (127.0.0.1 by default) ",type=str)
+argsparser.add_argument("-m","--myIP",help="Local IP (127.0.0.1 by default) ",type=str)
 argsparser.add_argument("-c","--client",help="LJ client number (0 by default)",type=int)
 argsparser.add_argument("-l","--laser",help="Laser number to be displayed (0 by default)",type=int)
 argsparser.add_argument("-v","--verbose",help="Verbosity level (0 by default)",type=int)
@@ -63,6 +64,14 @@ if args.redisIP  != None:
 	redisIP  = args.redisIP
 else:
 	redisIP = '127.0.0.1'
+
+
+# myIP
+if args.myIP  != None:
+	myIP  = args.myIP
+else:
+	myIP = '127.0.0.1'
+
 
 lj3.Config(redisIP,ljclient)
 #r = redis.StrictRedis(host=redisIP, port=6379, db=0)
@@ -101,8 +110,9 @@ def OSCquit():
 
 	lj3.OSCquit("cycl")
 
+print("Cycl starting its OSC server at", myIP, "port",OSCinPort,"...")
 osc_startup()
-osc_udp_server("127.0.0.1", OSCinPort, "InPort")
+osc_udp_server(myIP, OSCinPort, "InPort")
 
 osc_method("/ping*", OSCping)
 osc_method("/quit", OSCquit)

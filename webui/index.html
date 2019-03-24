@@ -564,7 +564,7 @@
 
   <div id = "mgsimu" class="mgsimu">
 
-    <!-- Simu left part : canvas -->
+    <!-- Simu left part : Canvas -->
     <div>
   	 <canvas id="canvas" width="500" height="400" style="border-color: #445;border-style:groove;border-width:1px;"></canvas>
     </div>
@@ -730,11 +730,13 @@
 
   <!-- simu right part : pluginsUI -->
 
-    <div id ="pluginsUI" style = "display: grid;justify-items: center;">
+    <div id ="pluginsUI" style = "display: none;justify-items: center;">
     <!-- Plugins choice Interface -->
 
       <div>
-        <webaudio-switch id="pysimu/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/pysimu.png"></webaudio-switch>
+        <webaudio-switch id="simu/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/pysimu.png"></webaudio-switch>
+        <webaudio-switch id="pose/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/pose.png"></webaudio-switch>
+        <webaudio-switch id="bank0/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/bank0.png"></webaudio-switch>
       </div>
       <div>
         <webaudio-switch id="glyph/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/glyph.png"></webaudio-switch>
@@ -856,9 +858,9 @@
 
   <!-- simu right part : poseUI  -->
 
-  <div id ="poseUI" class="posebuttons"> 
+  <div id ="poseUI" class="posebuttons" style = "display: grid;justify-items: center;"> 
     
-      <!-- IdiotIA laser destination -->
+      <!-- IdiotIA display flag -->
         <div><span class="lasertext">IdiotIA</span></div>
         <div><webaudio-switch id="pose/idiotia/0" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/0.png"></webaudio-switch></div>
         <div><webaudio-switch id="pose/idiotia/1" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/1.png"></webaudio-switch></div>
@@ -867,30 +869,38 @@
         <div></div>
     
       <!-- IdiotIA animation selection first line -->
-        <div><webaudio-switch id="pose/idiotia/anim0" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim1" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim2" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim3" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim4" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim5" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/0" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/1" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/2" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/3" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/4" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/5" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
 
       <!-- IdiotIA animation selection second line -->
-        <div><webaudio-switch id="pose/idiotia/anim6" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim7" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim8" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim9" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim10" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim11" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/6" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/7" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/8" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/9" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/10" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/11" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
 
       <!-- IdiotIA animation selection third line -->
-        <div><webaudio-switch id="pose/idiotia/anim12" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim13" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim14" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim15" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim16" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/anim17" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/12" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/13" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/14" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/15" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/16" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim/17" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
 
-      <!-- Starfield laser destination -->
+      <!-- Realtime pose display flag -->
+        <div><span class="lasertext">Live</span></div>
+        <div><webaudio-switch id="pose/live/0" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/0.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/live/1" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/1.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/live/2" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/2.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/live/3" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/3.png"></webaudio-switch></div>
+        <div></div>
+
+      <!-- Starfield display lag -->
         <div><span class="lasertext">Fields</span></div>
         <div><webaudio-switch id="pose/field/0" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/0.png"></webaudio-switch></div>
         <div><webaudio-switch id="pose/field/1" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/1.png"></webaudio-switch></div>

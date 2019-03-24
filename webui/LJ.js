@@ -2,6 +2,10 @@
 // LJ.js v0.7.1
 //
 
+// LJ websocket address. Change here if LJ is not bind to 127.0.0.1
+
+  var LJ = 'ws://127.0.0.1:9001/'
+
 //
 // Central horizontal menu
 //
@@ -204,7 +208,7 @@
 		var  pl = "";
 		var  pl2 = new Array();
     var _WS = {
-    uri: 'ws://192.168.2.13:9001/',
+    uri: LJ,
     ws: null,
 
     init : function (e) {
@@ -238,6 +242,8 @@
       var res = e.data.split(" ");
       //console.log(e.data)
       //console.log(res[0].substring(0,6))
+      //console.log(res)
+      //console.log(res[0].slice(1))
 
 		  switch (res[0].substring(0,6)) {
     			
