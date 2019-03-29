@@ -133,7 +133,11 @@ def OSCpl(value):
 	lj3.WebStatus("Glyph to pl "+ str(value))
 	lj3.LjPl(value)
 
+# /pose/ping value
+def OSCping(value):
+    lj3.OSCping("glyph")
 
+'''
 def Proj(x,y,z,angleX,angleY,angleZ):
 
 		rad = angleX * math.pi / 180
@@ -176,7 +180,7 @@ def Run():
 	print("Starting OSC at",myIP," port",OSCinPort,"...")
 	osc_startup()
 	osc_udp_server(myIP, OSCinPort, "InPort")
-	osc_method("/ping*", lj3.OSCping)
+	osc_method("/ping*", OSCping)
 	osc_method("/glyph/ljclient", OSCljclient)
 
 	try:

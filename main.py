@@ -92,8 +92,8 @@ print "Laser client number :",gstt.LasClientNumber
 serverIP = gstt.LjayServerIP
 print "Redis IP :", serverIP
 
-extoscIP = gstt.oscIPin
-print "extosc IP :", extoscIP
+oscserverIP = gstt.oscIPin
+print "OSCserver IP :", oscserverIP
 
 nozoscIP = gstt.nozoscip
 print "Nozosc IP :", nozoscIP
@@ -108,36 +108,34 @@ print "Lasers requested :", gstt.LaserNumber
 # Websocket listening port
 wsPORT = 9001
 
-# With extosc
+# oscserver
 # OSC Server : accept OSC message on port 8002 
 #oscIPin = "192.168.1.10"s
-extoscIPin = serverIP
+oscserverIPin = serverIP
 
-print "extoscIPin", extoscIPin
-extoscPORTin = 8002
+print "oscserverIPin", oscserverIPin
+oscserverPORTin = 8002
 
 # OSC Client : to send OSC message to an IP port 8001
-extoscIPout = extoscIP 
-extoscPORTout = 8001
+oscserverIPout = oscserverIP 
+oscserverPORTout = 8001
 
 
-# With Nozoid
-# OSC Client : to send OSC message to Nozoid inport 8003
+# Nozoid OSC Client : to send OSC message to Nozoid inport 8003
 NozoscIPout = nozoscIP
 NozoscPORTout = plugins.Port("nozoid")
 
 
-# With Planetarium
-# OSC Client : to send OSC message to planetarium inport 8005
+# Planetarium OSC Client : to send OSC message to planetarium inport 8005
 planetIPout = nozoscIP
 planetPORTout = plugins.Port("planet")
 
-# With Bank0
-# OSC Client : to send OSC message to bank0 inport 8010
+# Bank0 OSC Client : to send OSC message to bank0 inport 8010
 bank0IPout = nozoscIP
 bank0PORTout = plugins.Port("bank0")
 
-oscserver = OSCServer( (extoscIPin, extoscPORTin) )
+
+oscserver = OSCServer( (oscserverIPin, oscserverPORTin) )
 oscserver.timeout = 0
 OSCRunning = True
 
@@ -150,23 +148,23 @@ oscserver.handle_timeout = types.MethodType(handle_timeout, oscserver)
 '''
 osclientext = OSCClient()
 oscmsg = OSCMessage()
-osclientext.connect((extoscIPout, extoscPORTout)) 
+osclientext.connect((oscserverIPout, oscserverPORTout)) 
 
-# send UI string as OSC message to extosc 8001
-# sendextosc(oscaddress, [arg1, arg2,...])
+# send UI string as OSC message to oscserver 8001
+# sendoscserver(oscaddress, [arg1, arg2,...])
 
-def sendextosc(oscaddress,oscargs=''):
+def sendoscserver(oscaddress,oscargs=''):
         
     oscmsg = OSCMessage()
     oscmsg.setAddress(oscaddress)
     oscmsg.append(oscargs)
     
-    #print ("sending to extosc : ",oscmsg)
+    #print ("sending to oscserver : ",oscmsg)
     try:
-        osclientext.sendto(oscmsg, (extoscIPout, extoscPORTout))
+        osclientext.sendto(oscmsg, (oscserverIPout, oscserverPORTout))
         oscmsg.clearData()
     except:
-        print ('Connection to extosc IP', extoscIPout, 'port', extoscPORTout,'refused : died ?')
+        print ('Connection to oscserver IP', oscserverIPout, 'port', oscserverPORTout,'refused : died ?')
         sendWSall("/on 0")
         sendWSall("/status NoLJay")
         
@@ -268,6 +266,22 @@ def osc_frame():
     while not oscserver.timed_out:
         oscserver.handle_request()
 
+def PingAll():
+
+    for plugin in gstt.plugins.keys():
+
+        # Plugin Online
+        if plugins.Ping(plugin):
+            
+            sendWSall("/"+ plugin + "/start 1")
+            if gstt.debug >0:
+                print "plugin", plugin, "answered."
+
+        # Plugin Offline
+        else:
+            sendWSall("/"+ plugin + "/start 0")
+            if gstt.debug >0:
+                print "plugin", plugin, "didn't answered."
 
 
 # OSC server Thread : handler, dacs reports and simulator points sender to UI.
@@ -367,27 +381,23 @@ def message_received(client, wserver, message):
     print("")
    
     oscpath = message.split(" ")
-    print "WS Client", client['id'], "said :", message, "splitted in an oscpath :", oscpath
+    if gstt.debug > 0:
+        print "WS Client", client['id'], "said :", message, "splitted in an oscpath :", oscpath
+    PingAll()
+    message4plugin = False
 
-    # Ping all plugins connexion and send message if right plugin is online.
+    # WS received Message is for a plugin ?
+
     for plugin in gstt.plugins.keys():
-
-        # Plugin Online
-        if plugins.Ping(plugin):
-            
-            sendWSall("/"+ plugin + "/start 1")
-            if gstt.debug >0:
-                print "plugin", plugin, "answered."
-
-            if oscpath[0].find(plugin) != -1 and plugins.Send(plugin,oscpath):
-                print "message sent correctly to", plugin
-
-        # Plugin Offline
-        else:
-            sendWSall("/"+ plugin + "/start 0")
-            if gstt.debug >0:
-                print "plugin", plugin, "didn't answered."
-    plugins.sendWSall("/status Running...")
+    
+        if oscpath[0].find(plugin) != -1:
+    
+            message4plugin = True
+            if plugins.Send(plugin,oscpath):
+                    print "message sent correctly to", plugin
+                    
+        
+    #plugins.sendWSall("/status Running...")
 
     '''
     if plugins.Send("planet",oscpath):
@@ -416,21 +426,27 @@ def message_received(client, wserver, message):
     
     if oscpath[0] == "/on":
         if oscpath[1] == "1":
-            sendextosc("/on")
+            sendoscserver("/on")
         else:
-            sendextosc("/off")
+            sendoscserver("/off")
     '''
 
-    if len(oscpath) == 1:
-        args[0] = "noargs"
-        #print "noargs command"
+    # WS received message is an LJ command 
 
+    if message4plugin == False:
 
-    elif len(oscpath) > 1:
-        args[0] = str(oscpath[1]) 
-        #print "arg",oscpath[1]
+        if len(oscpath) == 1:
+            args[0] = "noargs"
+            #print "noargs command"
     
-    commands.handler(oscpath[0].split("/"),args)
+    
+        elif len(oscpath) > 1:
+            args[0] = str(oscpath[1]) 
+            #print "arg",oscpath[1]
+        
+        commands.handler(oscpath[0].split("/"),args)
+    
+    print ""
     
 
     '''
@@ -540,10 +556,10 @@ try:
     wserver = WebsocketServer(wsPORT,host=serverIP)
     plugins.Init(wserver)
     
-    # Launch OSC thread listening to extosc
+    # Launch OSC thread listening to oscserver
     print ""
     print "Launching OSC server..."
-    print "at", extoscIPin, "port",str(extoscPORTin)
+    print "at", oscserverIPin, "port",str(oscserverPORTin)
     print "Will update webUI dac status every second"
     oscserver.addMsgHandler( "/noteon", commands.NoteOn )
     # Default OSC handler for all OSC incoming message

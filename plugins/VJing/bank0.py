@@ -719,6 +719,13 @@ def OSCquit():
 def WebStatus(message):
     lj3.SendLJ("/status",message)
 
+# /pose/ping value
+def OSCping(value):
+    print("bank0 got /pose/ping with value", value)
+    lj3.OSCping("bank0")
+
+'''
+
 
 
 print('Loading Bank0...')
@@ -731,7 +738,7 @@ osc_startup()
 osc_udp_server("127.0.0.1", OSCinPort, "InPort")
 
 osc_method("/bank0/run*", OSCrun)
-osc_method("/bank0/ping*", lj3.OSCping)
+osc_method("/bank0/ping*", OSCping)
 osc_method("/bank0/ljclient", OSCljclient)
 osc_method("/bank0/ljpl", OSCpl)
 osc_method("/quit", OSCquit)

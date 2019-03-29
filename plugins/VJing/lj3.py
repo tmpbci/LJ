@@ -82,6 +82,7 @@ def SendLJ(oscaddress,oscargs=''):
         
     try:
         msg = oscbuildparse.OSCMessage(oscaddress, None, [oscargs])
+        # print(msg)
         osc_send(msg, "LJ 8002")
        	OSCframe()
 

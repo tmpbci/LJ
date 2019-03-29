@@ -82,6 +82,7 @@ def SendLJ(oscaddress,oscargs=''):
         
     try:
         msg = oscbuildparse.OSCMessage(oscaddress, None, [oscargs])
+        # print(msg)
         osc_send(msg, "LJ 8002")
        	OSCframe()
 
@@ -93,10 +94,8 @@ def WebStatus(message):
 	SendLJ("/status", message)
 
 
-# Answer to LJ pings
+# Answer to LJ pings with /pong pluginame
 def OSCping(value):
-    # Will receive message address, and message data flattened in s, x, y
-    print("Got /ping with value", value)
     SendLJ("/pong",value)
 
 

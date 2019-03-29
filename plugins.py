@@ -83,14 +83,10 @@ def Start(name):
 
 def OSCsend(name, oscaddress, oscargs =''):
 
+    #print "OSCsend in plugins got for", name, ": oscaddress", oscaddress, "oscargs :", oscargs
     PluginPort = Port(name)
-    sendWSall("/status Checking "+ name + "...")
-    if gstt.debug >1:
-            print ""
-            print "OSCSend is checking plugin", name, "..."
-            print "Plugin", name, "is at", gstt.LjayServerIP, ":" + str(PluginPort)
-            print "Sending", oscaddress, oscargs,"to plugin", name
-    
+    #sendWSall("/status Checking "+ name + "...")
+
     osclientplugin = OSCClient()
     osclientplugin.connect((gstt.LjayServerIP, PluginPort)) 
     oscmsg = OSCMessage()
@@ -98,6 +94,9 @@ def OSCsend(name, oscaddress, oscargs =''):
     oscmsg.append(oscargs)
 
     try:
+        if gstt.debug > 0:
+            print "OSCSend : sending", oscmsg,"to plugin", name, "at", gstt.LjayServerIP, ":", PluginPort
+        
         osclientplugin.sendto(oscmsg, (gstt.LjayServerIP, PluginPort))
         oscmsg.clearData()
         #if gstt.debug >0:
@@ -108,15 +107,17 @@ def OSCsend(name, oscaddress, oscargs =''):
         if gstt.debug > 0:
             print 'OSCSend : Connection to plugin IP', gstt.LjayServerIP ,':', PluginPort,'refused : died ?'
         #sendWSall("/status No plugin.")
-        sendWSall("/status " + name + " is offline")
-        sendWSall("/" + name + "/start 0")
+        #sendWSall("/status " + name + " is offline")
+        #sendWSall("/" + name + "/start 0")
         #PluginStart(name)
         return False
 
 
 def Ping(name):
     
-    return OSCsend(name,"/ping")
+
+    sendWSall("/"+ name + "/start 0")
+    return OSCsend(name,"/ping",1)
     #return True
 
         
@@ -138,7 +139,7 @@ def Kill(name):
 
 
 # Send a command to given plugin. Will also start it if command contain /start 1 
-def Send(name,oscpath):
+def Send(name, oscpath):
 
    
     if oscpath[0].find(name) != -1:
@@ -147,11 +148,10 @@ def Send(name,oscpath):
         if Ping(name):
 
             # Light up the plugin button
-            sendWSall("/" + name + "/start 1")
-            sendWSall("/status " + name + " online")    
-            if gstt.debug >0:
-                print "Plugin " + name + " online."
-                print "Command", oscpath
+            #sendWSall("/" + name + "/start 1")
+            #sendWSall("/status " + name + " online")    
+            if gstt.debug > 0:
+                print "Send got", oscpath, "for plugin", name, "currently online."
 
             
             # If start 0, try to kill plugin 
@@ -163,9 +163,9 @@ def Send(name,oscpath):
             
             # Send osc command
             elif len(oscpath) == 1:
-                OSCsend(name,oscpath[0], oscargs='noargs')
+                OSCsend(name, oscpath[0], oscargs='noargs')
             else:
-                OSCsend(name,oscpath[0], oscargs=oscpath[1])
+                OSCsend(name, oscpath[0], oscargs=oscpath[1])
             return True
         
         # Plugin not online..

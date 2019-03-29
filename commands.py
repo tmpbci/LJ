@@ -87,7 +87,7 @@ import plugins
 
 r = redis.StrictRedis(host=gstt.LjayServerIP , port=6379, db=0)
 
-GenericCommands = ["start","ljclient","clientnumber","noteon","ljpong","ljwars","mouse","emergency","simu","status","run","nozoid","planet","live","words","ai","bank0","pose","lj","cycl","glyph"]
+GenericCommands = ["start","ljclient","clientnumber","noteon","ljpong","ljwars","mouse","emergency","simu","status","run","nozoid","planet","live","words","ai","bank0","pose","lj","cycl","glyph","pong"]
 
 
     
@@ -180,22 +180,28 @@ def handler(oscpath, args):
     
     if oscpath[1] in GenericCommands:   
 
+        print "GenericCommand :",oscpath[1],"with args",args
+
         if oscpath[1] == "ljclient":
             LasClientChange(int(args[0]))
 
+
         elif oscpath[1] == "noteon":
             NoteOn(int(args[0]))
+
 
         elif oscpath[1] == "pong":
             print "LJ commands got pong from", args
             plugins.sendWSall("/" + args[0] + "start 1")
             plugins.sendWSall("/status got pong from "+ args[0] +".")
             
+
         elif oscpath[1] == "mouse":
             Mouse(int(args[0]),int(args[1]),int(args[2]),int(args[3]))
         
+
         # /emergency value (0 or 1) 
-        if oscpath[1] == "emergency":
+        elif oscpath[1] == "emergency":
         
             if args[0] == "1":
                 
@@ -208,6 +214,8 @@ def handler(oscpath, args):
                 for laser in range(gstt.lasernumber):
                     print "Back to normal for laser ", laser
                     UserOn(laser)
+        
+
 
     # Commands with a laser number
     else:

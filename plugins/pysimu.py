@@ -31,7 +31,7 @@ import pdb
 import types, ast, argparse
 from OSC import OSCServer, OSCClient, OSCMessage
 
-
+screen_size = [750,750]
 pl = [[],[],[],[]]
 
 
@@ -206,7 +206,7 @@ def RenderScreen(surface):
             if c: pygame.draw.line(surface,c,xyc_prev[:2],xyc[:2],3)
             xyc_prev = xyc
 
-screen_size = [700,700]
+
 pygame.init()
 screen = pygame.display.set_mode(screen_size)
 pygame.display.set_caption("LJ Simulator")

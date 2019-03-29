@@ -25,7 +25,7 @@ from datetime import datetime
 from random import randrange
 import redis
 import lj3
-import sys,time
+import sys,time,traceback
 import os
 
 from osc4py3.as_eventloop import *
@@ -34,7 +34,8 @@ from osc4py3 import oscbuildparse
 from osc4py3.oscmethod import * 
 import argparse
 
-
+# 0.25 : each frame will be repeated 4 times.
+animspeed = 0.25
 
 screen_size = [700,700]
 xy_center = [screen_size[0]/2,screen_size[1]/2]
@@ -44,9 +45,12 @@ OSCinPort = 8011
 
 ljclient = 0
 
-idiotiaDisplay = [True,True,True,True]
+idiotiaDisplay = [True,True,False,False]
+#idiotiaDisplay = [False,False,False,False]
 liveDisplay = [False,False,False,False]
-fieldsDisplay = [False,False,False,False]
+
+fieldsDisplay = [False,False,True,True]
+#fieldsDisplay = [True,True,True,True]
 currentIdiotia = 0
 
 print ("")
@@ -99,6 +103,7 @@ else:
 lj3.Config(redisIP,ljclient)
 
 
+
 def hex2rgb(hexcode):
     return tuple(map(ord,hexcode[1:].decode('hex')))
 
@@ -109,7 +114,7 @@ def rgb2hex(rgb):
 
 # IdiotIA
 import json
-CurrentPose = 1
+#CurrentPose = 1
 
 # Get frame number for pose path describe in PoseDir 
 def lengthPOSE(pose_dir):
@@ -123,6 +128,47 @@ def lengthPOSE(pose_dir):
       if debug > 0:
         print("but it doesn't even exist!")
       return 0
+
+
+def prepareIdiotIA(currentAnim):
+    
+    WebStatus("Checking anims...")
+    print()
+    print("Reading available IdiotIA anims...")
+    # anim format (name, xpos, ypos, resize, currentframe, totalframe, count, speed)
+    #               0     1     2      3           4           5         6      7
+    # total frames is fetched from directory by lengthPOSE()
+    
+    anims[0] = ['boredhh' , xy_center[0] - 100, xy_center[1] + 30, 550, 0, 0, 0, animspeed]
+    anims[1] = ['belka4'  , xy_center[0] - 70, xy_center[1] + 380, 680, 0, 0, 0, animspeed]
+    anims[2] = ['belka3' , xy_center[0] - 100, xy_center[1] + 360, 700, 0, 0, 0, animspeed]
+    anims[3] = ['hhhead' , xy_center[0] - 100, xy_center[1] + 300, 600, 0, 0, 0, animspeed]
+    anims[4] = ['hhhead2', xy_center[0] - 100, xy_center[1] + 300, 600, 0, 0, 0, animspeed]
+    anims[5] = ['hhhead4', xy_center[0] - 100, xy_center[1] + 280, 600, 0, 0, 0, animspeed]
+    anims[6] = ['hhred'  , xy_center[0] - 250, xy_center[1] + 220, 550, 0, 0, 0, animspeed]
+    anims[7] = ['hhred2' , xy_center[0] - 200, xy_center[1] + 200, 550, 0, 0, 0, animspeed]
+    anims[8] = ['lady1'  , xy_center[0] - 100, xy_center[1] + 300, 600, 0, 0, 0, animspeed]
+    anims[9] = ['lady1'  , xy_center[0] - 100, xy_center[1] + 280, 600, 0, 0, 0, animspeed]
+    anims[10] = ['lady2' , xy_center[0] - 100, xy_center[1] + 280, 600, 0, 0, 0, animspeed]
+    anims[11] = ['lady3' , xy_center[0] - 100, xy_center[1] + 300, 600, 0, 0, 0, animspeed]
+    anims[12] = ['lady4' , xy_center[0] - 100, xy_center[1] + 300, 600, 0, 0, 0, animspeed]
+    anims[13] = ['mila6' , xy_center[0] - 100, xy_center[1] + 280, 600, 0, 0, 0, animspeed]
+    anims[14] = ['mila5' , xy_center[0] - 100, xy_center[1] + 280, 600, 0, 0, 0, animspeed]
+    anims[15] = ['idiotia1', xy_center[0] - 100, xy_center[1] + 300, 600, 0, 0, 0, animspeed]
+    anims[16] = ['idiotia1', xy_center[0] - 100, xy_center[1] + 300, 600, 0, 0, 0, animspeed]
+    anims[17] = ['belka4', xy_center[0] - 100, xy_center[1] + 280, 600, 0, 0, 0, animspeed]
+    anims[18] = ['belka3', xy_center[0] - 100, xy_center[1] + 280, 600, 0, 0, 0, animspeed]
+    
+    #for laseranims in anims:
+        
+    for anim in anims:
+            #print(anim)
+            anim[5] = lengthPOSE(anim[0])
+            WebStatus("Checking "+ anim[0] +"...")
+            if debug > 0:
+              print('poses/' + anim[0], "length :", anim[5], "frames")
+
+    print("Current IdiotIA anim is",anims[currentIdiotia][0],"("+str(currentIdiotia)+")")
 
 
 # get absolute face position points 
@@ -180,50 +226,6 @@ def mouth(pose_json, people):
 
 
 
-def prepareIdiotIA(currentAnim):
-    
-
-    WebStatus("Checking anims...")
-
-    print()
-    print("Reading available IdiotIA anims...")
-    # anim format (name, xpos, ypos, resize, currentframe, totalframe, count, speed)
-    #               0     1     2      3           4           5         6      7
-    # total frames is fetched from directory by lengthPOSE()
-    
-    anims[0] = [['boredhh', xy_center[0], xy_center[1] + 130, 550,0,0,0,5]]
-    anims[1] = [['belka4', xy_center[0], xy_center[1] + 280, 600,0,0,0,5]]
-    anims[2] = [['belka3', xy_center[0], xy_center[1] + 280, 600,0,0,0,5]]
-    anims[3] = [['hhbored2', xy_center[0], xy_center[1]+ 300, 600,0,0,0,5]]
-    anims[4] = [['hhhead', xy_center[0], xy_center[1]+ 300, 600,0,0,0,5]]
-    anims[5] = [['hhhead2', xy_center[0], xy_center[1] + 280, 600,0,0,0,30]]
-    anims[6] = [['hhhead4', xy_center[0], xy_center[1] + 280, 600,0,0,0,30]]
-    anims[7] = [['hhred', xy_center[0], xy_center[1]+ 300, 600,0,0,0,25]]
-    anims[8] = [['hhred2', xy_center[0], xy_center[1]+ 300, 600,0,0,0,5]]
-    anims[9] = [['lady1', xy_center[0], xy_center[1] + 280, 600,0,0,0,30]]
-    anims[10] = [['lady2', xy_center[0], xy_center[1] + 280, 600,0,0,0,30]]
-    anims[11] = [['lady3', xy_center[0], xy_center[1]+ 300, 600,0,0,0,25]]
-    anims[12] = [['lady4', xy_center[0], xy_center[1]+ 300, 600,0,0,0,5]]
-    anims[13] = [['mila6', xy_center[0], xy_center[1] + 280, 600,0,0,0,30]]
-    anims[14] = [['mila5', xy_center[0], xy_center[1] + 280, 600,0,0,0,30]]
-    anims[15] = [['idiotia1', xy_center[0], xy_center[1]+ 300, 600,0,0,0,25]]
-    anims[16] = [['idiotia1', xy_center[0], xy_center[1]+ 300, 600,0,0,0,5]]
-    anims[17] = [['belka4', xy_center[0], xy_center[1] + 280, 600,0,0,0,30]]
-    anims[18] = [['belka3', xy_center[0], xy_center[1] + 280, 600,0,0,0,30]]
-
-
-    for laseranims in anims:
-
-        for anim in laseranims:
-            anim[5] = lengthPOSE(anim[0])
-            WebStatus("Checking "+ anim[0] +"...")
-            if debug > 0:
-              print('poses/' + anim[0], "length :", anim[5], "frames")
-
-    print("Current IdiotIA anim is",anims[currentIdiotia][0],"("+str(currentIdiotia)+")")
-
-
-
 
 # display the currentIdiotia animation on all lasers according to display flag
 def IdiotIA():
@@ -235,7 +237,7 @@ def IdiotIA():
     # if display flag is True, send the face points.
     if idiotiaDisplay[laser]:
 
-        anim = anims[currentIdiotia][0]
+        anim = anims[currentIdiotia]
         #print(anim)
 
         PL = laser
@@ -244,16 +246,19 @@ def IdiotIA():
         dots = []
 
         # increase current frame [4] of speed [7] frames
-        anim[4] += 1
+        #print(anim[4],anim[7],anim[4]+anim[7])
+
+        anim[4] = anim[4]+anim[7]
 
         # compare to total frame [5]
         if anim[4] >= anim[5]:
             anim[4] = 0
 
-        posename = 'poses/' + anim[0] + '/' + anim[0] +'-'+str("%05d"%anim[4])+'.json'
+        posename = 'poses/' + anim[0] + '/' + anim[0] +'-'+str("%05d"%int(anim[4]))+'.json'
         posefile = open(posename , 'r') 
         posedatas = posefile.read()
         pose_json = json.loads(posedatas)
+        #WebStatus("Frame : "+str("%05d"%int(anim[4])))
 
         # Draw Face
 
@@ -270,7 +275,6 @@ def IdiotIA():
             lj3.rPolyLineOneColor(mouth(pose_json, people), c = white, PL = laser, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
         
         lj3.DrawPL(PL)
-        time.sleep(0.02)
 
 
 # Init Starfields
@@ -313,8 +317,8 @@ def Starfield(hori=0,verti=0):
     if displayedstars < num_stars and starfieldcount % 15 == 0:
         displayedstars += 1
 
-    if displayedstars == num_stars and starfieldcount % 10 == 0:
-        starspeed += 0.005
+    #if displayedstars == num_stars and starfieldcount % 10 == 0:
+    #    starspeed += 0.005
 
     #print starspeed
 
@@ -433,12 +437,11 @@ def LiveFace():
 # /pose/idiotia/lasernumber 1 
 def OSCidiotia(address, value):
     
-    print("idiotia",address,value)
-   
+    print("pose idiotia got ",address,value)
     laser = int(address[14:])
     print("laser", laser, value)
     
-    if value == 1:
+    if value == "1" or value == 1:
     
         idiotiaDisplay[laser] = True
         liveDisplay[laser] = False
@@ -450,41 +453,48 @@ def OSCidiotia(address, value):
         idiotiaDisplay[laser] = False
         print(idiotiaDisplay,liveDisplay,fieldsDisplay)
 
+    UpdatePoseUI()
 
-# /pose/anim
-def OSCanim(address,state):
+# /pose/anim/animnumber 1
+def OSCanim(address, value):
+    global currentIdiotia
     
-    print("/pose/anim",address, state)
-    anim = int(address[12:])
-    print(anim, state)
+    print("pose anim got :", address, type(value), value)
+    anim = int(address[11:])
+    print("anim", anim)
 
-    if state == 1:
+    if value == "1" or value == 1:
         currentIdiotia = anim
+        UpdatePoseUI()
+        WebStatus("Running "+ anims[currentIdiotia][0]+"...")
 
 
 # /pose/live/lasernumber value
-def OSClive(address,value):
+def OSClive(address, value):
     
     print("live",address,value)
     laser = int(address[11:])
-    print("laser", laser, value)
+    #print("laser", laser, value)
     
-    if value == "1":
-        idiotiaDisplay[value] = False
-        liveDisplay[value] = True
-        fieldsDisplay[value] = False
+    if value == "1" or value == 1:
+        idiotiaDisplay[laser] = False
+        liveDisplay[laser] = True
+        fieldsDisplay[laser] = False
+        UpdatePoseUI()
 
 # /pose/field/lasernumber value
 def OSCfield(address, value):
 
-    print("Pose bank field got", address, "with value", value)
+    print("Pose field got", address, "with value", type(value), value)
     laser = int(address[12:])
-    print("laser", laser, value)
+    #print("laser", laser, value)
     
-    if value == "1":
-        idiotiaDisplay[value] = False
-        liveDisplay[value] = False
-        fieldsDisplay[value] = True
+    if value == "1" or value == 1:
+        print("field",laser,"true")
+        idiotiaDisplay[laser] = False
+        liveDisplay[laser] = False
+        fieldsDisplay[laser] = True
+        UpdatePoseUI()
 
 
 # /pose/ljclient
@@ -494,6 +504,9 @@ def OSCljclient(value):
     lj3.LjClient(ljclient)
 
 
+# /pose/ping value
+def OSCping(value):
+    lj3.OSCping("pose")
 
 '''
 # Starfield, idiotia
@@ -522,26 +535,26 @@ def UpdatePoseUI():
     for laser in range(LaserNumber):
 
         if idiotiaDisplay[laser]:
-            lj3.SendLJ("pose/idiotia/" + str(laser) + " 1")
+            lj3.SendLJ("/pose/idiotia/" + str(laser) + " 1")
         else:
-            lj3.SendLJ("pose/idiotia/" + str(laser) + " 0")
+            lj3.SendLJ("/pose/idiotia/" + str(laser) + " 0")
 
         if liveDisplay[laser]:
-            lj3.SendLJ("pose/live/" + str(laser) + " 1")
+            lj3.SendLJ("/pose/live/" + str(laser) + " 1")
         else:
-            lj3.SendLJ("pose/live/" + str(laser) + " 0")
+            lj3.SendLJ("/pose/live/" + str(laser) + " 0")
 
         if fieldsDisplay[laser]:
-            lj3.SendLJ("pose/field/" + str(laser) + " 1")
+            lj3.SendLJ("/pose/field/" + str(laser) + " 1")
         else:
-            lj3.SendLJ("pose/field/" + str(laser) + " 0")
+            lj3.SendLJ("/pose/field/" + str(laser) + " 0")
 
 
     for anim in range(19):
         if anim == currentIdiotia:
-            lj3.SendLJ("pose/anim/" + str(anim) + " 1")
+            lj3.SendLJ("/pose/anim/" + str(anim) + " 1")
         else:
-            lj3.SendLJ("pose/anim/" + str(anim) + " 0")
+            lj3.SendLJ("/pose/anim/" + str(anim) + " 0")
 
 
 
@@ -549,12 +562,12 @@ print('Loading Pose bank...')
 WebStatus("Loading Pose bank...")
 
 # OSC Server callbacks
-print("Starting OSC server at",myIP,":",OSCinPort,"...")
+print("Starting OSC server at", myIP, ":", OSCinPort, "...")
 osc_startup()
 osc_udp_server(myIP, OSCinPort, "InPort")
 
 #osc_method("/pose/run*", OSCrun)
-osc_method("/ping*", lj3.OSCping)
+osc_method("/ping*", OSCping)
 osc_method("/pose/ljclient", OSCljclient)
 osc_method("/quit", OSCquit)
 osc_method("/pose/idiotia/*", OSCidiotia, argscheme=OSCARG_ADDRESS + OSCARG_DATAUNPACK)
@@ -562,8 +575,9 @@ osc_method("/pose/field/*", OSCfield,argscheme=OSCARG_ADDRESS + OSCARG_DATAUNPAC
 osc_method("/pose/live/*", OSClive, argscheme=OSCARG_ADDRESS + OSCARG_DATAUNPACK)
 osc_method("/pose/anim/*", OSCanim, argscheme=OSCARG_ADDRESS + OSCARG_DATAUNPACK)
 
-anims =[[]]*20
-#color = lj3.rgb2int(255,255,255)
+
+anims =[[]]*19
+
 
 prepareIdiotIA(0)
 prepareSTARFIELD()
@@ -579,24 +593,39 @@ green = lj3.rgb2int(0,255,0)
 print("Updating Pose UI...")
 UpdatePoseUI()
 
-WebStatus("Pose bank running.")
-print("Pose bank running")
-
-
-
-
+WebStatus("Running "+ anims[currentIdiotia][0]+"...")
+#WebStatus("Pose bank running.")
+#print("Pose bank running")
+print("Running "+ anims[currentIdiotia][0]+" on " + str(LaserNumber) +" lasers.")
 
 def Run():
     
     try:
         while 1:
 
+            lj3.OSCframe()
+            # If you want an idea 
+            # t0 = time.time()
             Starfield(hori=0,verti=0)
             IdiotIA()
-            LiveFace()
+            #LiveFace()
+            time.sleep(0.002)
+            #t1 = time.time()
+            # looptime = t1 - t0
+            # 25 frames/sec -> 1 frame is 0.04 sec long
+            # if looptime is 0.01 sec
+            # 0.04/0.01 = 4 loops with the same anim
+            # so speedanim is 1 / 4 = 0.25
+            # speedanim = 1 / (0.04 / looptime)
 
-    except KeyboardInterrupt:
-        pass
+
+            #print("Took %f" % (t1 - t0, ))
+
+    #except KeyboardInterrupt:
+    #    pass
+
+    except Exception:
+        traceback.print_exc()
 
     # Gently stop on CTRL C
 
