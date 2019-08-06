@@ -14,6 +14,9 @@ import itertools
 import sys
 import os
 import types
+sys.path.append('../../../libs')
+import lj
+
 
 '''
 is_py2 = sys.version[0] == '2'
@@ -26,7 +29,7 @@ else:
 import thread
 import time
 import random
-import lj
+import lj23 as lj
 import entities
 from controller import setup_controls
 import argparse
@@ -116,13 +119,15 @@ if args.laser:
 else:
 	plnumber = 0
 
+entities.plnumber = plnumber
+
 # Redis Computer IP
 if args.redisIP  != None:
 	redisIP  = args.redisIP
 else:
 	redisIP = '127.0.0.1'
 
-lj.Config(redisIP,ljclient)
+lj.Config(redisIP,ljclient,"ljpong")
 
 
 def StartPlaying(first_time = False):
@@ -209,24 +214,26 @@ OSCRunning = True
 def OSCljclient(path, tags, args, source):
 
 
-	print("LJ Pong got /ljpong/ljclient with value", args[0])
+	print("LJPong got /ljpong/ljclient with value", args[0])
 	lj.WebStatus("LJPong to virtual "+ str(args[0]))
 	ljclient = args[0]
 	lj.LjClient(ljclient)
 
 def OSCpl(path, tags, args, source):
+	global plnumber
 
 	print("LJ Pong got /ljpong/pl with value", args[0])
 	lj.WebStatus("LJPong to pl "+ str(args[0]))
-	plnumber = args[0]
-
+	plnumber = int(args[0])
+	lj.LjPl(plnumber)
+'''
 # /ping
 def OSCping(path, tags, args, source):
 
 	print("LJ Pong got /ping")
 	lj.SendLJ("/pong","ljpong")
 	lj.SendLJ("/ljpong/start",1)
-
+'''
 
 def OSC_frame():
     # clear timed_out flag
@@ -246,10 +253,10 @@ print "at", OSCIP, "port",str(OSCPort)
 oscserver.handle_timeout = types.MethodType(handle_timeout, oscserver)
 
 # OSC callbacks
-
+lj.addOSCdefaults(oscserver)
 oscserver.addMsgHandler( "/ljpong/ljclient", OSCljclient )
 oscserver.addMsgHandler("/ljpong/pl", OSCpl)
-oscserver.addMsgHandler("/ping", OSCping)
+#oscserver.addMsgHandler("/ping", lj.OSCping)
 
 print "Running..."
 

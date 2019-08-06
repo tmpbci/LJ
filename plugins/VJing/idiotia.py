@@ -24,33 +24,67 @@ import pdb
 from datetime import datetime
 from random import randrange
 import redis
-import lj3
-import sys,time,traceback
+import sys
+import ast
 import os
 
+import time,traceback
+
+
+ljpath = r'%s' % os.getcwd().replace('\\','/')
+
+# import from shell
+
+sys.path.append(ljpath +'/../../libs/')
+print(ljpath +'/../../libs/')
+#import from LJ
+sys.path.append(ljpath +'/libs/')
+print (ljpath +'/libs/')
+
+
+is_py2 = sys.version[0] == '2'
+if is_py2:
+    from OSC import OSCServer, OSCClient, OSCMessage
+else:
+    from OSC3 import OSCServer, OSCClient, OSCMessage
+
+import lj23 as lj3
+
+'''
 from osc4py3.as_eventloop import *
 from osc4py3 import oscbuildparse
 #from osc4py3 import oscmethod as osm
 from osc4py3.oscmethod import * 
+'''
+
 import argparse
 
 # 0.25 : each frame will be repeated 4 times.
-animspeed = 0.25
+animspeed = 0.1
 
 screen_size = [700,700]
 xy_center = [screen_size[0]/2,screen_size[1]/2]
 
-message = "LO"
+message = "TEAMLASER"
 OSCinPort = 8011
 
 ljclient = 0
 
-idiotiaDisplay = [True,True,False,False]
-#idiotiaDisplay = [False,False,False,False]
-liveDisplay = [False,False,False,False]
+#liveDisplay = [False,False,False,False]
 
-fieldsDisplay = [False,False,True,True]
+liveDisplay = [True, True, True, True]
 #fieldsDisplay = [True,True,True,True]
+idiotiaDisplay = [False, False, False, False]
+fieldsDisplay = [False, False, False, False]
+
+
+
+'''
+fieldsDisplay = [False,False,True,True]
+'''
+
+#idiotiaDisplay = [True,True,False,False]
+
 currentIdiotia = 0
 
 print ("")
@@ -97,10 +131,29 @@ else:
 if args.Lasers  != None:
     LaserNumber = args.Lasers
 else:
-    LaserNumber = 4
+    LaserNumber = 1
 
 
-lj3.Config(redisIP,ljclient)
+r = lj3.Config(redisIP,ljclient,"pose")
+
+
+#
+# OSC
+#
+
+oscserver = OSCServer( (myIP, OSCinPort) )
+oscserver.timeout = 0
+#oscrun = True
+
+# this method of reporting timeouts only works by convention
+# that before calling handle_request() field .timed_out is 
+# set to False
+def handle_timeout(self):
+    self.timed_out = True
+
+# funny python's way to add a method to an instance of a class
+import types
+oscserver.handle_timeout = types.MethodType(handle_timeout, oscserver)
 
 
 
@@ -119,11 +172,14 @@ import json
 # Get frame number for pose path describe in PoseDir 
 def lengthPOSE(pose_dir):
 
-    #if debug > 0:
-    #  print("Check directory",'poses/' + pose_dir)
-    if os.path.exists('poses/' + pose_dir):
-      numfiles = sum(1 for f in os.listdir('poses/' + pose_dir) if os.path.isfile(os.path.join('poses/' + pose_dir + '/', f)) and f[0] != '.')
-      return numfiles
+    if debug > 0:
+        print("Checking directory",'plugins/VJing/poses/' + pose_dir)
+    if os.path.exists('plugins/VJing/poses/' + pose_dir):
+        
+        numfiles = sum(1 for f in os.listdir('plugins/VJing/poses/' + pose_dir) if os.path.isfile(os.path.join('plugins/VJing/poses/' + pose_dir + '/', f)) and f[0] != '.')
+        if debug > 0:
+            print(numfiles, 'frames')
+        return numfiles
     else:
       if debug > 0:
         print("but it doesn't even exist!")
@@ -166,10 +222,107 @@ def prepareIdiotIA(currentAnim):
             anim[5] = lengthPOSE(anim[0])
             WebStatus("Checking "+ anim[0] +"...")
             if debug > 0:
-              print('poses/' + anim[0], "length :", anim[5], "frames")
+              print('plugins/VJing/poses/' + anim[0], "length :", anim[5], "frames")
 
     print("Current IdiotIA anim is",anims[currentIdiotia][0],"("+str(currentIdiotia)+")")
 
+
+'''
+pose_keypoints_2d
+face_keypoints_2d
+hand_left_keypoints_2d
+hand_right_keypoints_2d
+pose_keypoints_3d
+face_keypoints_3d
+hand_left_keypoints_3d
+hand_right_keypoints_3d
+
+"/0/face_keypoints_2d"
+"[-0.0946419, -0.521328, 0.675269, -0.0883931, -0.413923, 0.69358, -0.0758954, -0.302815, 0.73599, -0.059232, -0.191707, 0.640398, -0.0384026, -0.0917102, 0.683398, -0.00507569, -0.00652742, 0.643006, 0.0428318, 0.0601374, 0.558626, 0.0844904, 0.108284, 0.576597, 0.142813, 0.108284, 0.621916, 0.178223, 0.0749518, 0.546389, 0.207384, 0.0193979, 0.556877, 0.22613, -0.0361562, 0.660514, 0.244876, -0.102821, 0.713871, 0.267789, -0.1843, 0.706604, 0.290701, -0.265779, 0.680418, 0.307364, -0.347258, 0.617497, 0.31153, -0.428738, 0.53877, -0.0446514, -0.547253, 0.784288, -0.00715858, -0.569474, 0.873856, 0.0303342, -0.558364, 0.835336, 0.0740758, -0.543549, 0.827985, 0.111569, -0.525031, 0.809191, 0.213632, -0.543549, 0.819012, 0.242794, -0.569474, 0.884373, 0.265706, -0.5954, 0.842317, 0.292784, -0.613918, 0.804365, 0.313613, -0.625028, 0.740405, 0.163642, -0.443552, 0.805348, 0.169891, -0.362073, 0.837128, 0.169891, -0.280594, 0.839031, 0.174057, -0.213929, 0.68711, 0.111569, -0.162078, 0.725528, 0.134481, -0.154671, 0.837339, 0.159476, -0.150968, 0.887387, 0.178223, -0.158375, 0.835752, 0.196969, -0.180597, 0.698174, 0.00950491, -0.432441, 0.864517, 0.0345001, -0.458366, 0.859197, 0.0636612, -0.46207, 0.867471, 0.0907393, -0.432441, 0.852409, 0.0636612, -0.417627, 0.876186, 0.0324172, -0.413923, 0.834265, 0.21155, -0.454663, 0.875569, 0.232379, -0.491699, 0.816674, 0.26154, -0.50281, 0.878064, 0.282369, -0.476884, 0.839634, 0.263623, -0.450959, 0.912212, 0.24071, -0.450959, 0.896937, 0.0719929, -0.047267, 0.761505, 0.101154, -0.065785, 0.864081, 0.130315, -0.0694886, 0.910774, 0.159476, -0.065785, 0.895222, 0.17614, -0.0731922, 0.846551, 0.194886, -0.0731922, 0.74389, 0.209467, -0.0731922, 0.573107, 0.194886, -0.0213418, 0.677465, 0.17614, 0.0156941, 0.755373, 0.15531, 0.0231014, 0.765641, 0.124066, 0.0231014, 0.863117, 0.0928223, -0.00282377, 0.823042, 0.0928223, -0.0398598, 0.743914, 0.128232, -0.0361562, 0.932259, 0.157393, -0.0361562, 0.877732, 0.17614, -0.0398598, 0.853163, 0.196969, -0.0620813, 0.645926, 0.17614, -0.0398598, 0.80738, 0.157393, -0.0324526, 0.872388, 0.128232, -0.0361562, 0.924673, 0.0511636, -0.450959, 0.801577, 0.244876, -0.480588, 0.915322]"
+
+"/peopleCount"
+"2"
+'''
+
+def bodyREDIS(people):
+
+    dots = []
+    pose = []
+    redispose = []
+
+    pose_points = [10,9,8,1,11,12,13]
+    print ("people body", people)
+    
+    print ("/"+str(people)+"/pose_keypoints_2d")
+    #pose = np.array(ast.literal_eval(r.get("/"+str(people)+"/pose_keypoints_2d")))
+    redispose = r.get("/"+str(people)+"/pose_keypoints_2d")
+    #print ("redispose",redispose)
+    poseast = ast.literal_eval(redispose)
+    #print ("poseast",poseast)
+    #print (poseast[0])
+    pose = np.array(poseast)
+    #print (np.array((ast.literal_eval(strg))))
+    #print pose
+    #print(pose[0], pose[1])
+    #print("len pose", len(pose))
+    '''
+    for dot in range(len(pose)/3):
+        #print dot
+        dots.append(((pose[dot * 3], pose[(dot * 3)+1])))
+        #print((pose[dot * 3], pose[(dot * 3)+1]))
+    '''
+    for dot in range(len(pose_points)):
+        bodypoint =  pose_points[dot]
+        if pose[bodypoint * 3] != -1 and  pose[(bodypoint * 3)+1] != -1:
+
+            dots.append(((pose[bodypoint * 3], pose[(bodypoint * 3)+1])))
+        #print((pose[dot * 3], pose[(dot * 3)+1]))
+        #print "body point ", pose_points[dot],dot, (pose[bodypoint * 3], pose[(bodypoint * 3)+1])
+    print dots
+    return dots
+
+# display the Realtime open pose face according to flag.
+def LivePose():
+
+
+    laser = 0
+    # Old style : if display flag is True for given laser, send the face points.
+    # New style : should send the people points in a PL, then use the PL's dest object to describe 
+    # what to do with it
+    
+    if liveDisplay[0]:
+        peoplenumber = int(r.get("/peopleCount"))
+        print peoplenumber
+        for currentnumber in range(peoplenumber):
+            PL = 0
+            #print PL, anim
+            # Draw Pose
+            
+            x_offset = 26 * (- (0.9*peoplenumber) + 3*currentnumber)
+            for people in range(peoplenumber):
+
+                print("people", people)
+                x_offset = 26 * (- (0.9*peoplenumber) + 3*currentnumber)
+                print x_offset
+                lj3.rPolyLineOneColor(bodyREDIS(people), c= white, PL = PL, closed = False, xpos = xy_center[0]+ x_offset, ypos = xy_center[1], resize = 250)
+
+            lj3.DrawPL(PL)
+
+
+
+# get relative (-1 0 1) body position points. a position -1, -1 means doesn't exist
+def getBODY(pose_json,pose_points, people):
+
+    dots = []
+    for dot in pose_points:
+        #print pose_points
+        if len(pose_json['people'][people]['pose_keypoints_2d']) != 0:
+            #print "people 0"
+            if pose_json['people'][people]['pose_keypoints_2d'][dot * 3] != -1 and  pose_json['people'][people]['pose_keypoints_2d'][(dot * 3)+1] != -1:
+                dots.append((pose_json['people'][people]['pose_keypoints_2d'][dot * 3], pose_json['people'][people]['pose_keypoints_2d'][(dot * 3)+1]))
+
+
+    return dots
 
 # get absolute face position points 
 def getFACE(pose_json,pose_points, people):
@@ -183,6 +336,21 @@ def getFACE(pose_json,pose_points, people):
                 dots.append((pose_json['people'][people]['face_keypoints_2d'][dot * 3], pose_json['people'][people]['face_keypoints_2d'][(dot * 3)+1]))
 
     return dots
+
+
+
+# Body parts
+def bodyCOCO(pose_json, people):
+    pose_points = [10,9,8,1,11,12,13]
+    return getBODY(pose_json,pose_points, people)
+
+def armCOCO(pose_json, people):
+    pose_points = [7,6,5,1,2,3,4]
+    return getBODY(pose_json,pose_points, people)
+
+def headCOCO(pose_json, people):
+    pose_points = [1,0]
+    return getBODY(pose_json,pose_points, people)
 
 
 # Face keypoints
@@ -239,22 +407,20 @@ def IdiotIA():
 
         anim = anims[currentIdiotia]
         #print(anim)
-
         PL = laser
-        #print PL, anim
-
         dots = []
 
         # increase current frame [4] of speed [7] frames
-        #print(anim[4],anim[7],anim[4]+anim[7])
-
+        # print(anim[4],anim[7],anim[4]+anim[7])
+        # print("frame", anim[4])
         anim[4] = anim[4]+anim[7]
-
+        # print("animspeed",anim[7], "newframe", anim[4], "maximum frame", anim[5] )
         # compare to total frame [5]
         if anim[4] >= anim[5]:
             anim[4] = 0
 
-        posename = 'poses/' + anim[0] + '/' + anim[0] +'-'+str("%05d"%int(anim[4]))+'.json'
+        posename = 'plugins/VJing/poses/' + anim[0] + '/' + anim[0] +'-'+str("%05d"%int(anim[4]))+'.json'
+        # print(posename)
         posefile = open(posename , 'r') 
         posedatas = posefile.read()
         pose_json = json.loads(posedatas)
@@ -421,12 +587,47 @@ def Starfield(hori=0,verti=0):
             lj3.DrawPL(laser)
 
 
+
+
+
+
 # display the Realtime open pose face according to flag.
 def LiveFace():
 
   # All laser loop
   for laser in range(LaserNumber):
     # for anim in anims[laseranims]:
+    print ("laser", laser)
+
+    # if display flag is True, send the face points.
+    if liveDisplay[laser]:
+
+        PL = laser
+        #print PL, anim
+        dots = []
+        pose_json = json.loads(posedatas)
+
+        # Draw Face
+
+        for people in range(len(pose_json['people'])):
+
+            r.get(n)
+            lj3.rPolyLineOneColor(bodyCOCO(pose_json, people), c=colorify.rgb2hex(gstt.color), PL = 0, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            lj3.rPolyLineOneColor(armCOCO(pose_json, people), c=colorify.rgb2hex(gstt.color), PL = 0, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            lj3.rPolyLineOneColor(headCOCO(pose_json, people), c=colorify.rgb2hex(gstt.color),  PL = 0, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+
+            #lj3.rPolyLineOneColor(face(pose_json, people), c = white, PL = laser closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            lj3.rPolyLineOneColor(browL(pose_json, people), c = white, PL = laser, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            lj3.rPolyLineOneColor(browR(pose_json, people), c = white, PL = laser, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            lj3.rPolyLineOneColor(eyeR(pose_json, people), c = white, PL = laser, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            #lj3.rPolyLineOneColor(pupR(pose_json, people), c = white, PL = laser, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            lj3.rPolyLineOneColor(eyeL(pose_json, people), c = white, PL = laser, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            #lj3.rPolyLineOneColor(pupL(pose_json, people), c = white, PL = laser, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+            lj3.rPolyLineOneColor(nose(pose_json, people), c = white, PL = laser, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])  
+            lj3.rPolyLineOneColor(mouth(pose_json, people), c = white, PL = laser, closed = False, xpos = anim[1], ypos = anim[2], resize = anim[3])
+        
+        lj3.DrawPL(PL)
+
 
     # if display flag is True, send the face points.
     if liveDisplay[laser]:
@@ -435,18 +636,20 @@ def LiveFace():
 
 
 # /pose/idiotia/lasernumber 1 
-def OSCidiotia(address, value):
+def OSCidiotia(path, tags, args, source):
     
-    print("pose idiotia got ",address,value)
-    laser = int(address[14:])
-    print("laser", laser, value)
+    print("pose idiotia got",path, args)
+    laser = int(args[0])
+    value = int(args[1])
     
-    if value == "1" or value == 1:
     
+    if value == 1:
+    
+        print("switch on idiotia for laser", laser, value)
         idiotiaDisplay[laser] = True
         liveDisplay[laser] = False
         fieldsDisplay[laser] = False
-        print(idiotiaDisplay,liveDisplay,fieldsDisplay)
+        #print(idiotiaDisplay,liveDisplay,fieldsDisplay)
     
     else:
     
@@ -455,58 +658,65 @@ def OSCidiotia(address, value):
 
     UpdatePoseUI()
 
-# /pose/anim/animnumber 1
-def OSCanim(address, value):
-    global currentIdiotia
-    
-    print("pose anim got :", address, type(value), value)
-    anim = int(address[11:])
-    print("anim", anim)
 
-    if value == "1" or value == 1:
+
+# /pose/anim
+def OSCanim(path, tags, args, source):
+    
+    print("pose anim got",path, args)
+    anim = int(args[0])
+    state = int(args[1])
+    
+    #print(anim, state)
+
+    if state == 1:
+        print("/pose/anim switch to",anim)
         currentIdiotia = anim
         UpdatePoseUI()
-        WebStatus("Running "+ anims[currentIdiotia][0]+"...")
+        WebStatus("Ruuning "+ anims[currentIdiotia][0]+"...")
 
 
 # /pose/live/lasernumber value
-def OSClive(address, value):
+def OSClive(path, tags, args, source):
     
-    print("live",address,value)
-    laser = int(address[11:])
-    #print("laser", laser, value)
+    print("pose live got",path, args)
+    laser = int(args[0])
+    value = int(args[1])
     
-    if value == "1" or value == 1:
-        idiotiaDisplay[laser] = False
-        liveDisplay[laser] = True
-        fieldsDisplay[laser] = False
+    
+    if value == "1":
+        print("live for laser", laser)
+        idiotiaDisplay[value] = False
+        liveDisplay[value] = True
+        fieldsDisplay[value] = False
         UpdatePoseUI()
 
 # /pose/field/lasernumber value
-def OSCfield(address, value):
+def OSCfield(path, tags, args, source):
 
-    print("Pose field got", address, "with value", type(value), value)
-    laser = int(address[12:])
-    #print("laser", laser, value)
+    print("pose field got",path, args)
+    laser = int(args[0])
+    value = int(args[1])
     
-    if value == "1" or value == 1:
-        print("field",laser,"true")
-        idiotiaDisplay[laser] = False
-        liveDisplay[laser] = False
-        fieldsDisplay[laser] = True
+    
+    if value == "1":
+        print("field for laser", laser)
+        idiotiaDisplay[value] = False
+        liveDisplay[value] = False
+        fieldsDisplay[value] = True
         UpdatePoseUI()
 
 
 # /pose/ljclient
-def OSCljclient(value):
-    print("Pose bank got /pose/ljclient with value", value)
-    ljclient = value
-    lj3.LjClient(ljclient)
+def OSCljclient(path, tags, args, source):
+
+    print("pose got /viewgen/ljclient with value", args[0])
+    lj.WebStatus("viewgen to virtual "+ str(args[0]))
+    ljclient = args[0]
+    lj.LjClient(ljclient)
 
 
-# /pose/ping value
-def OSCping(value):
-    lj3.OSCping("pose")
+
 
 '''
 # Starfield, idiotia
@@ -515,7 +725,7 @@ def OSCrun(value):
     print("Pose bank got /run with value", value)
     doit = value
 '''
-
+'''
 # /quit
 def OSCquit():
 
@@ -523,6 +733,7 @@ def OSCquit():
     print("Stopping OSC...")
     lj3.OSCstop()
     sys.exit()
+'''
 
 def WebStatus(message):
     lj3.SendLJ("/status",message)
@@ -561,20 +772,13 @@ def UpdatePoseUI():
 print('Loading Pose bank...')
 WebStatus("Loading Pose bank...")
 
-# OSC Server callbacks
-print("Starting OSC server at", myIP, ":", OSCinPort, "...")
-osc_startup()
-osc_udp_server(myIP, OSCinPort, "InPort")
-
-#osc_method("/pose/run*", OSCrun)
-osc_method("/ping*", OSCping)
-osc_method("/pose/ljclient", OSCljclient)
-osc_method("/quit", OSCquit)
-osc_method("/pose/idiotia/*", OSCidiotia, argscheme=OSCARG_ADDRESS + OSCARG_DATAUNPACK)
-osc_method("/pose/field/*", OSCfield,argscheme=OSCARG_ADDRESS + OSCARG_DATAUNPACK)
-osc_method("/pose/live/*", OSClive, argscheme=OSCARG_ADDRESS + OSCARG_DATAUNPACK)
-osc_method("/pose/anim/*", OSCanim, argscheme=OSCARG_ADDRESS + OSCARG_DATAUNPACK)
-
+oscserver.addMsgHandler("/pose/ljclient", OSCljclient)
+oscserver.addMsgHandler("/pose/idiotia", OSCidiotia)
+oscserver.addMsgHandler("/pose/field", OSCfield)
+oscserver.addMsgHandler("/pose/live", OSClive)
+oscserver.addMsgHandler("/pose/anim", OSCanim)
+# Add OSC generic plugins commands : 'default", /ping, /quit, /pluginame/obj, /pluginame/var, /pluginame/adddest, /pluginame/deldest
+lj3.addOSCdefaults(oscserver)
 
 anims =[[]]*19
 
@@ -593,21 +797,22 @@ green = lj3.rgb2int(0,255,0)
 print("Updating Pose UI...")
 UpdatePoseUI()
 
-WebStatus("Running "+ anims[currentIdiotia][0]+"...")
+WebStatus("Pose "+ anims[currentIdiotia][0]+".")
 #WebStatus("Pose bank running.")
 #print("Pose bank running")
-print("Running "+ anims[currentIdiotia][0]+" on " + str(LaserNumber) +" lasers.")
+print("Pose "+ anims[currentIdiotia][0]+" ready on " + str(LaserNumber) +" lasers.")
 
 def Run():
     
     try:
-        while 1:
+        while lj3.oscrun:
 
-            lj3.OSCframe()
             # If you want an idea 
             # t0 = time.time()
-            Starfield(hori=0,verti=0)
-            IdiotIA()
+            lj3.OSCframe()
+            #Starfield(hori=0,verti=0)
+            #IdiotIA()
+            LivePose()
             #LiveFace()
             time.sleep(0.002)
             #t1 = time.time()

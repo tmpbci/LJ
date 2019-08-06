@@ -6,9 +6,11 @@ LICENCE : CC
 '''
 
 import redis
-import lj3
+
 import sys,time
 import argparse
+sys.path.append('../libs')
+import lj3
 
 from osc4py3.as_eventloop import *
 from osc4py3 import oscbuildparse
@@ -20,11 +22,12 @@ myIP = "127.0.0.1"
 duration = 300
 
 OSCinPort = 8006
+oscrun = True
 
-Word0 = "LASER"
-Word1 = "LASER"
-Word2 = "LASER"
-Word3 = "LASER"
+Word0 = "ONE"
+Word1 = "TWO"
+Word2 = "THREE"
+Word3 = "FOUR"
 
 '''
 is_py2 = sys.version[0] == '2'
@@ -67,7 +70,7 @@ else:
 	debug = 0
 
 
-lj3.Config(redisIP,ljclient)
+lj3.Config(redisIP,ljclient,"words")
 #r = redis.StrictRedis(host=redisIP, port=6379, db=0)
 
 
@@ -108,17 +111,15 @@ def OSCljclient(value):
 
 
 
-# /ping
-def OSCping():
 
-	lj3.OSCping("words")
-	lj3.SendLJ("words/text/0",Word0)
-	lj3.SendLJ("words/text/1",Word1)
+# /quit dummyvalue
+def quit(value):
+    # don't do this at home (or it'll quit blender)
+    global oscrun
 
-# /quit
-def OSCquit():
-
-	lj3.OSCquit("words")
+    oscrun = False
+    print("Stopped by /quit.")
+    lj3.ClosePlugin()
 
 
 def Run():
@@ -131,9 +132,9 @@ def Run():
 	osc_method("/words/text/1*", OSCword1)
 	osc_method("/words/text/2*", OSCword2)
 	osc_method("/words/text/3*", OSCword3)
-	osc_method("/ping*", OSCping)
 	osc_method("/words/ljclient*", OSCljclient)
-	osc_method("/quit", OSCquit)
+	osc_method("/ping", lj3.OSCping)
+	osc_method("/quit*", quit)
 
 	color = lj3.rgb2int(255,255,255)
 	lj3.WebStatus("Loading Words...")
@@ -145,7 +146,7 @@ def Run():
 
 	try:
 
-		while 1:
+		while oscrun:
 		
 			lj3.OSCframe()
 	
@@ -170,11 +171,8 @@ def Run():
 
 	finally:
 
-		lj3.WebStatus("Words Exit")
-		print("Stopping Words OSC...")
-		lj3.OSCstop()
+		lj3.ClosePlugin()
 
-	print ("Words Stopped.")
 
 
 Run()

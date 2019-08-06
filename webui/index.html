@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
-
+  <!-- Head block -->
+  <!-- DO NOT EDIT index.html page. Edit the right block then python build.py -->
 <!--
   LJ webapp 'mg' stand for main grid elements
 -->
@@ -24,21 +25,27 @@
         </script>
         <script src="webaudio-controls.js"></script>
         <link rel="stylesheet" href="LJgrid.css" />
+        <link rel="stylesheet" type="text/css" href="selector.min.css">
+        <script type="application/javascript" src="selector.min.js"></script>
       	<!-- Javascript for this webapp is a the end of this html page and in LJ.js -->
         <script src="LJ.js"></script>
     </head>
 
 <body style="background-color:#222;">
 
+
 <!--
-  MainGrid Webpage one column, different raws displayed or hidden by menu button 
+  MainGrid : Webpage one column, different raws displayed or hidden by menu button 
 -->
+
 
 <div class="maingrid">
 
 
+  <!-- End of Header block -->
+  
   <!--
-    Title and laser state
+    Title block and laser state
   -->
   
   <div class="mgtitle">
@@ -50,7 +57,7 @@
   	<!-- ON OFF button -->
   	<div class="onoffgrid">
   		<div class="lasertextxs">/on</div>
-  		<div><webaudio-switch id="on" height="52" width="41"  value="0" src="knobs/bigbluetoggle.png" type="toggle"></webaudio-switch></div>
+  		<div><webaudio-switch id="on" height="57" width="57"  value="0" src="knobs/onoff3.png" type="toggle"></webaudio-switch></div>
   	</div>
 
     <!-- Lasers states grid -->
@@ -95,6 +102,58 @@
     <div>
 
   	<div class="topgrid">
+      <div>
+        <!-- Glyph destination LJ client Selection -->
+        <webaudio-switch id="glyph/start" value="0" height="27" width="80" tooltip="Switch-B" src="knobs/glyph.png"></webaudio-switch>
+       <select onclick="buttonClicked(this.value)" id="virtual" value="0">
+         <option value="glyph/ljclient 0">0</option>
+         <option value="glyph/ljclient 1">1</option>
+         <option value="glyph/ljclient 2">2</option>
+         <option value="glyph/ljclient 3">3</option>
+       </select>
+       <!-- Glyph Point List destination -->
+       <select onclick="buttonClicked(this.value)">
+         <option value="glyph/pl 0">0</option>
+         <option value="glyph/pl 1">1</option>
+         <option value="glyph/pl 2">2</option>
+         <option value="glyph/pl 3">3</option>
+       </select>
+      </div>
+
+      <div>
+        <!-- FFT destination LJ client Selection -->
+        <webaudio-switch id="fft/start" value="0" height="27" width="80" tooltip="Switch-B" src="knobs/fft.png"></webaudio-switch>
+       <select onclick="buttonClicked(this.value)" id="virtual" value="0">
+         <option value="fft/ljclient 0">0</option>
+         <option value="fft/ljclient 1">1</option>
+         <option value="fft/ljclient 2">2</option>
+         <option value="fft/ljclient 3">3</option>
+       </select>
+       <!-- FFT Point List destination -->
+       <select onclick="buttonClicked(this.value)">
+         <option value="fft/pl 0">0</option>
+         <option value="fft/pl 1">1</option>
+         <option value="fft/pl 2">2</option>
+         <option value="fft/pl 3">3</option>
+       </select>
+      </div>
+      <div>
+        <!-- Nozoids destination LJ client Selection -->
+        <webaudio-switch id="nozoid/start" value="0" height="27" width="80" tooltip="Switch-B" src="knobs/nozoids.png"></webaudio-switch>
+       <select onclick="buttonClicked(this.value)" id="virtual" value="0">
+         <option value="nozoid/ljclient 0">0</option>
+         <option value="nozoid/ljclient 1">1</option>
+         <option value="nozoid/ljclient 2">2</option>
+         <option value="nozoid/ljclient 3">3</option>
+       </select>
+       <!-- Nozoids Point List destination -->
+       <select onclick="buttonClicked(this.value)">
+         <option value="nozoid/pl 0">0</option>
+         <option value="nozoid/pl 1">1</option>
+         <option value="nozoid/pl 2">2</option>
+         <option value="nozoid/pl 3">3</option>
+       </select>
+      </div>
           <!--
           <div class="app">
             <x-sign>
@@ -134,9 +193,10 @@
     <div></div>
   </div>
 
+  <!-- End of Title block -->
 
   <!--
-    Menu buttons and Status display 
+    Menu Block : buttons and Status display 
   -->
 
   <div id="mgstatus" class="mgstatus">
@@ -153,7 +213,7 @@
     </div>
 		<div>
        <!-- Client actually drawn Selection -->
-       <span class="lasertext">Virtual</span>
+       <span class="lasertext">Scene</span>
        <select onclick="buttonClicked(this.value)" id="virtual" value="0">
          <option value="noteon 0">0</option>
          <option value="noteon 1">1</option>
@@ -200,9 +260,10 @@
 
    </div>
 
+  <!-- End of Menu block -->
 
   <!--
-    Align 
+    Align grid block
   -->
   
   <div id="mgalign" class="mgalign">
@@ -457,7 +518,7 @@
 
   </div>
 
-
+  <!-- End of Align block -->
   <!-- 
     Live 
   -->
@@ -557,9 +618,8 @@
     </div>
   </div>
 
-
-  <!-- 
-    Simulator and interfaces
+  <!-- End of Live block --><!-- 
+    Simulator header block and interfaces
   -->
 
   <div id = "mgsimu" class="mgsimu">
@@ -570,9 +630,10 @@
     </div>
 
     <!-- Right part interfaces -->
+        <div>
+      <!-- End of Simu Header block -->
 
-    <div>
-     <!-- simu right part : Planetarium -->
+     <!-- simu right part : Planetarium Block -->
 
      <div id ="planetUI" style = "display: none;justify-items: center;">
         <!-- Stop and start switch -->
@@ -646,8 +707,8 @@
       </form>
      </div>
 
-
-     <!-- simu right part : lissaUI -->
+    <!-- End of planetarium block -->
+     <!-- simu right part : lissaUI block -->
 
      <div id ="lissaUI" style = "display: none;justify-items: center;">
         <!-- Lissa interface -->
@@ -686,7 +747,8 @@
           </div>
     </div>
   </div>
-
+  <!-- End of Lissa block -->
+  
   <!-- simu right part : aiUI -->
 
     <div id ="aiUI" style = "display: none;justify-items: center;">
@@ -727,26 +789,29 @@
     </div>
   </div>
 
+    <!-- End of AI block -->   <!-- simu right part : plugins UI Block-->
 
-  <!-- simu right part : pluginsUI -->
-
-    <div id ="pluginsUI" style = "display: none;justify-items: center;">
+    <div id ="pluginsUI" style = "display: grid;justify-items: center;">
     <!-- Plugins choice Interface -->
 
       <div>
         <webaudio-switch id="simu/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/pysimu.png"></webaudio-switch>
         <webaudio-switch id="pose/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/pose.png"></webaudio-switch>
         <webaudio-switch id="bank0/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/bank0.png"></webaudio-switch>
-      </div>
-      <div>
-        <webaudio-switch id="glyph/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/glyph.png"></webaudio-switch>
-    
         <webaudio-switch id="cycl/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/cycl.png"></webaudio-switch>
-      </div>  
-      <div>
 
+      </div>
+
+      <div>
+        <webaudio-switch id="midigen/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/midigen.png"></webaudio-switch>
+        <webaudio-switch id="audiogen/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/audiogen.png"></webaudio-switch>
+        <webaudio-switch id="viewgen/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/viewgen.png"></webaudio-switch>
+        <webaudio-switch id="/artnet/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/artnet.png"></webaudio-switch>
+      </div>  
+
+      <div>
        <!-- Glyph destination LJ client Selection -->
-       <span class="lasertext">Virtual</span>
+       <span class="lasertext">Scene</span>
        <select onclick="buttonClicked(this.value)" id="virtual" value="0">
          <option value="glyph/ljclient 0">0</option>
          <option value="glyph/ljclient 1">1</option>
@@ -755,7 +820,7 @@
        </select>
 
         <!-- Cycl destination LJ client Selection -->
-       <span class="lasertext">Virtual</span>
+       <span class="lasertext">Scene</span>
        <select onclick="buttonClicked(this.value)" id="virtual" value="0">
          <option value="cycl/ljclient 0">0</option>
          <option value="cycl/ljclient 1">1</option>
@@ -763,8 +828,8 @@
          <option value="cycl/ljclient 3">3</option>
        </select>
      </div>
-     <div>
 
+     <div>
        <!-- Glyph Point List destination -->
        <span class="lasertext">PL</span>
        <select onclick="buttonClicked(this.value)">
@@ -789,11 +854,13 @@
       <div>
         <webaudio-switch id="ljpong/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/ljpong.png"></webaudio-switch>
         <webaudio-switch id="ljwars/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/ljwars.png"></webaudio-switch>
+        <webaudio-switch id="maxw/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/maxw.png"></webaudio-switch>
+        <webaudio-switch id="square/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/square.png"></webaudio-switch>
       </div>
       <div>
 
        <!-- LJ Pong destination LJ client Selection -->
-       <span class="lasertext">Virtual</span>
+       <span class="lasertext">Scene</span>
        <select onclick="buttonClicked(this.value)" id="virtual" value="0">
          <option value="ljpong/ljclient 0">0</option>
          <option value="ljpong/ljclient 1">1</option>
@@ -802,7 +869,7 @@
        </select>
 
        <!-- LJ Wars destination LJ client Selection -->
-       <span class="lasertext">Virtual</span>
+       <span class="lasertext">Scene</span>
        <select onclick="buttonClicked(this.value)" id="virtual" value="0">
          <option value="ljwars/ljclient 0">0</option>
          <option value="ljwars/ljclient 1">1</option>
@@ -821,9 +888,184 @@
          <option value="ljpong/pl 3">3</option>
        </select>
      </div>
+
+     <div class = "destmatrix">
+    
+      <!-- First line Scene 0 -->
+        <div>
+          <webaudio-switch id="scene/0/start" value="1" height="27" width="75" tooltip="Switch-B" src="knobs/scene0.png"></webaudio-switch>   
+        </div>   
+
+         <!-- /pluginame/dest PL, scene, laser  -->
+        <div>
+            <!-- scene 0, laser 0 -->
+            <select class="selector-instance" data-type="search-selector" name="third-selector" id="second" onclick="buttonClicked(this.value)">
+                <option value="fft/dest 1 1 0" data-sublocale="HELLO" selected>EXT</option>
+                <option value="viewgen/dest 0 0 0">FFT</option>
+                <option value="viewgen/dest 1 0 0">Lissa</option>
+                <option value="viewgen/dest 2 0 0">Osci</option>
+                <option value="glyph/dest 0 0 0">Glyph</option>
+                <option value="nozoid/dest 0 0 0">Nozoids</option>
+                <option value="pose/dest 0 0 0">IdiotIA</option>
+                <option value="pose/dest 1 0 0">Starfield</option>
+                <option value="cycl/dest 0 0 0">Cycl</option>
+                <option value="planet/dest 0 0 0">Planet</option>
+                <option value="words/dest 0 0 0">Words</option>
+                <option value="ljpong/dest 0 0 0">Pong</option>
+                <option value="ljwars/dest 0 0 0">Wars</option>
+                <option value="maxw/dest 0 0 0">Maxw</option>
+                <option value="square/dest 0 0 0">Square</option>
+            </select>
+        </div>  
+
+        <div>
+          <!-- scene 0, laser 1 -->
+              <select class="selector-instance" data-type="search-selector" name="third-selector" id="second" onclick="buttonClicked(this.value)">
+                <option value="fft/dest 1 0 0" data-sublocale="HELLO" selected>EXT</option>
+                <option value="viewgen/dest 0 0 1">FFT</option>
+                <option value="viewgen/dest 1 0 1">Lissa</option>
+                <option value="viewgen/dest 2 0 1">Osci</option>
+                <option value="glyph/dest 0 0 1">Glyph</option>
+                <option value="nozoid/dest 0 0 1">Nozoids</option>
+                <option value="pose/dest 0 0 1">IdiotIA</option>
+                <option value="pose/dest 1 0 1">Starfield</option>
+                <option value="cycl/dest 0 0 1">Cycl</option>
+                <option value="planet/dest 0 0 1">Planet</option>
+                <option value="words/dest 0 0 1">Words</option>
+                <option value="ljpong/dest 0 0 1">Pong</option>
+                <option value="ljwars/dest 0 0 1">Wars</option>
+                <option value="maxw/dest 0 0 1">Maxw</option>
+                <option value="square/dest 0 0 1">Square</option>
+            </select>
+        </div> 
+
+        <div>  
+        <!-- scene 0, laser 2 -->
+          <select onclick="buttonClicked(this.value)">
+            <option value="ext 0 1">EXT</option>
+            <option value="fft/dest 0 1 0">FFT 0</option>
+            <option value="fft/dest 1 1 0">FFT 1</option>
+            <option value="fft/dest 2 1 0">FFT 2</option>
+            <option value="fft/dest 3 1 0">FFT 3</option>
+          </select>
+        </div> 
+
+        <div>
+            <!-- scene 0, laser 3 -->    
+        </div>   
+
+      <!-- Second line Scene 1 -->
+        <div>
+          <webaudio-switch id="scene/1/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/scene1.png"></webaudio-switch>
+        </div>   
+
+        <!-- /pluginame/dest PL, scene, laser  -->
+        <div>  
+            <!-- scene 1, laser 0 -->
+            <select class="selector-instance" data-type="search-selector" name="third-selector" id="second" onclick="buttonClicked(this.value)">
+                <option value="fft/dest 1 1 0" data-sublocale="HELLO" selected>EXT</option>
+                <option value="viewgen/dest 0 1 0">FFT</option>
+                <option value="viewgen/dest 1 1 0">Lissa</option>
+                <option value="viewgen/dest 2 1 0">Osci</option>
+                <option value="glyph/dest 0 1 0">Glyph</option>
+                <option value="nozoid/dest 0 1 0">Nozoids</option>
+                <option value="pose/dest 0 1 0">IdiotIA</option>
+                <option value="pose/dest 1 1 0">Starfield</option>
+                <option value="cycl/dest 0 1 0">Cycl</option>
+                <option value="planet/dest 0 1 0">Planet</option>
+                <option value="words/dest 0 1 0">Words</option>
+                <option value="ljpong/dest 0 1 0">Pong</option>
+                <option value="ljwars/dest 0 1 0">Wars</option>
+                <option value="maxw/dest 0 1 0">Maxw</option>
+                <option value="square/dest 0 1 0">Square</option>
+            </select>
+        </div>  
+        
+        <div>
+            <!-- scene 1 , laser 1 -->
+              <select class="selector-instance" data-type="search-selector" name="third-selector" id="second" onclick="buttonClicked(this.value)">
+                <option value="fft/dest 1 0 0" data-sublocale="HELLO" selected>EXT</option>
+                <option value="viewgen/dest 0 1 1">FFT</option>
+                <option value="viewgen/dest 1 1 1">Lissa</option>
+                <option value="viewgen/dest 2 1 1">Osci</option>
+                <option value="glyph/dest 0 1 1">Glyph</option>
+                <option value="nozoid/dest 0 1 1">Nozoids</option>
+                <option value="pose/dest 0 1 1">IdiotIA</option>
+                <option value="pose/dest 1 1 1">Starfield</option>
+                <option value="cycl/dest 0 1 1">Cycl</option>
+                <option value="planet/dest 0 1 1">Planet</option>
+                <option value="words/dest 0 1 1">Words</option>
+                <option value="ljpong/dest 0 1 1">Pong</option>
+                <option value="ljwars/dest 0 1 1">Wars</option>
+                <option value="maxw/dest 0 1 1">Maxw</option>
+                <option value="square/dest 0 1 1">Square</option>
+            </select>
+        </div> 
+        <div>
+          <!-- scene 1 , laser 2 -->
+        </div> 
+        <div>
+          <!-- scene 1 , laser 3 -->
+        </div>  
+
+      <!-- Third line Scene 2 -->
+        <div>
+          <webaudio-switch id="scene/2/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/scene2.png"></webaudio-switch>
+        </div>   
+        <div>
+          <!-- scene 2 , laser 0 -->
+          
+        </div>  
+        <div>
+          <!-- scene 2 , laser 1 -->
+        </div> 
+        <div>
+          <!-- scene 2 , laser 2 -->
+        </div> 
+        <div>
+          <!-- scene 2 , laser 3 -->
+        </div>  
+
+   <!-- Fourth line Scene 3 -->
+      <div>
+           <webaudio-switch id="scene/3/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/scene3.png"></webaudio-switch>
+        </div>   
+        <div>
+          <!-- scene 3 , laser 0 -->
+        </div>  
+        <div>
+          <!-- scene 3 , laser 1 -->
+        </div> 
+        <div>
+          <!-- scene 3 , laser 2 -->
+        </div> 
+        <div>
+          <!-- scene 3 , laser 3 -->
+        </div>    
+
+      <!-- Fifth line -->
+  
+
+      <div><span class="lasertext">Selection</span></div>
+        <div>
+          <webaudio-switch id="laser0/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/laser0.png"></webaudio-switch>
+        </div>
+        <div>
+           <webaudio-switch id="laser1/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/laser1.png"></webaudio-switch>
+        </div>
+        <div>
+          <webaudio-switch id="laser2/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/laser2.png"></webaudio-switch>
+        </div>
+        <div>
+         <webaudio-switch id="laser3/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/laser3.png"></webaudio-switch>
+        </div>
+
+     </div>
   </div>
-
-
+     <script>
+        new Selector();
+    </script>
+   <!-- End of PLuginUI block -->
   <!-- simu right part : bank0 vjUI  -->
 
   <div id ="vjUI" class="cnvbuttons">
@@ -854,65 +1096,78 @@
 
   </div>
 
+  <!-- End of bank0 block -->
 
+  <!-- simu right part : poseUI  block -->
 
-  <!-- simu right part : poseUI  -->
-
-  <div id ="poseUI" class="posebuttons" style = "display: grid;justify-items: center;"> 
+  <div id ="poseUI" class="posebuttons" style = "display: none;justify-items: center;"> 
     
-      <!-- IdiotIA display flag -->
-        <div><span class="lasertext">IdiotIA</span></div>
-        <div><webaudio-switch id="pose/idiotia/0" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/0.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/1" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/1.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/2" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/2.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/idiotia/3" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/3.png"></webaudio-switch></div>
-        <div></div>
-    
+
       <!-- IdiotIA animation selection first line -->
-        <div><webaudio-switch id="pose/anim/0" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/1" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/2" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/3" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/4" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/5" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 0" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 1" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 2" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 3" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 4" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 5" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
 
       <!-- IdiotIA animation selection second line -->
-        <div><webaudio-switch id="pose/anim/6" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/7" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/8" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/9" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/10" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/11" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 6" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 7" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 8" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 9" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 10" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 11" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
 
       <!-- IdiotIA animation selection third line -->
-        <div><webaudio-switch id="pose/anim/12" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/13" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/14" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/15" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/16" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/anim/17" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 12" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 13" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 14" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 15" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 16" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/anim 17" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/idiotia.png"></webaudio-switch></div>
+
+        <!-- Pose frame player -->
+        <div><span class="lasertext">Frames</span></div>
+        <div><webaudio-switch id="pose/speed 1" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/slower.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/speed 2" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/stop.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/speed 3" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/play.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/speed 4" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/faster.png"></webaudio-switch></div>
+        <div></div>
+        
+
+      <!-- IdiotIA display flag -->
+        <div><span class="lasertext">IdiotIA</span></div>
+        <div><webaudio-switch id="pose/idiotia 0" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/0.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/idiotia 1" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/1.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/idiotia 2" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/2.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/idiotia 3" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/3.png"></webaudio-switch></div>
+        <div></div>
+    
 
       <!-- Realtime pose display flag -->
         <div><span class="lasertext">Live</span></div>
-        <div><webaudio-switch id="pose/live/0" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/0.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/live/1" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/1.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/live/2" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/2.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/live/3" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/3.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/live 0" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/0.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/live 1" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/1.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/live 2" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/2.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/live 3" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/3.png"></webaudio-switch></div>
         <div></div>
 
       <!-- Starfield display lag -->
         <div><span class="lasertext">Fields</span></div>
-        <div><webaudio-switch id="pose/field/0" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/0.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/field/1" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/1.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/field/2" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/2.png"></webaudio-switch></div>
-        <div><webaudio-switch id="pose/field/3" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/3.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/field 0" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/0.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/field 1" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/1.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/field 2" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/2.png"></webaudio-switch></div>
+        <div><webaudio-switch id="pose/field 3" value="0" tooltip="Switch-B" height="24" width="64" src="knobs/3.png"></webaudio-switch></div>
         <div></div>
+
+
  
   </div>
+  <!-- End of PoseUI block -->
 
 
-
-     <!-- simu right part : wordsUI -->
+  <!-- simu right part : wordsUI -->
 
      <div id ="wordsUI" style = "display: none;justify-items: center;">
         <div>
@@ -930,7 +1185,8 @@
 
           <!-- Words 0 -->
           <form onsubmit="onSubmit(); return false;">
-              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/text/0" value=" ">
+            <span class="lasertext">Laser 0</span>
+              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/text/0" value="ZERO">
               <select onclick="buttonClicked(this.value)">
                 <!-- color selection -->
                 <option value="words/color/0 red" selected >Red</option>
@@ -941,12 +1197,12 @@
                 <option value="words/color/0 cyan">Cyan</option>
                 <option value="words/color/0 pink">Pink</option>
               </select>
-              <span class="lasertext">Laser 0</span>
+              <webaudio-switch id="words/play/0" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/play.png"></webaudio-switch>
           </form>
 
           <!-- Words 1 -->
           <form onsubmit="onSubmit(); return false;">
-              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/text/1" value=" ">
+              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/text/1" value="ONE">
               <select onclick="buttonClicked(this.value)">
                 <!-- color selection -->
                 <option value="words/color/1 red" selected >Red</option>
@@ -962,7 +1218,7 @@
 
           <!-- Words 2 -->
           <form onsubmit="onSubmit(); return false;">
-              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/text/2" value=" ">
+              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/text/2" value="TWO">
               <select onclick="buttonClicked(this.value)">
                 <!-- color selection -->
                 <option value="words/color/2/color red" selected >Red</option>
@@ -978,7 +1234,7 @@
 
           <!-- Words 3 -->
           <form onsubmit="onSubmit(); return false;">
-              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/text/3" value=" ">
+              <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="words/text/3" value="THREE">
               <select onclick="buttonClicked(this.value)">
                 <!-- color selection -->
                 <option value="words/color/3 red" selected >Red</option>
@@ -995,36 +1251,120 @@
         
      </div>
 
+  <!-- End of WordsUI block -->
 
+  <!-- simu right part : NozoidsUI Block -->
 
-  <!-- simu right part : NozoidUI -->
+  <div id ="nozoidUI" class="nozoidbuttons" style = "display: none;justify-items: center;">
 
-  <div id ="nozoidUI" style = "display: none;justify-items: center;">
-     <!-- Stop and start switch -->
-     <div>
-           <div><webaudio-switch id="nozoid/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/nozoids.png"></webaudio-switch></div>
-     </div>
- 
-     <div> 
-       <!-- Nozoids list and leds -->
-       <div>
-           <webaudio-knob id="nozoid/mmo3/led" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
-           <webaudio-switch id="nozoid/mmo3" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/mmo3.png"></webaudio-switch>
-            <webaudio-switch id="nozoid/mmo3/down 50" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/slower.png"></webaudio-switch>
-           <webaudio-switch id="nozoid/mmo3/up 50" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/faster.png"></webaudio-switch>
+     <!-- Nozoids UI : names and leds -->
+    <div>
+        <webaudio-knob id="nozoid/o2/led" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+        <webaudio-switch id="nozoid/o2" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/o2.png"></webaudio-switch>
+    </div>
+    <div>
+        <webaudio-knob id="nozoid/m3/led" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+        <webaudio-switch id="nozoid/m3" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/m3.png"></webaudio-switch>
+    </div>
+     
+    <!-- OCS-2 UI -->
+    <div style="border-color: #445;border-style:groove;border-width:1px;">
 
-           <div></div>
-           <webaudio-knob id="nozoid/ocs2/led" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
-           <webaudio-switch id="nozoid/ocs2" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/ocs2.png"></webaudio-switch>
+        <webaudio-switch id="nozoid/down/o2 25" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/slower.png"></webaudio-switch>
+        <webaudio-switch id="nozoid/up/o2 25" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/faster.png"></webaudio-switch>
+        <span class="lasertext">Sound curve for X</span>
 
-           <webaudio-switch id="nozoid/ocs2/down 50" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/slower.png"></webaudio-switch>
-           <webaudio-switch id="nozoid/ocs2/up 50" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/faster.png"></webaudio-switch>
+           <select onclick="buttonClicked(this.value)">
+             <option value="nozoid/X/o2 0">STOP</option>
+             <option value="nozoid/X/o2 1">VCO1</option>
+             <option value="nozoid/X/o2 2">VCO2</option>
+             <option value="nozoid/X/o2 3">LFO1</option>
+             <option value="nozoid/X/o2 4">LFO2</option>
+             <option value="nozoid/X/o2 5">LFO3</option>
+             <option value="nozoid/X/o2 6">CV/GEN</option>
+             <option value="nozoid/X/o2 7">ADSR</option>
+             <option value="nozoid/X/o2 8">LIGHT</option>
+             <option value="nozoid/X/o2 9">LINE IN</option>
+             <option value="nozoid/X/o2 10">MIDI</option>
+             <option value="nozoid/X/o2 11">CV1</option>
+             <option value="nozoid/X/o2 12">CV2</option>
+             <option value="nozoid/X/o2 13">CV3</option>
+             <option value="nozoid/X/o2 17">1 Out</option>
+             <option value="nozoid/X/o2 18">2 Out</option>
+             <option value="nozoid/X/o2 20">VCF</option>
+             <option value="nozoid/X/o2 21">MIX</option>
+             <option value="nozoid/X/o2 22">VCA</option>
+           </select>
+          <span class="lasertext">Sound curve for Y</span>
+
+           <select onclick="buttonClicked(this.value)">
+             <option value="nozoid/Y/o2 0">STOP</option>
+             <option value="nozoid/Y/o2 1">VCO1</option>
+             <option value="nozoid/Y/o2 2">VCO2</option>
+             <option value="nozoid/Y/o2 3">LFO1</option>
+             <option value="nozoid/Y/o2 4">LFO2</option>
+             <option value="nozoid/Y/o2 5">LFO3</option>
+             <option value="nozoid/Y/o2 6">CV/GEN</option>
+             <option value="nozoid/Y/o2 7">ADSR</option>
+             <option value="nozoid/Y/o2 8">LIGHT</option>
+             <option value="nozoid/Y/o2 9">LINE IN</option>
+             <option value="nozoid/Y/o2 10">MIDI</option>
+             <option value="nozoid/Y/o2 11">CV1</option>
+             <option value="nozoid/Y/o2 12">CV2</option>
+             <option value="nozoid/Y/o2 13">CV3</option>
+             <option value="nozoid/Y/o2 17">1 Out</option>
+             <option value="nozoid/Y/o2 18">2 Out</option>
+             <option value="nozoid/Y/o2 20">VCF</option>
+             <option value="nozoid/Y/o2 21">MIX</option>
+             <option value="nozoid/Y/o2 22">VCA</option>
+           </select>
+         </div>
+
+        <!-- MMO-3 UI -->
+        <div  style="border-color: #445;border-style:groove;border-width:1px;">
+            <webaudio-switch id="nozoid/down/m3 25" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/slower.png"></webaudio-switch>
+           <webaudio-switch id="nozoid/up/m3 25" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/faster.png"></webaudio-switch>
+
+           <span class="lasertext">Sound curve for X</span>
+
+           <select onclick="buttonClicked(this.value)">
+             <option value="nozoid/X/m3 0">Stop</option>
+             <option value="nozoid/X/m3 1">OSC1</option>
+             <option value="nozoid/X/m3 2">OSC2</option>
+             <option value="nozoid/X/m3 3">OSC3</option>
+             <option value="nozoid/X/m3 4">LFO1</option>
+             <option value="nozoid/X/m3 5">LFO2</option>
+             <option value="nozoid/X/m3 6">LFO3</option>
+             <option value="nozoid/X/m3 7">ADSR</option>
+             <option value="nozoid/X/m3 8">CV</option>
+             <option value="nozoid/X/m3 9">Line IN</option>
+             <option value="nozoid/X/m3 10">Jstck</option>
+             <option value="nozoid/X/m3 11">INL</option>
+             <option value="nozoid/X/m3 12">INR</option>
+           </select>
+           <span class="lasertext">Sound curve for Y</span>
+           
+           <select onclick="buttonClicked(this.value)">
+             <option value="nozoid/Y/m3 0">Stop</option>
+             <option value="nozoid/Y/m3 1">OSC1</option>
+             <option value="nozoid/Y/m3 2">OSC2</option>
+             <option value="nozoid/Y/m3 3">OSC3</option>
+             <option value="nozoid/Y/m3 4">LFO1</option>
+             <option value="nozoid/Y/m3 5">LFO2</option>
+             <option value="nozoid/Y/m3 6">LFO3</option>
+             <option value="nozoid/Y/m3 7">ADSR</option>
+             <option value="nozoid/Y/m3 8">CV</option>
+             <option value="nozoid/Y/m3 9">Line IN</option>
+             <option value="nozoid/Y/m3 10">Jstck</option>
+             <option value="nozoid/Y/m3 11">INL</option>
+             <option value="nozoid/X/m3 12">INR</option>
+           </select>
 
        </div>
 
        <!-- Curve choice -->
        <div>
-         <span  class="lasertext" >Curve</span>
+         <span  class="lasertext">CurveNumber : </span>
          <select  onclick="buttonClicked(this.value)">
            <option value="nozoid/curve 0">0</option>
            <option value="nozoid/curve 1">1</option>
@@ -1033,99 +1373,29 @@
          </select>
    
        <!-- Color choice -->
-         <span  class="lasertext" >Color</span>
+       <!-- 0 black / 1 green / 2 cyan / 3 pink / 4 yellow / 5 red / 6 white (in nozoids.py) -->
+
+         <span  class="lasertext">CurveColor :</span>
          <select  onclick="buttonClicked(this.value)">
-           <option value="nozoid/color 255 0 0">Red</option>
-           <option value="nozoid/color 0 255 0">Green</option>
-           <option value="nozoid/color 0 0 255">Blue</option>
-           <option value="nozoid/color 255 255 0">Yellow</option>
-           <option value="nozoid/color 0 255 255">Cyan</option>
-           <option value="nozoid/color 255 0 255">Magenta</option>
+           <option value="nozoid/color 5">Red</option>
+           <option value="nozoid/color 1">Green</option>
+           <option value="nozoid/color 2">Blue</option>
+           <option value="nozoid/color 4">Yellow</option>
+           <option value="nozoid/color 3">Pink</option>
+           <option value="nozoid/color 6">White</option>
          </select>
-       </div>
+  
 
-       <!-- X and X Curve choices -->
-       <div>
-           <span class="lasertext" >X</span>
-           <select onclick="buttonClicked(this.value)">
-             <option value="nozoid/X 0">STOP</option>
-             <option value="nozoid/X 1">VCO1</option>
-             <option value="nozoid/X 2">VCO2</option>
-             <option value="nozoid/X 3">LFO1</option>
-             <option value="nozoid/X 4">LFO2</option>
-             <option value="nozoid/X 5">LFO3</option>
-             <option value="nozoid/X 6">CV/GEN</option>
-             <option value="nozoid/X 7">ADSR</option>
-             <option value="nozoid/X 8">LIGHT</option>
-             <option value="nozoid/X 9">LINE IN</option>
-             <option value="nozoid/X 10">MIDI</option>
-             <option value="nozoid/X 11">CV1</option>
-             <option value="nozoid/X 12">CV2</option>
-             <option value="nozoid/X 13">CV3</option>
-             <option value="nozoid/X 17">1 Out</option>
-             <option value="nozoid/X 18">2 Out</option>
-             <option value="nozoid/X 20">VCF</option>
-             <option value="nozoid/X 21">MIX</option>
-             <option value="nozoid/X 22">VCA</option>
-           </select>
-           <span class="lasertext" >Curve</span>
-           <select onclick="buttonClicked(this.value)">
-             <option value="nozoid/X 0">Stop</option>
-             <option value="nozoid/X 1">OSC1</option>
-             <option value="nozoid/X 2">OSC2</option>
-             <option value="nozoid/X 3">OSC3</option>
-             <option value="nozoid/X 4">LFO1</option>
-             <option value="nozoid/X 5">LFO2</option>
-             <option value="nozoid/X 6">LFO3</option>
-             <option value="nozoid/X 7">ADSR</option>
-             <option value="nozoid/X 8">CV</option>
-             <option value="nozoid/X 9">Line IN</option>
-             <option value="nozoid/X 10">Jstck</option>
-             <option value="nozoid/X 11">INL</option>
-             <option value="nozoid/X 12">INR</option>
-           </select>
-         </div>
+       <!-- Laser choice -->
 
-       <!-- Y and Y Curve choices -->
-       <div>
-           <span class="lasertext" >Y</span>
-           <select onclick="buttonClicked(this.value)">
-             <option value="nozoid/Y 0">STOP</option>
-             <option value="nozoid/Y 1">VCO1</option>
-             <option value="nozoid/Y 2">VCO2</option>
-             <option value="nozoid/Y 3">LFO1</option>
-             <option value="nozoid/Y 4">LFO2</option>
-             <option value="nozoid/Y 5">LFO3</option>
-             <option value="nozoid/Y 6">CV/GEN</option>
-             <option value="nozoid/Y 7">ADSR</option>
-             <option value="nozoid/Y 8">LIGHT</option>
-             <option value="nozoid/Y 9">LINE IN</option>
-             <option value="nozoid/Y 10">MIDI</option>
-             <option value="nozoid/Y 11">CV1</option>
-             <option value="nozoid/Y 12">CV2</option>
-             <option value="nozoid/Y 13">CV3</option>
-             <option value="nozoid/Y 17">1 Out</option>
-             <option value="nozoid/Y 18">2 Out</option>
-             <option value="nozoid/Y 20">VCF</option>
-             <option value="nozoid/Y 21">MIX</option>
-             <option value="nozoid/Y 22">VCA</option>
-           </select>
-           <span class="lasertext" >Curve</span>
-           <select onclick="buttonClicked(this.value)">
-             <option value="nozoid/Y 0">Stop</option>
-             <option value="nozoid/Y 1">OSC1</option>
-             <option value="nozoid/Y 2">OSC2</option>
-             <option value="nozoid/Y 3">OSC3</option>
-             <option value="nozoid/Y 4">LFO1</option>
-             <option value="nozoid/Y 5">LFO2</option>
-             <option value="nozoid/Y 6">LFO3</option>
-             <option value="nozoid/Y 7">ADSR</option>
-             <option value="nozoid/Y 8">CV</option>
-             <option value="nozoid/Y 9">Line IN</option>
-             <option value="nozoid/Y 10">Jstck</option>
-             <option value="nozoid/Y 11">INL</option>
-             <option value="nozoid/X 12">INR</option>
-           </select>
+         <span  class="lasertext">DrawingLaser :</span>
+         <select  onclick="buttonClicked(this.value)">
+           <option value="nozoid/laser 0">0</option>
+           <option value="nozoid/laser 1">1</option>
+           <option value="nozoid/laser 2">2</option>
+           <option value="nozoid/laser 3">3</option>
+
+         </select>
        </div>
 
 
@@ -1140,7 +1410,7 @@
              <option value="nozoid/auto/X/OutR">OutR</option>
              <option value="nozoid/auto/X/OutL">OutL</option>
            </select>
-           <span  class="lasertext">Y</span>
+           <span  class="lasertext">Automod : Y</span>
            <select onclick="buttonClicked(this.value)">
              <option value="nozoid/auto/Y/0">0</option>
              <option value="nozoid/auto/Y/1 Out">1 Out</option>
@@ -1150,19 +1420,17 @@
              <option value="nozoid/auto/Y/OutL">OutL</option>
            </select>
        </div>
-
-  
-       
-
-        </div>
+       <div></div>
+       <div></div>
       </div>
     </div>
 
   </div>
 
+  <!-- End of NozoidsUI block -->
 
   <!--
-     Run  
+     Run Block
    -->
 
   <div id="mgrun" class="mgrun">    	
@@ -1176,14 +1444,14 @@
       <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
       <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
       <div><img src="knobs/client.png" alt=" " class="icongrid" /></div>
-      <div><button id ="noteon 0" onclick ="buttonClicked(this.id)"  class="button:checked">0</button></div>
-      <div><button id ="noteon 1" onclick ="buttonClicked(this.id)"  class="button">1</button></div>
-      <div><button id ="noteon 2" onclick ="buttonClicked(this.id)"  class="button">2</button></div>
-      <div><button id ="noteon 3" onclick ="buttonClicked(this.id)"  class="button">3</button></div>
-      <div><button id ="noteon 4" onclick ="buttonClicked(this.id)"  class="button">4</button></div>
-      <div><button id ="noteon 5" onclick ="buttonClicked(this.id)"  class="button">5</button></div>
-      <div><button id ="noteon 6" onclick ="buttonClicked(this.id)"  class="button">6</button></div>
-      <div><button id ="noteon 7" onclick ="buttonClicked(this.id)"  class="button">7</button></div>
+      <div><button id ="noteon 0" onclick ="buttonClicked(this.id)" class="button:checked">0</button></div>
+      <div><button id ="noteon 1" onclick ="buttonClicked(this.id)" class="button">1</button></div>
+      <div><button id ="noteon 2" onclick ="buttonClicked(this.id)" class="button">2</button></div>
+      <div><button id ="noteon 3" onclick ="buttonClicked(this.id)" class="button">3</button></div>
+      <div><button id ="noteon 4" onclick ="buttonClicked(this.id)" class="button">4</button></div>
+      <div><button id ="noteon 5" onclick ="buttonClicked(this.id)" class="button">5</button></div>
+      <div><button id ="noteon 6" onclick ="buttonClicked(this.id)" class="button">6</button></div>
+      <div><button id ="noteon 7" onclick ="buttonClicked(this.id)" class="button">7</button></div>
       
       <!-- Simulator PL selection grid -->
       <div><img src="knobs/iconljay2.png" alt=" " class="icongrid" /></div>
@@ -1239,9 +1507,12 @@
       <div></div>
       <div></div>
   	</div>
+  <!-- End of Run block -->
+  
 
+ 
   <!-- 
-    Footer display events for debug 
+    Footer block display events for debug 
   -->
   
   <div class="mgfooter">
@@ -1491,5 +1762,5 @@
 	<webaudio-switch id="laser/3" height="64" width="25" value="0" src="knobs/key0.png" type="toggle"></webaudio-switch>
 	</div>
 	-->
-
+ <!-- End of Footer block -->
 </html>

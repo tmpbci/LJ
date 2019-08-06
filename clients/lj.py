@@ -1,17 +1,21 @@
 # coding=UTF-8
 
 '''
-LJ v0.8.1
-Some LJ functions useful for python clients (was framy.py)
+LJ v0.8.2
+Some LJ functions useful for python 2.7 clients (was framy.py)
+Functions and documentation here is low priority as python 2 support will stop soon.
+Better code your plugin with python 3 and lj3.py.
 
-Config(redisIP, client number) 
+
+Config 
 PolyLineOneColor
 rPolyLineOneColor
-
-Text(word, color, PL, xpos, ypos, resize, rotx, roty, rotz) : Display a word
-Send(adress,message) : remote control. See commands.py
-WebStatus(message) : display message on webui
-DrawPL(point list number) : once you stacked all wanted elements, like 2 polylines, send them to lasers.
+Text
+SendLJ 				: remote control
+LjClient			: 
+LjPl				 : 
+DrawPL
+WebStatus
 
 LICENCE : CC
 Sam Neurohack
@@ -20,10 +24,11 @@ Sam Neurohack
 
 import math
 import redis
-#from OSC import OSCServer, OSCClient, OSCMessage
+from OSC import OSCServer, OSCClient, OSCMessage
 
-redisIP = '127.0.0.1'
-r = redis.StrictRedis(host=redisIP, port=6379, db=0)
+print "Importing lj..."
+#redisIP = '127.0.0.1'
+#r = redis.StrictRedis(host=redisIP, port=6379, db=0)
 
 ClientNumber = 0
 
@@ -31,22 +36,14 @@ point_list = []
 pl = [[],[],[],[]]
 
 
-'''
-LJIP = "127.0.0.1"
 
-osclientlj = OSCClient()
-oscmsg = OSCMessage()
-osclientlj.connect((redisIP, 8002)) 
-'''
-
-'''
-def Send(oscaddress,oscargs=''):
+def SendLJ(oscaddress,oscargs=''):
         
     oscmsg = OSCMessage()
     oscmsg.setAddress(oscaddress)
     oscmsg.append(oscargs)
     
-    #print ("sending to bhorosc : ",oscmsg)
+    print ("sending OSC message : ",oscmsg)
     try:
         osclientlj.sendto(oscmsg, (redisIP, 8002))
         oscmsg.clearData()
@@ -54,11 +51,9 @@ def Send(oscaddress,oscargs=''):
         print ('Connection to LJ refused : died ?')
         pass
     #time.sleep(0.001
-'''
 
 def WebStatus(message):
-	Send("/status",message)
-
+	SendLJ("/status", message)
 
 
 ASCII_GRAPHICS = [
@@ -162,6 +157,47 @@ def Config(redisIP,client):
 
 	r = redis.StrictRedis(host=redisIP, port=6379, db=0)	
 	ClientNumber = client
+	#print "client configured",ClientNumber
+
+
+def LjClient(client):
+	global ClientNumber
+
+	ClientNumber = client
+
+def LjPl(pl):
+	global PL
+
+	PL = pl
+
+# Properly close the system. Todo
+def OSCstop():
+	osc_terminate()
+
+
+# Answer to LJ pings with /pong value
+def OSCping(name):
+    SendLJ("/pong",name)
+
+
+
+# Closing plugin messages to LJ
+def ClosePlugin(name):
+        WebStatus(name+" Exit")
+        SendLJ("/"+name+"/start",0)
+
+        
+
+
+# /quit
+def OSCquit(name):
+
+	WebStatus(name + " quit.")
+	print("Stopping OSC...")
+	
+	OSCstop()
+	sys.exit()
+
 
  
 def LineTo(xy, c, PL):
@@ -199,7 +235,7 @@ def Pointransf(xy, xpos = 0, ypos =0, resize =1, rotx =0, roty =0 , rotz=0):
 		y = xy[1] * resize
 		z = 0
 
-		rad = rotx * math.pi / 180
+		rad = math.radians(rotx)
 		cosaX = math.cos(rad)
 		sinaX = math.sin(rad)
 
@@ -207,7 +243,7 @@ def Pointransf(xy, xpos = 0, ypos =0, resize =1, rotx =0, roty =0 , rotz=0):
 		y = y2 * cosaX - z * sinaX
 		z = y2 * sinaX + z * cosaX
 
-		rad = roty * math.pi / 180
+		rad = math.radians(roty)
 		cosaY = math.cos(rad)
 		sinaY = math.sin(rad)
 
@@ -215,7 +251,7 @@ def Pointransf(xy, xpos = 0, ypos =0, resize =1, rotx =0, roty =0 , rotz=0):
 		z = z2 * cosaY - x * sinaY
 		x = z2 * sinaY + x * cosaY
 
-		rad = rotz * math.pi / 180
+		rad = math.radians(rotz)
 		cosZ = math.cos(rad)
 		sinZ = math.sin(rad)
 
@@ -250,12 +286,14 @@ def rPolyLineOneColor(xy_list, c, PL , closed, xpos = 0, ypos =0, resize =0.7, r
 
  
 def LinesPL(PL):
-	print ("Stupido !! your code is to old : use DrawPL() instead of LinesPL()")
+	print "Stupido !! your code is to old : use DrawPL() instead of LinesPL()"
 	DrawPL(PL)
+
 
 def DrawPL(PL):
 	#print '/pl/0/'+str(PL), str(pl[PL])
 	if r.set('/pl/'+str(ClientNumber)+'/'+str(PL), str(pl[PL])) == True:
+		#print '/pl/'+str(ClientNumber)+'/'+str(PL), str(pl[PL])
 		pl[PL] = []
 		return True
 	else:
@@ -294,12 +332,11 @@ def Text(message,c, PL, xpos, ypos, resize, rotx, roty, rotz):
 		#print ""
 		# texte centre en x automatiquement selon le nombre de lettres l
 		x_offset = 26 * (- (0.9*l) + 3*i)
-		#print i,x_offset
+		# Digits
 		if ord(ch)<58:
 			char_pl_list = ASCII_GRAPHICS[ord(ch) - 48]
 		else: 
 			char_pl_list = ASCII_GRAPHICS[ord(ch) - 46]
-			
 		char_draw = []
 		#dots.append((char_pl_list[0][0] + x_offset,char_pl_list[0][1],0))
 

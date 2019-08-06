@@ -1,27 +1,55 @@
-# coding=UTF-8
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+# -*- mode: Python -*-
+
 
 '''
+
+Laserglyph
+v0.1.0
+
 Anaglyphed rotating cube (for red and green glasses)
 
 This client uses the drawing functions (polyline) provided by LJ in lj.py
-You must check in lj.py if the redis server IP is correct.
 
 LICENCE : CC
-'''
 
+by Sam Neurohack
+
+
+'''
+import sys
+import os
+print()
+ljpath = r'%s' % os.getcwd().replace('\\','/')
+
+# import from shell
+
+sys.path.append(ljpath +'/../libs/')
+
+#import from LJ
+sys.path.append(ljpath +'/libs/')
+print (ljpath+'/../libs/')
+
+import lj23 as lj
+
+from OSC3 import OSCServer, OSCClient, OSCMessage
 import redis
-import lj3
 import math
 import time
 import argparse
 
+'''
 from osc4py3.as_eventloop import *
 from osc4py3 import oscbuildparse
 #from osc4py3 import oscmethod as osm
 from osc4py3.oscmethod import * 
+'''
 
 OSCinPort = 8004
-myIP = "192.168.2.52"
+oscrun = True
+# myIP = "127.0.0.1"
+PL = 0
 
 print ("")
 print ("Arguments parsing if needed...")
@@ -59,7 +87,7 @@ if args.myIP  != None:
 else:
 	myIP = '127.0.0.1'
 
-print("redisIP",redisIP)
+print("myIP",myIP)
 
 if args.verbose:
 	debug = args.verbose
@@ -67,8 +95,12 @@ else:
 	debug = 0
 
 
-lj3.Config(redisIP,ljclient)
+lj.Config(redisIP,ljclient,"glyph")
 
+white = lj.rgb2int(255,255,255)
+red = lj.rgb2int(255,0,0)
+blue = lj.rgb2int(0,0,255)
+green = lj.rgb2int(0,255,0)
 
 width = 800
 height = 600
@@ -87,7 +119,7 @@ observer_altitude = 30000
 #observer_altitude = 10000
 # elevation = z coordinate
 # 0.0, -2000 pop out
-map_plane_altitude = 0.0 
+map_plane_altitude = 0.0
 
 # Cube coordinates
 # Define the vertices that compose each of the 6 faces.
@@ -101,9 +133,29 @@ vertices = [
 	( 1.0,- 1.0, 1.0),
 	(- 1.0,- 1.0, 1.0)
 	]
-faces = [(0,1,2,3),(0,4,5,1),(1,5,6,2),(2,3,7,6),(6,5,4,7),(7,3,0,4)]
+#faces = [(0,1,2,3),(0,4,5,1),(1,5,6,2),(2,3,7,6),(6,5,4,7),(7,3,0,4)]
+faces = [(0,1,2,3),(0,4,5,1),(1,5,6,2),(2,3,7,6),(7,3,0,4),(7,3,0,4)]
+#							name, intensity, active, xy, color, red, green, blue, PL , closed):
+Leftcube = lj.FixedObject('Leftcube', True, 255, [], red, 255, 0, 0, PL , True)
+Rightcube = lj.FixedObject('Rightcube', True, 255, [], green, 0, 255, 0, PL , True)
 
+# 'Destination' for each PL 
+#                  name, number, active, PL , scene, laser
+# PL 0
+Dest0 = lj.DestObject('0', 0, True, 0 , 0, 0)
+Dest1 = lj.DestObject('1', 1, True, 0 , 1, 1)
 
+'''
+viewgen3Lasers = [True,False,False,False]
+# Add here, one by one, as much destination as you want for each PL. 
+# LJ and OSC can remotely add/delete destinations here.
+
+lj.Dests = {
+    "0":       {"PL": 0, "scene": 0, "laser": 0},
+    "1":       {"PL": 0, "scene": 1, "laser": 1}
+    }
+
+'''
 
 def LeftShift(elevation):
 
@@ -115,29 +167,36 @@ def RightShift(elevation):
 			diff = map_plane_altitude - elevation
 			return (1 - nadir) * eye_spacing * diff / (observer_altitude - elevation)
 
-# If you want to use rgb for color :
-def rgb2int(r,g,b):
-	return int('0x%02x%02x%02x' % (r,g,b),0)
-	
 
-def OSCljclient(value):
+# OSC
+#
 
-	print("Glyph got /glyph/ljclient with value", value)
-	lj3.WebStatus("Glyph to virtual "+ str(value))
-	ljclient = value
-	lj3.LjClient(ljclient)
+oscserver = OSCServer( (myIP, OSCinPort) )
+oscserver.timeout = 0
+#oscrun = True
 
-def OSCpl(value):
+# this method of reporting timeouts only works by convention
+# that before calling handle_request() field .timed_out is 
+# set to False
+def handle_timeout(self):
+    self.timed_out = True
 
-	print("Glyph got /glyph/pl with value", value)
-	lj3.WebStatus("Glyph to pl "+ str(value))
-	lj3.LjPl(value)
+# funny python's way to add a method to an instance of a class
+import types
+oscserver.handle_timeout = types.MethodType(handle_timeout, oscserver)
 
-# /pose/ping value
-def OSCping(value):
-    lj3.OSCping("glyph")
 
-'''
+# OSC callbacks
+
+# /viewgen/ljclient
+def OSCljclient(path, tags, args, source):
+
+    print("Got /viewgen/ljclient with value", args[0])
+    lj.WebStatus("viewgen to virtual "+ str(args[0]))
+    ljclient = args[0]
+    lj.LjClient(ljclient)
+
+
 def Proj(x,y,z,angleX,angleY,angleZ):
 
 		rad = angleX * math.pi / 180
@@ -174,18 +233,28 @@ def Run():
 	Left = []
 	Right = []
 	counter =0
-	lj3.WebStatus("LaserGlyph")
+	lj.WebStatus("LaserGlyph")
+	lj.SendLJ("/glyph/start 1")
 
 	# OSC Server callbacks
-	print("Starting OSC at",myIP," port",OSCinPort,"...")
+	print("Starting OSC server at",myIP," port",OSCinPort,"...")
+	'''
 	osc_startup()
 	osc_udp_server(myIP, OSCinPort, "InPort")
-	osc_method("/ping*", OSCping)
+	osc_method("/ping", lj.OSCping)
+	osc_method("/quit*", quit)
 	osc_method("/glyph/ljclient", OSCljclient)
+	'''
+	oscserver.addMsgHandler( "/glyph/ljclient", OSCljclient )
+
+	# Add OSC generic plugins commands : 'default", /ping, /quit, /pluginame/obj, /pluginame/var, /pluginame/adddest, /pluginame/deldest
+	lj.addOSCdefaults(oscserver)
 
 	try:
 
-		while 1:
+		while lj.oscrun:
+
+			lj.OSCframe()
 			Left = []
 			Right = []
 	
@@ -216,24 +285,31 @@ def Run():
 			# Drawing step, 2 possibilities 
 	
 			# Red and Green drawn by laser 0
-			lj3.PolyLineOneColor(Left,  c = red,    PL = 0, closed = True)
-			lj3.PolyLineOneColor(Right, c = green,   PL = 0, closed = True)
-			lj3.DrawPL(0)
+			#lj.PolyLineOneColor(Left,  c = red,    PL = PL, closed = True)
+			#lj.PolyLineOneColor(Right, c = green,   PL = PL, closed = True)
+
+			lj.PolyLineOneColor(Left, c = Leftcube.color , PL = Leftcube.PL, closed = Leftcube.closed)
+			lj.PolyLineOneColor(Right, c = Rightcube.color , PL = Rightcube.PL, closed = Rightcube.closed)
+			#print(len(Left))
+
+			#lj.DrawPL(PL)
+			#print(Dest0.name, Dest1.name)
+			lj.DrawDests()
 	
 			'''
 			# Red on laser 1 and green on laser 2
-			lj3.PolyLineOneColor(Left,  c = red,    PL = 1, closed = True)
-			lj3.PolyLineOneColor(Right, c = green,   PL = 2, closed = True)
-			lj3.DrawPL(1)
-			lj3.DrawPL(2)		
+			lj.PolyLineOneColor(Left,  c = red,    PL = 1, closed = True)
+			lj.PolyLineOneColor(Right, c = green,   PL = 2, closed = True)
+			lj.DrawPL(1)
+			lj.DrawPL(2)		
 	
 			'''
 			
 			time.sleep(0.1)
 	
 			counter += 1
-			if counter >360:
-				counter =0
+			if counter > 360:
+				counter = 0
 
 	except KeyboardInterrupt:
 		pass
@@ -242,18 +318,7 @@ def Run():
 
 	finally:
 
-		lj3.WebStatus("Glyph Exit")
-		print("Stopping OSC...")
-		lj3.OSCstop()
-		pass
-
-	print ("LaserGlyph Stopped.")
-
-
-white = rgb2int(255,255,255)
-red = rgb2int(255,0,0)
-blue = rgb2int(0,0,255)
-green = rgb2int(0,255,0)
+		lj.ClosePlugin()
 
 
 Run()

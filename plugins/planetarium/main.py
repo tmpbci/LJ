@@ -29,6 +29,8 @@ Remember : LJ will automatically warp geometry according to alignement data. See
 '''
 
 import redis
+import sys
+sys.path.append('../../libs')
 import lj3
 import numpy as np
 import math,time
@@ -48,7 +50,7 @@ from osc4py3 import oscbuildparse
 from osc4py3.oscmethod import * 
 
 import json
-
+oscrun = True
 '''
 is_py2 = sys.version[0] == '2'
 if is_py2:
@@ -103,7 +105,7 @@ if args.redisIP  != None:
 else:
 	redisIP = '127.0.0.1'
 
-lj3.Config(redisIP,ljclient)
+lj3.Config(redisIP,ljclient,"planet")
 
 #
 # Inits Laser
@@ -164,6 +166,42 @@ def Proj(x,y,z,angleX,angleY,angleZ):
 # All the coordinates base functions 
 #
 
+#Transforming coordinates functions by Povik martin.povik@gmail.com
+import math
+import datetime
+
+def cartesian_to_horizontal(x, y, z):
+    ele = math.degrees(math.atan2(z, math.sqrt(x * x + y * y)))
+    az = math.degrees(math.atan2(y, x))
+    return math.sqrt(x * x + y * y + z * z), ele, az
+
+def horizontal_to_equatorial(az, ele, lat):
+    az, ele = math.radians(az), math.radians(ele)
+    lat = math.radians(lat)
+    cd_ct = math.cos(ele) * math.cos(az) * math.sin(lat) \
+            + math.sin(ele) * math.cos(lat)
+    cd_st = math.cos(ele) * math.sin(az)
+    sd = -math.cos(ele) * math.cos(az) * math.cos(lat) + math.sin(ele) * math.sin(lat)
+    cd = math.sqrt(cd_ct * cd_ct + cd_st * cd_st)
+    return math.atan2(cd_st / cd, cd_ct / cd) * 12 / math.pi, \
+           math.degrees(math.atan2(sd, cd))
+     
+def timestamp_to_jd(timestamp):
+    return float(timestamp) / 86400 + 2440587.5
+
+def timestamp_to_lst(timestamp, lon):
+    timestamp = float(timestamp)
+    timeofday = timestamp % 86400
+    jd0 = timestamp_to_jd(timestamp - timeofday)
+    T = (jd0 - 2451545) / 36525
+    s0 = 6.697374558 + 2400.05133691 * T + 0.000025862 * T**2 \
+         - 0.0000000017 * T**3
+    return (s0 + 1.0027379093 * (timeofday / 86400) * 24.0 + float(lon) / 15) % 24
+
+def horizontal_to_equatorial2(az, ele, lat, lon, timestamp):
+    t, d = horizontal_to_equatorial(az, ele, lat)
+    return d, (timestamp_to_lst(timestamp, lon) - t) % 24
+    
 '''
  To minize number of sky objects coordinates conversion : Change planetarium FOV in Ra Dec to select objects 
  (planets, hipparcos,..). Then get only those objects in AltAz coordinates.
@@ -586,13 +624,14 @@ def NewTime(timeshift):
 	 if DisplayAnything:
 	 	UpdateAnything()
 
-# /quit
-def OSCquit():
+# /quit dummyvalue
+def quit(value):
+    # don't do this at home (or it'll quit blender)
+    global oscrun
 
-	WebStatus("Planet stopping")
-	print("Stopping OSC...")
-	lj3.OSCstop()
-	sys.exit() 
+    oscrun = False
+    print("Stopped by /quit.")
+    lj3.ClosePlugin()
 
 def OSCUI(value):
     # Will receive message address, and message data flattened in s, x, y
@@ -615,7 +654,7 @@ try:
 	osc_udp_server("127.0.0.1", OSCinPort, "InPort")
 	osc_method("/planet/planetUI*", OSCUI)
 	osc_method("/ping*", lj3.OSCping)
-	osc_method("/quit", OSCquit)
+	osc_method("/quit", quit)
 
 	WebStatus("Loading Cities...")
 	ts = load.timescale()
@@ -654,7 +693,7 @@ try:
 	DisplayAnything = False
 	print("Start displaying on",lasernumber,"lasers")
 
-	while 1:
+	while oscrun:
 
 		for laser in range(lasernumber):
 

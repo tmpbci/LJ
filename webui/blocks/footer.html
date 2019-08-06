@@ -1,0 +1,257 @@
+
+  
+
+ 
+  <!-- 
+    Footer block display events for debug 
+  -->
+  
+  <div class="mgfooter">
+        <div id="showin"></div>
+		<div id="showout"></div>
+    	<div id="events"</div>
+  </div>
+
+</div>
+
+
+<!-- 
+  web audio buttons scripts 
+-->
+
+<script type="text/javascript">
+    var message="";
+    var log=[];
+    var knobs = document.getElementsByTagName('webaudio-knob');
+    for(var i = 0; i < knobs.length; i++){
+        knobs[i].addEventListener("input",Dump,false);
+        knobs[i].addEventListener("change",Dump,false);
+    }
+    var sliders = document.getElementsByTagName('webaudio-slider');
+    for(var i = 0; i < sliders.length; i++){
+        sliders[i].addEventListener("input",Dump,false);
+        sliders[i].addEventListener("change",Dump,false);
+    }
+    var switches = document.getElementsByTagName('webaudio-switch');
+    for(var i = 0; i < switches.length; i++) {
+        switches[i].addEventListener("change",Dump,false);
+    }
+    function Dump(e) {
+        var str="";
+        str=e.type + " : " + e.target.id + " : " + e.target.value + " ";
+        console.log(str);
+        log.unshift(str);
+        log.length=1;
+        str="";
+        for(var i=19;i>=0;--i) {
+            if(log[i])
+                str+=log[i]+"<br/>";
+        }
+        var evview=document.getElementById("events");
+        evview.innerHTML=str;
+        //console.log(  e.type + "/" + e.target.id + "/" +  e.target.value);
+
+        if (e.target.id === "align" && e.type === "change") {
+            showAlign();
+            }
+         if (e.target.id === "simu" && e.type === "change") {   
+            showCanvas();
+            }
+         if (e.target.id === "live" && e.type === "change") {   
+            showLive();
+            }
+         if (e.target.id === "nozoid" && e.type === "change") {   
+            showNozoid();
+            }
+          if (e.target.id === "run" && e.type === "change") {   
+            showRun();
+            }
+          if (e.target.id === "on" && e.type === "change") {   
+            window.location.reload();
+            }
+
+          if (e.target.id === "nozoid/down 50" && e.type === "input") {
+              e.target.value = 1 ;
+            }
+            
+          if (e.target.id === "noteon" && e.type ==="input")
+          	 console.log("only noteon change are sent not input");
+
+          else
+          	 _WS.send("/" + e.target.id + " " +  e.target.value);
+  
+          // for /scale : after a change (knob is released) reset knob value to 0
+          if (e.target.id.substring(0,5) === "scale" && e.type === "change") {
+          	 e.target.value = 0;
+          	//console.log(e.target.id + "set to 0")
+          	}
+          // for /loffset : after a change (knob is released) reset knob value to 0
+          if (e.target.id.substring(0,7) === "loffset" && e.type === "change") {
+          	 e.target.value = 0;
+          	 console.log(e.target.id + "set to 0")
+          	}
+          // for /angle : after a change (knob is released) reset knob value to 0
+          if (e.target.id.substring(0,5) === "angle" && e.type === "change") {
+          	 e.target.value = 0;
+          	 //console.log(e.target.id + "set to 0")
+          	}
+    }
+</script>
+
+
+<!-- 
+  Simulator Point lists drawing scripts 
+-->
+
+<script type="text/javascript">
+
+  //
+  // Align canvas : store Reference To The Canvas & Set Context
+  //
+
+  var aligncanvas = document.getElementById("aligncanvas");
+  var alignctx = aligncanvas.getContext("2d");
+  alignctx.clearRect(0,0,400,400);
+  var mousePosDown =  { x: 0, y: 0};
+  var mousePosUp =  { x: 0, y: 0 };
+  var mouseMsgDown = '';
+  var mouseMsgUp = '';
+
+
+  function getMousePos(aligncanvas,evt) 
+      {
+      var rect = aligncanvas.getBoundingClientRect();
+      return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+      }
+
+   
+  function MouseDown(evt)
+      {
+      mousePosDown = getMousePos(aligncanvas, evt);
+      mouseMsgDown = mousePosDown.x + ' ' + mousePosDown.y;
+      _WS.showin(mouseMsgDown);
+      }
+      
+  function MouseUp(evt)
+      {
+      mousePosUp = getMousePos(aligncanvas, evt);
+      mouseMsgUp = mousePosUp.x + ' ' + mousePosUp.y;
+      _WS.showin(mouseMsgUp);
+      _WS.s.send('/mouse '+mouseMsgDown+' '+mouseMsgUp);
+      _WS.showin('/mouse '+mouseMsgDown+' '+mouseMsgUp);
+      }
+
+  aligncanvas.addEventListener("mouseup", MouseUp, false);
+  aligncanvas.addEventListener("mousedown", MouseDown, false);
+
+
+
+  //
+	// Simulator canvas : store Reference To The Canvas & Set Context
+	//
+
+  var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+  var lastpoint = { x: 0, y: 0, color: 0};
+  ctx.clearRect(0,0,400,400);
+  var zoom = 0.5;
+  //ctx.save
+
+
+  // Todo : laser point will have black points to go from a polyline to another. Need to discard those black points.
+  function draw() {
+
+
+      // Clear Canvas At The Start Of Every Frame
+      //ctx.restore
+      
+      if (pl2.length > 0)
+        {
+
+        // Begin a new path
+        // 0.7 reduces max coordinates in a more browser compatible resolution.
+        ctx.clearRect(0,0,400,400);
+        ctx.beginPath();
+       
+        ctx.moveTo(pl2[0]*zoom, pl2[1]*zoom);
+        lastpoint.color = pl2[2];
+
+        // Draw n Lines
+        for (var i = 0; i < pl2.length/3; i++) 
+          {
+          
+          // New point has the same color -> add a new line to the new point
+          if (pl2[2+(i*3)] === lastpoint.color)
+            {
+            ctx.lineTo(pl2[i*3]*zoom, pl2[1+(i*3)]*zoom);
+            }
+
+          // New point has different color -> stroke with previous color
+          if (pl2[2+(i*3)] != lastpoint.color) 
+            {
+            ctx.strokeStyle = "#"+(lastpoint.color + Math.pow(16, 6)).toString(16).slice(-6);
+            ctx.stroke();
+            ctx.closePath()
+            //ctx.restore
+            ctx.beginPath();
+            //ctx.clearRect(0,0,400,400);
+            
+            ctx.moveTo(pl2[i*3]*zoom, pl2[1+(i*3)]*zoom);
+            }
+
+          // Last point -> stroke with current color
+          if (i === (pl2.length/3)-1 ) 
+            {
+            ctx.moveTo(pl2[i*3]*zoom, pl2[1+(i*3)]*zoom);
+            ctx.strokeStyle = "#"+((pl2[2+(i*3)]) + Math.pow(16, 6)).toString(16).slice(-6);
+            ctx.stroke();
+            
+            ctx.closePath()
+            //ctx.restore
+            //ctx.clearRect(0,0,400,400);
+            }
+
+          // store point for comparison
+          lastpoint.x = pl2[i*3];
+          lastpoint.y = pl2[1+(i*3)];
+          lastpoint.color = pl2[2+(i*3)];
+          }
+
+      } 
+      // Call Draw Function Again To Create Animation
+      window.requestAnimationFrame(draw);
+    }
+      
+  // Initialize The Draw Function
+  draw();
+</script>
+</body>
+
+<!-- non displayed items, for code reference mainly for other type of webaudio buttons
+        <div>
+        	<span  class="lasertext">Swap X</span>
+        	<span  class="lasertext">Swap Y</span>
+        </div>
+        <div>
+        	<webaudio-switch id="swap/X" value="0" height="76" width="76" tooltip="Switch-B" src="knobs/switch_toggle.png"></webaudio-switch>
+        	<webaudio-switch id="swap/Y" value="0" height="76" width="76" tooltip="Switch-B" src="knobs/switch_toggle.png"></webaudio-switch>
+        </div>
+
+	<div><webaudio-knob id="choice"  src="knobs/Prophet5.png" diameter="80" min="0" max="10" value="0" sprites="9"></webaudio-knob></div>
+<div><webaudio-knob id="choice2" src="knobs/Old11.png"  diameter="80" min="0" max="10" value="0" sprites="10">></webaudio-knob></div>
+<div><webaudio-knob id="laser"  src="knobs/Prophetic5.png" diameter="70" min="0" max="5" value="0" sprites="5"></webaudio-knob></div>
+
+	<div>
+    <webaudio-slider id="slider1" width="24" height="120"></webaudio-slider>
+    <webaudio-slider id="slider2" width="24" height="120"></webaudio-slider>
+    </div>
+
+    <div>
+	<webaudio-switch id="laser/0" height="64" width="25"   value="0" src="knobs/key0.png" type="toggle"></webaudio-switch>
+	<webaudio-switch id="laser/1" height="64" width="25"   value="0" src="knobs/key0.png" type="toggle"></webaudio-switch>
+	<webaudio-switch id="laser/2" height="64" width="25"  value="0" src="knobs/key0.png" type="toggle"></webaudio-switch>
+	<webaudio-switch id="laser/3" height="64" width="25" value="0" src="knobs/key0.png" type="toggle"></webaudio-switch>
+	</div>
+	-->
+ <!-- End of Footer block -->
+</html>

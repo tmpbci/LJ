@@ -252,6 +252,7 @@
         			break;
           case "/simul":
         			pl = e.data.slice(7);
+              //console.log(pl)
         			pl2 = eval(pl.replace(/[()]/g, ''));
         			break;
         	case "/plpoi":

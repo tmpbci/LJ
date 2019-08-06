@@ -1,0 +1,42 @@
+
+     <!-- simu right part : lissaUI block -->
+
+     <div id ="lissaUI" style = "display: none;justify-items: center;">
+        <!-- Lissa interface -->
+        <div class="lissabox">
+          <div class="lasertext" style="border-color:#334;border-style: groove;border-width:1px;">LISSA
+          </div>
+          <div class="lissagrid">
+
+              <!-- Select X & Select Y -->
+              <div><webaudio-knob id="cc/5" diameter="60" min="0" max="127" value="0"></webaudio-knob></div>
+              <div><webaudio-knob id="cc/6" diameter="60" min="0" max="127" value="0"></webaudio-knob></div>
+              <div><webaudio-param link="cc/5" value="0"></webaudio-param></div>
+              <div><webaudio-param link="cc/6" value="0"></webaudio-param></div>
+              <div class="lasertext">Select X</div>
+              <div class="lasertext">Select Y</div>
+              <div class="spacer"></div>
+              <div class="spacer"></div>
+
+              <!-- FOV & Dist -->
+              <div><webaudio-knob id="cc/21" diameter="60" min="1" max="127" value="1"></webaudio-knob></div>
+              <div><webaudio-knob id="cc/22" diameter="60" min="1" max="127" value="1"></webaudio-knob></div>
+              <div><webaudio-param link="cc/21" value="0"></webaudio-param></div>
+              <div><webaudio-param link="cc/22" value="0"></webaudio-param></div>
+              <div class="lasertext">FOV</div>
+              <div class="lasertext">Dist</div>
+              <div class="spacer"></div>
+              <div class="spacer"></div>
+
+              <!-- Offset X & Offset Y -->
+              <div><webaudio-knob id="cc/1" diameter="60" min="1" max="127" value="1"></webaudio-knob></div>
+              <div><webaudio-knob id="cc/2" diameter="60" min="1" max="127" value="1"></webaudio-knob></div>
+              <div><webaudio-param link="cc/1" value="0"></webaudio-param></div>
+              <div><webaudio-param link="cc/2" value="0"></webaudio-param></div>
+              <div class="lasertext">Offset X</div>
+            <div class="lasertext">Offset Y</div>
+          </div>
+    </div>
+  </div>
+  <!-- End of Lissa block -->
+  

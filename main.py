@@ -4,12 +4,15 @@
 '''
 LJ Laser Server v0.8.1
 
+Inspiration for new WebUI icon menu :
+https://codepen.io/AlbertFeynman/pen/mjXeMV
+
 Laser server + webUI servers (ws + OSC)
 
 - get point list to draw : /pl/lasernumber
 - for report /lstt/lasernumber /lack/lasernumber /cap/lasernumber
 - A nice ws debug tool : websocat 
-- a "plugin" is a code that send point to LJ. Plugins if they have an open OSC port can be checked and restart if in the same computer. 
+- a "plugin" is a generator that send points to LJ. Plugins if they have an open OSC port can be checked and restart if in the same computer. 
 
 Todo : 
 
@@ -21,43 +24,42 @@ All used ports:
 
 8002 OSC incoming
 9001 WS communication with WebGUI 
-Plugins Ports (see LJ.conf)
+Plugins OSC Ports (see LJ.conf)
 
 '''
-
-import time
-import gstt
-import redis
 
 
 print ""
 print ""
 print "LJ Laser Server"
-print "v0.8.1"
+print "v0.8.2"
 print ""
 
-import settings
+import redis
+
+from libs import gstt, settings
 settings.Read()
 
-import cli
+# Arguments may alter .conf file so import settings first then cli
+from libs import cli
+
 settings.Write()
+
 from multiprocessing import Process, Queue, TimeoutError 
 import random, ast
 
-import tracer
-import homographyp
-import commands
-import font1
+from libs import plugins, tracer, homographyp, commands, font1
 
 import subprocess
 import sys
 import os
+#import midi
 
 from OSC import OSCServer, OSCClient, OSCMessage
 from websocket_server import WebsocketServer
 #import socket
 import types, thread, time
-import plugins
+
 
 r = redis.StrictRedis(host=gstt.LjayServerIP , port=6379, db=0)
 args =[0,0]
@@ -88,7 +90,7 @@ def dac_process(number, pl):
 # webUI server
 #
 
-print "Laser client number :",gstt.LasClientNumber
+print "Laser client number :",gstt.SceneNumber
 serverIP = gstt.LjayServerIP
 print "Redis IP :", serverIP
 
@@ -145,115 +147,17 @@ def handle_timeout(self):
 
 oscserver.handle_timeout = types.MethodType(handle_timeout, oscserver)
 
-'''
-osclientext = OSCClient()
-oscmsg = OSCMessage()
-osclientext.connect((oscserverIPout, oscserverPORTout)) 
-
-# send UI string as OSC message to oscserver 8001
-# sendoscserver(oscaddress, [arg1, arg2,...])
-
-def sendoscserver(oscaddress,oscargs=''):
-        
-    oscmsg = OSCMessage()
-    oscmsg.setAddress(oscaddress)
-    oscmsg.append(oscargs)
-    
-    #print ("sending to oscserver : ",oscmsg)
-    try:
-        osclientext.sendto(oscmsg, (oscserverIPout, oscserverPORTout))
-        oscmsg.clearData()
-    except:
-        print ('Connection to oscserver IP', oscserverIPout, 'port', oscserverPORTout,'refused : died ?')
-        sendWSall("/on 0")
-        sendWSall("/status NoLJay")
-        
-    #time.sleep(0.001)
-
-
-# send UI string as OSC message to Nozosc 8003
-# sendnozosc(oscaddress, [arg1, arg2,...])
-
-osclientnozoid = OSCClient()
-osclientnozoid.connect((NozoscIPout, NozoscPORTout)) 
-
-def sendnozosc(oscaddress,oscargs=''):
-        
-    oscmsg = OSCMessage()
-    oscmsg.setAddress(oscaddress)
-    oscmsg.append(oscargs)
-    
-    print "Sending OSC to Nozosc server :", oscaddress,'with args', oscargs 
-    try:
-        osclientnozoid.sendto(oscmsg, (NozoscIPout, NozoscPORTout))
-        oscmsg.clearData()
-    except:
-        print 'Connection to nozosc IP', NozoscIPout,'port', NozoscPORTout,' refused : died ?'
-        sendWSall("/on 0")
-        sendWSall("/status No Nozosc ")
-    
-    #time.sleep(0.001)
-
-# send UI string as OSC message to Planet 8005
-# sendplanet(oscaddress, [arg1, arg2,...])
-
-osclientplanet = OSCClient()
-osclientplanet.connect((planetIPout, planetPORTout)) 
-
-def sendplanet(oscaddress,oscargs=''):
-        
-    oscmsg = OSCMessage()
-    oscmsg.setAddress(oscaddress)
-    oscmsg.append(oscargs)
-    
-    print "Sending OSC to Planet server :", oscaddress,'with args :', oscargs 
-    try:
-        osclientplanet.sendto(oscmsg, (planetIPout, planetPORTout))
-        oscmsg.clearData()
-    except:
-        print 'OSC send to planet IP', planetIPout, 'port', planetPORTout, "refused : died ?"
-        sendWSall("/planet/start 0")
-        sendWSall("/status No Planet")
-        
-    #time.sleep(0.001)
-
-# send UI string as OSC message to Bank 0 8010
-# sendbank0(oscaddress, [arg1, arg2,...])
-
-osclientbank0 = OSCClient()
-osclientbank0.connect((planetIPout, planetPORTout)) 
-
-def sendbank0(oscaddress,oscargs=''):
-        
-    oscmsg = OSCMessage()
-    oscmsg.setAddress(oscaddress)
-    oscmsg.append(oscargs)
-    
-    print "Sending OSC to Bank0 server :", oscaddress,'with args :', oscargs 
-    try:
-        osclientbank0.sendto(oscmsg, (bank0IPout, bank0PORTout))
-        oscmsg.clearData()
-    except:
-        print 'OSC send to bank0 IP', bank0IPout, 'port', bank0PORTout, "refused : died ?"
-        sendWSall("/bank0/start 0")
-        sendWSall("/status No Bank0")
-        
-    #time.sleep(0.001)
-
-'''
 
 # OSC default path handler : send incoming OSC message to UI via websocket 9001
 def handler(path, tags, args, source):
 
     oscpath = path.split("/")
-    print ""
-    print "OSC handler in main said : path", path," oscpath ", oscpath," args", args
-    #print "debug", gstt.debug
-    #if gstt.debug >0:
-    #    print "default handler"
-    #    print "OSC said  path", path," oscpath ", oscpath," args", args
-    
-    sendWSall(path + " " + str(args[0]))
+    if gstt.debug > 0:
+        print ""
+        print "OSC handler in main said : path", path," oscpath ", oscpath," args", args
+
+    if oscpath[1] != "pong":
+        sendWSall(path + " " + str(args[0]))
     commands.handler(oscpath,args)
 
 
@@ -268,26 +172,19 @@ def osc_frame():
 
 def PingAll():
 
+    print ("Pinging all plugins...")
     for plugin in gstt.plugins.keys():
 
-        # Plugin Online
-        if plugins.Ping(plugin):
-            
-            sendWSall("/"+ plugin + "/start 1")
-            if gstt.debug >0:
-                print "plugin", plugin, "answered."
+        print("pinging", plugin)
+        #sendWSall("/"+ plugin + "/start 0")
+        plugins.Ping(plugin)
 
-        # Plugin Offline
-        else:
-            sendWSall("/"+ plugin + "/start 0")
-            if gstt.debug >0:
-                print "plugin", plugin, "didn't answered."
 
 
 # OSC server Thread : handler, dacs reports and simulator points sender to UI.
 def osc_thread():
 
-    while True:
+    #while True:
         try:
             while True:
 
@@ -326,9 +223,9 @@ def osc_thread():
                         # last number of points sent to etherdream buffer
                         sendWSall("/points/" + str(laserid) + " " + str(r.get('/cap/'+str(laserid))))
 
-                #print "Sending simu frame from",'/pl/'+str(gstt.LasClientNumber)+'/'+str(gstt.Laser)
-                #print r.get('/pl/'+str(gstt.LasClientNumber)+'/'+str(gstt.Laser))
-                sendWSall("/simul" +" "+ r.get('/pl/'+str(gstt.LasClientNumber)+'/'+str(gstt.Laser)))
+                #print "Sending simu frame from",'/pl/'+str(gstt.SceneNumber)+'/'+str(gstt.Laser)
+                #print r.get('/pl/'+str(gstt.SceneNumber)+'/'+str(gstt.Laser))
+                sendWSall("/simul" +" "+ r.get('/pl/'+str(gstt.SceneNumber)+'/'+str(gstt.Laser)))
 
 
         except Exception as e:
@@ -350,8 +247,10 @@ def new_client(client, wserver):
     sendWSall("/status Hello %d" % client['id'])
 
     for laserid in range(0,gstt.LaserNumber):    
+
         sendWSall("/ip/" + str(laserid) + " " + str(gstt.lasersIPS[laserid]))
         sendWSall("/kpps/" + str(laserid)+ " " + str(gstt.kpps[laserid]))
+        sendWSall("/laser"+str(laserid)+"/start 1")
 
         if gstt.swapX[laserid] == 1:
             sendWSall("/swap/X/" + str(laserid)+ " 1")
@@ -383,6 +282,7 @@ def message_received(client, wserver, message):
     oscpath = message.split(" ")
     if gstt.debug > 0:
         print "WS Client", client['id'], "said :", message, "splitted in an oscpath :", oscpath
+    
     PingAll()
     message4plugin = False
 
@@ -394,42 +294,10 @@ def message_received(client, wserver, message):
     
             message4plugin = True
             if plugins.Send(plugin,oscpath):
-                    print "message sent correctly to", plugin
-                    
-        
-    #plugins.sendWSall("/status Running...")
+                print "message sent correctly to", plugin
+            else:
+                print"plugin was offline"
 
-    '''
-    if plugins.Send("planet",oscpath):
-        pass
-
-    elif plugins.Send("nozoid",oscpath):
-        pass
-
-    elif plugins.Send("ai",oscpath):
-        pass
-
-    elif plugins.Send("lissa",oscpath):
-        pass
-
-    elif plugins.Send("bank0",oscpath):
-        pass
-
-    elif plugins.Send("simu",oscpath):
-        pass
-
-    elif len(oscpath) > 1:
-        args[0] = str(oscpath[1]) 
-        commands.handler(oscpath[0].split("/"),args)
-        #print oscpath[0].split("/"),oscpath[1]
-                                                                                               
-    
-    if oscpath[0] == "/on":
-        if oscpath[1] == "1":
-            sendoscserver("/on")
-        else:
-            sendoscserver("/off")
-    '''
 
     # WS received message is an LJ command 
 
@@ -448,46 +316,6 @@ def message_received(client, wserver, message):
     
     print ""
     
-
-    '''
-    # I message included "nozoid" forward the message as OSC to nozoid IP port 8003
-    elif oscpath[0].find("nozoid") != -1:
-
-        if plugins.Ping("nozoid"):
-
-            sendWSall("/nozoid/start 1")
-
-            if oscpath[0].find("start") != -1:
-                print "Nozoid 0",oscpath[0],"1", oscpath[1]
-            
-            if len(oscpath) == 1:
-                sendnozosc(oscpath[0], oscargs='noargs')
-            else:
-                sendnozosc(oscpath[0], oscargs=oscpath[1])
-        else:
-            sendWSall("/status Nozoid offline")
-            sendWSall("/planet/start 0")
-
-     # If message included "ai" do something
-    elif oscpath[0].find("ai") != -1:
-        print "ai order ", oscpath
-
-    # If message included "lissa" do something
-    elif oscpath[0].find("lissa") != -1:
-        print "lissa order ", oscpath
-
-    # If message included "bank0" do something
-    elif oscpath[0].find("bank0") != -1:
-
-        if plugins.Ping("bank0"):
-           if len(oscpath) == 1:
-               sendbank0(oscpath[0], oscargs='noargs')
-           else:
-               sendbank0(oscpath[0], oscargs=oscpath[1])
-        else:
-            sendWSall("/status Bank0 offline")
-    '''
-
  
     # if needed a loop back : WS Client -> server -> WS Client
     #sendWSall("ws"+message)
@@ -501,13 +329,18 @@ def sendWSall(message):
     #if gstt.debug >0:
         #print("WS sending %s" % (message))
     wserver.send_message_to_all(message)
-    
-
+ 
+'''   
+print ""
+print "Midi Configuration"
+midi.InConfig()
+midi.OutConfig()
+'''
 
 # Creating a startup point list for each client : 0,1,2,...
 
 print ""
-for clientid in range(0,gstt.MaxLasClient):
+for clientid in range(0,gstt.MaxScenes+1):
     print "Creating startup point lists for client",clientid,"..."
     digit_points = font1.DigitsDots(clientid,65280)
 
@@ -519,8 +352,8 @@ for clientid in range(0,gstt.MaxLasClient):
 
         r.set('/order/'+str(laserid), 0)
 
-if r.set("/clientkey","/pl/"+str(gstt.LasClientNumber)+"/")==True:
-    print "sent clientkey : /pl/"+str(gstt.LasClientNumber)+"/"
+if r.set("/clientkey","/pl/"+str(gstt.SceneNumber)+"/")==True:
+    print "sent clientkey : /pl/"+str(gstt.SceneNumber)+"/"
 
 print ""
 print "Etherdream connection check is NOT DISPLAYED"
@@ -579,9 +412,8 @@ try:
     print "Resetting all Homographies.."
     for laserid in range(0,gstt.LaserNumber):  
         homographyp.newEDH(laserid)
-        
     print ""
-    print "ws server running forver..."
+    print "WS server running forever..."
     wserver.run_forever()
 
 

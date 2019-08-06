@@ -13,20 +13,30 @@ A software laser server with GUI for up to 4 lasers live actions. Think creative
 
 LJ has 5 main components : 
 
+- "Plugins" are points generators (to one or more lasers). Lot examples comes with LJ : planetarium, 3D anaglyph animations,... See plugins directory.
 - A "tracer" per etherdream/laser that take its given point list, correct geometry, recompute in laser controller coordinates, send it to its controller and report its status to the "manager".
-- A "manager" that talk to all tracers (which client number point lists to draw, new geometry correction,...), handle the webui functions, OSC commands,...
-- To share the lasers between people/computers, LJ accept up to 4 virtual "clients" that can simultaneously send one point list per laser. You select in WebUI wich "client" should be used by tracers.
+- A "manager" that talk to all tracers (which client number point lists to draw, new geometry correction,...), handle IOs (webui functions, OSC commands,...) and plugins.
 - A web GUI in html, css, and vanilla js. No html server or js framework here : it's complex enough. This GUI has a (currently slow) simulator, but one can used a builtin python simulator (pysimu) or an etherdream/laser emulator (from nannou) to work without physical lasers !! 
-- A network available database (redis). "Clients" send directly their pointlists to redis and each "tracer" is instructed to get a given pointlist in redis. 
+- A network available database (redis). "Plugins" send directly their pointlists to redis and each "tracer" is instructed to get one of the avalaible pointlist in redis. See details right below...
 
 
-4 clients can send 4 pointlists so up to 16 pointlists can be accessed at anytime from anywhere in the network. The server/network/webUI idea allows to share cpu intensive tasks and especially give tracers enough cpu to draw smoothly. Of course all this can happen in one computer. There is no real limits : 4 everything is tested and works smoothly if *you have enough cpu/computers/network ressources*. 
+More details :
 
-It's obviously overkill for one laser in a garage, but for several laserS game events, laserS art, laserS competition, laserS planetarium,... LJ will handle the complexity. Content providers like artists, demomakers,... just need to send points.
+LJ server accept up to 4 groups = virtual "scenes" of 4 "pointlists" so up to 16 pointlists can be sent to redis at anytime from anywhere in the network. You select in WebUI (Simu/plugins matrix) wich "scene" should be used by tracers/lasers. The all point is to easily share actual lasers. Imagine in demo party :
 
-Needs at least : an etherdream DAC connected to an ILDA laser, RJ 45 IP network (gigabits only !!  no wifi, 100 mpbs doesn't work well with several lasers)
+Erica needs 4 lasers, that's the 4 pointlists of a "scene".
+Paula and Jennifer use only 2 lasers each, so they can share a "scene".
+And so on..
 
-LJ is tested with Firefox, supports Linux and OS X. Windows is unkown but welcome, if someone want to jump in and care about it. 
+The server/network/webUI idea allows to spread cpu intensive tasks on different cpu cores and especially give tracers enough cpu to feed etherdreams DACs smoothly. Of course all this can happen in one computer. There is no real limits : 4 everything is tested and works smoothly if *you have enough cpu/computers/network ressources*. 
+
+It's obviously overkill for one laser in a garage, but for several laserS games events, laserS art, laserS competition, laserS planetarium,... LJ will handle the complexity. Content providers like artists, demomakers,... just need create plugin in whatever langage, send the points to redis. Then use the webui to select the "scene". 
+
+Registering the plugin in LJ.conf is absolutely not mandatory. 
+
+Needs at least : an etherdream DAC connected to an ILDA laser, RJ 45 IP network (gigabits only !! wifi and wired 100 mpbs doesn't work well with several lasers). Seriously : if you experience frame drops you need to upgrade your network. 
+
+LJ is tested with Firefox, supports Linux and OS X. Windows is unkown but welcome, if someone want to jump in. 
 
 LJ is in dev : versions in this repository will always be core functionnal : accept and draw pointlists. New features can be not fully implemented, wait for the next commit. Any feedback is welcome at any time.
 
@@ -38,14 +48,19 @@ LJ is in dev : versions in this repository will always be core functionnal : acc
 
 (Doc in progress)
 
-- Laser alignment like in laser mapping.
+- Laser alignment like in videomapping.
 - OSC and websocket commands. Very cool : LJ can script or be scripted.
 - Web ui : In your browser open webui/index.html. Javascript is needed. By default it connect to localhost. If you want to control a remote server, you need to change the uri line in LJ.js.
 - Status update every 0.5 seconds : every etherdream DAC state, number of buffer points sent,...
 - "Optimisation" points automatically added, can be changed live for glitch art. Search "resampler" commands.
 - A compiled version for os x and linux of nannou.org etherdream+laser emulator is included. For more informations, like license see https://github.com/nannou-org/ether-dream
 - Some fancy examples are available : 3D anaglyph, Laser Pong,...
-
+- Midi and audio reactive, look midigen.py and fft3.py
+- Openpose skeletons animations laser player.
+- Resolume OSC client.
+- Another project (bhorpad) has been merged in LJ : so if you a led matrix, like Launchpad mini or bhoreal, plug it you may define, launch macros as pushing on one led or use them to display informations.
+- Artnet plugin.
+- Maxwell laser synth emulation plugin.
 
 
 
@@ -82,18 +97,18 @@ There is a nice websocket debug tool : websocat.
 
 Correct launch order is :
 
-- Dac/Laser (emulator or IRL)
-- Redis server once.
+- Switch on Dac/Laser (emulator or IRL)
+- Redis server once : i.e redis-server &
 - This server. see below.
 - Load/reload webUI page from disk in a browser (webui/index.html). Javascript must be enabled.
-- Run a plugin, see in clients/plugins folder for examples.
+- Run a builtin plugin or your generator, to send pointlists in redis. See in clients/plugins folder for examples.
 
 
-A typical server start is python main.py -L numberoflasers. 
+A typical LJ server start is python main.py -L numberoflasers. 
 Use also -h to display all possible arguments, like -v for debug informations.
 
 
-CASE 1 : the laser server computer is the same that the computer running a client :
+CASE 1 : the laser server computer is the same that the computer running a generator/plugin :
 
 
 1/ Run LJ
@@ -119,11 +134,13 @@ edit /etc/redis/redis.conf
 2/ Launch LJ with -r argument :
 python main.py -r 192.168.1.13 -L 1
 
-3/ run a client/plugin on client computer, like :
+3/ If the webUI is launched on "client" computer, update uri line in LJ.js
+
+4/ run a client/plugin on client computer, like :
 
 node nodeclient.js
 
-4/ to monitor redis server use redis-manager/medis/... or :
+5/ to monitor redis server use redis-manager/medis/... or :
 
 redis-cli -h redisserverIP monitor
 
@@ -140,21 +157,86 @@ A "plugin" is a software that send any number of pointlist(s). LJ comes with dif
 - Planetarium 	: A 4 lasers planetarium.
 - pySimu 		: A full speed laser simulator (pygame, python 2.7)
 - LaserPong		: Our laser Pong is back ! (python 2.7)
-
+- Pose 			: Display json openpose skeleton animations ans starfields
+- fft3          : Example how to make LJ audio reactive
+- maxwell 		: A laser synth inspired by bluefang great work.
 
 #
-# Program your own "plugin" 
+# Client Side : Program your own "plugin" 
 #
 
 
-The server approach is based on redis, so you write and run your laser client software in any redis capable programming langage (50+ : https://redis.io/clients). If you want some interaction with GUI, like in text status area, you also need OSC.
+The server approach is based on redis, so you write and run your laser client software in any redis capable programming langage (50+ : https://redis.io/clients). An external program that just send pointlists is a "client". If you want some interactions from the webUI, like text status area support, crash detection, launch,... it's a "plugin" and some default code is needed see square.py as example and :
 
 - Read all this readme ;-)
-- There is a client and plugin folders with examples in different languages. If you want to do game especially with pygame, see ljpong in plugins/games directory.
+- There is a client and plugin folders with examples in different languages. If you want to do game, especially with pygame, see ljpong in plugins/games directory.
 - Generate at least one point list array (say a square) with *enough points*, one point is likely to fail for buffering reason.
-- Feed your point list array in string format to redis server. i.e use "/pl/0/1" redis key to feed client 0, pointlist 1.
+- Feed your point list array in string format to redis server. i.e use "/pl/0/1" redis key to feed scene 0, pointlist 1.
 - Tell LJ.conf your plugin configuration : OSC port and command line to start it.
-- lj3.py (python 3) and lj.py (python 2.7) have many very useful functions to not reinvent the wheel. Maybe it's better to symlink them in your directory than having a separated copy, to get future enhancements transparently. 
+
+Currently the WebUI (webui/index.html) is static so it has to be modified 'manually' and build : run python build.py in webui directory. 
+
+
+#
+# Client side dope mode : How to use lj23
+# 
+
+lj23 have many very useful functions to not reinvent the wheel for advanced point generation "client" side : layers, built in rotations,..
+ 
+
+4 Great TRICKS with lj23.
+First open square.py and learn how to declare different objects. square.py is a 2D shape example in 3D rotation (red/green anaglyph rendering) that use 2 layers : one left eye and one for right eye.
+
+
+1/ How to have another laser drawing the same thing ?
+
+That's a destination problem : just add another destination !
+
+Dest1 = lj.DestObject('1', 1, True, 0 , 1, 1)	# Dest1 will also send layer 0 points to scene 1, laser 1 
+
+
+
+2/ Different layers to different lasers ?
+
+Say because of too much points you want Left element drawn by scene 0, laser 0 and right element by scene 0, laser 1
+
+First define a different object/layer for each drawn element :
+
+Leftsquare = lj.FixedObject('Leftsquare', True, 255, [], red, 255, 0, 0, 0 , True)		 # Left goes to layer 0
+Rightsquare = lj.FixedObject('Rightsquare', True, 255, [], green, 0, 255, 0, 1 , True)	 # Right goes to layer 1
+
+Define 2 destinations :
+
+Dest0 = lj.DestObject('0', 0, True, 0 , 0, 0) 	# Dest0 will send layer 0 points to scene 0, laser 0 
+Dest1 = lj.DestObject('1', 1, True, 1 , 0, 1)	# Dest1 will send layer 1 points to scene 0, laser 1 
+
+
+
+3/ Different layers to one laser ?
+
+You should consider adding all your points to one layer, but same as 1/ it's a destination problem, just add another destination with the same scene/laser for this layer
+
+Dest1 = lj.DestObject('1', 1, True, 1 , 0, 0)	# Dest1 will also send layer 1 points to scene 0, laser 0 
+
+
+
+4/ I want to animate/modify anything on the fly : I'm doing a game and suddenly my hero change color.
+
+It's a declared object problem : say Hero is a Fixed Object, you can directly change value of 
+
+Hero.name, Hero.active, Hero.intensity, Hero.xy, Hero.color, Hero.red, Hero.green, Hero.blue, Hero.layer, Hero.closed
+
+For a character vanishing in one point use a relativeObject so you can decrease resize parameter,...
+PNC.name, PNC.active, PNC.intensity, PNC.xy, PNC.color, PNC.red, PNC.green, PNC.blue, PNC.layer, PNC.closed, PNC.xpos, PNC.ypos, PNC.resize, PNC.rotx, PNC.roty, PNC.rotz
+
+Remember RelativeObject points 'objectname.xy' has to be around 0,0,0. The other properties let you change the actual position (xpos, ypos), resize,..
+
+
+Same for Dest0 if it's a destObject, properties are :
+Dest0.name, Dest0.number, Dest0.active, Dest0.layer, Dest0.scene, Dest0.laser
+
+
+DrawDests() will take care of all your declared drawn elements/"objects" and Destinations to generate a point list per scene/laser sent to redis. In client point of view a "pointlist" is the sum of all its declared "layers".
 
 
 #
@@ -202,7 +284,7 @@ By default LJ uses on 127.0.0.1 (localhost) :
 
 You need to update LJ.conf to your network/etherdreams IPs and be sure to check command arguments : python main.py --help
 
-The need for a dedicated computer to act as "laser server" usually depends on how many lasers you want to control and your main computer load. If you seen flickering with small point lists, try the dedicated computer option and/or stop process interfering like redis monitoring,...
+The need for a dedicated computer to act as "laser server" usually depends on how many lasers you want to control and your main computer load. If you seen flickering with small point lists, try the dedicated computer idea and/or stop process interfering like redis monitoring,...
 
 
 

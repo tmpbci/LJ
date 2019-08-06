@@ -1,0 +1,258 @@
+
+  <!--
+    Align grid block
+  -->
+  
+  <div id="mgalign" class="mgalign">
+
+
+   <!-- Laser 0 -->
+   <div class="laserbox">
+    <!-- IP laser 0 -->
+    <div>
+      <form onsubmit="onSubmit(); return false;">
+      <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="ip/0">
+      </form>
+    </div>
+  	<div>
+    	<!-- Align Icons -->
+        <webaudio-switch id="grid/0" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/grid.png"></webaudio-switch>
+        <webaudio-switch id="mouse/0" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/mouse.png"></webaudio-switch>
+        <!-- Blackout icon -->
+        <webaudio-switch id="black/0" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/blackout.png"></webaudio-switch>
+        <!-- Swap Icons -->
+        <webaudio-switch id="swap/X/0" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapx.png"></webaudio-switch>
+        <webaudio-switch id="swap/Y/0" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
+    </div>
+
+    <!-- Lasergrid 0 -->
+    <div class="lasergrid" style="background-image: url(knobs/lasergrid0.png);">
+       <!-- kPPS & Points-->
+    	 <div><webaudio-param id="kpps/0" link="kpps/0" ></webaudio-param></div>
+       	<div><webaudio-param id="points/0" link="points/0"></webaudio-param></div>
+        <div class="lasertext">kPPS</div>
+    	  <div class="lasertext">Points</div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Offset X & Offset Y -->
+        <div><webaudio-knob id="loffset/X/0" diameter="60" min="-320" max="320" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="loffset/Y/0" diameter="60" min="-320" max="320" value="0"></webaudio-knob></div>
+        <div class="lasertext">Offset X</div>
+        <div class="lasertext">Offset Y</div>
+       	<div><webaudio-param link="loffset/X/0" value="0"></webaudio-param></div>
+       	<div><webaudio-param link="loffset/Y/0" value="0"></webaudio-param></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Scale X & Scale Y -->
+        <div><webaudio-knob id="scale/X/0" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="scale/Y/0" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+       	<div class="lasertext">Scale X</div>
+        <div class="lasertext">Scale Y</div>
+        <div><webaudio-param link="scale/X/0" value="0"></webaudio-param></div>
+       	<div><webaudio-param link="scale/Y/0" value="0"></webaudio-param></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Angle & Intensity -->
+    	  <div><webaudio-knob id="angle/0" diameter="60" min="-1" max="1" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="intens/0" diameter="60" min="0" max="127" value="127"></webaudio-knob></div>
+       	<div class="lasertext">Angle</div>
+    	<div class="lasertext">Intens.</div>
+    </div>
+   </div>
+
+
+   <!-- Laser 1 -->
+   <div class="laserbox">
+    <!-- IP laser 1 -->
+    <div>
+      <form onsubmit="onSubmit(); return false;">
+      <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="ip/1">
+      </form>
+     </div>
+    <div>
+
+    	<!-- Align Icons -->
+        <webaudio-switch id="grid/1" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/grid.png"></webaudio-switch>
+        <webaudio-switch id="mouse/1" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/mouse.png"></webaudio-switch>
+      
+        <!-- Blackout icon -->
+        <webaudio-switch id="black/1" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/blackout.png"></webaudio-switch>
+      
+        <!-- Swap Icons -->
+        <webaudio-switch id="swap/X/1" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapx.png"></webaudio-switch>
+        <webaudio-switch id="swap/Y/1" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
+    </div>
+
+
+    <!-- Lasergrid 1 -->
+    <div class="lasergrid" style="background-image: url(knobs/lasergrid1.png);">
+
+       <!-- kPPS & Points-->
+    	  <div><webaudio-param id="kpps/1" link="kpps/1"></webaudio-param></div>
+        <div><webaudio-param id="points/1" link="points/1"></webaudio-param></div>
+        <div class="lasertext">kPPS</div>
+    	  <div class="lasertext">Points</div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Offset X & Offset Y -->
+        <div><webaudio-knob id="loffset/X/1" diameter="60" min="-20" max="20" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="loffset/Y/1" diameter="60" min="-20" max="20" value="0"></webaudio-knob></div>
+       	<div class="lasertext">Offset X</div>
+        <div class="lasertext">Offset Y</div>
+        <div><webaudio-param link="loffset/X/1" value="0"></webaudio-param></div>
+       	<div><webaudio-param link="loffset/Y/1" value="0"></webaudio-param></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Scale X & Scale Y -->
+        <div><webaudio-knob id="scale/X/1" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="scale/Y/1" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+       	<div class="lasertext">Scale X</div>
+        <div class="lasertext">Scale Y</div>
+        <div><webaudio-param link="scale/X/1" value="0"></webaudio-param></div>
+       	<div><webaudio-param link="scale/Y/1" value="0"></webaudio-param></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Angle & Intensity -->
+    	<div><webaudio-knob id="angle/1" diameter="60" min="-1" max="1" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="intens/1" diameter="60" min="0" max="127"value="127"></webaudio-knob></div>
+       	<div class="lasertext">Angle</div>
+    	<div class="lasertext">Intens.</div>
+    </div>
+   </div>
+
+
+   <!-- Laser 2 -->
+   <div class="laserbox">
+    <!-- IP laser 2 -->
+    <div>
+      <form onsubmit="onSubmit(); return false;">
+      <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="ip/2">
+      </form>
+    </div>
+  	<div>
+    	
+      <!-- Align Icons -->
+        <webaudio-switch id="grid/2" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/grid.png"></webaudio-switch>
+        <webaudio-switch id="mouse/2" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/mouse.png"></webaudio-switch>
+      
+        <!-- Blackout icon -->
+        <webaudio-switch id="black/2" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/blackout.png"></webaudio-switch>
+      
+        <!-- Swap Icons -->
+        <webaudio-switch id="swap/X/2" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapx.png"></webaudio-switch>
+        <webaudio-switch id="swap/Y/2" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
+    </div>
+
+    <!-- Laser 2 grid -->
+    <div class="lasergrid" style="background-image: url(knobs/lasergrid2.png)">
+    	  
+        <!-- kPPS & Points-->
+        <div><webaudio-param id="kpps/2" link="kpps/2"></webaudio-param></div>
+       	<div><webaudio-param id="points/2" link="points/2"></webaudio-param></div>
+        <div class="lasertext">kPPS</div>
+    	  <div class="lasertext">Points</div>
+    	  <div class="spacer"></div>
+    	  <div class="spacer"></div>
+
+        <!-- Offset X & Offset Y -->
+        <div><webaudio-knob id="loffset/X/2" diameter="60" min="-20" max="20" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="loffset/Y/2" diameter="60" min="-20" max="20" value="0"></webaudio-knob></div>
+       	<div class="lasertext">Offset X</div>
+        <div class="lasertext">Offset Y</div>
+        <div><webaudio-param link="loffset/X/2" value="0"></webaudio-param></div>
+       	<div><webaudio-param link="loffset/Y/2" value="0"></webaudio-param></div>
+    	  <div class="spacer"></div>
+    	  <div class="spacer"></div>
+
+        <!-- Scale X & Scale Y -->
+        <div><webaudio-knob id="scale/X/2" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="scale/Y/2" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+       	<div class="lasertext">Scale X</div>
+        <div class="lasertext">Scale Y</div>
+        <div><webaudio-param link="scale/X/2" value="0"></webaudio-param></div>
+       	<div><webaudio-param link="scale/Y/2" value="0"></webaudio-param></div>
+    	  <div class="spacer"></div>
+    	  <div class="spacer"></div>
+
+        <!-- Angle & Intensity -->
+    	  <div><webaudio-knob id="angle/2" diameter="60" min="-1" max="1" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="intens/2" diameter="60" min="0" max="127"value="127"></webaudio-knob></div>
+       	<div class="lasertext">Angle</div>
+    	  <div class="lasertext">Intens.</div>
+    </div>
+   </div>
+
+
+   <!-- Laser 3 -->
+   <div class="laserbox">
+    <!-- IP laser 3 -->
+    <div>
+      <form onsubmit="onSubmit(); return false;">
+      <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="ip/3">
+      </form>
+    </div>
+  	<div>
+    	
+      <!-- Align Icons -->
+        <webaudio-switch id="grid/3" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/grid.png"></webaudio-switch>
+        <webaudio-switch id="mouse/3" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/mouse.png"></webaudio-switch>
+        
+        <!-- Blackout icon -->
+        <webaudio-switch id="black/3" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/blackout.png"></webaudio-switch>
+        
+        <!-- Swap Icons -->
+        <webaudio-switch id="swap/X/3" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapx.png"></webaudio-switch>
+        <webaudio-switch id="swap/Y/3" value="0" height="25" width="21" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
+    </div>
+
+    <!-- Laser 3 grid -->
+    <div class="lasergrid" style="background-image: url(knobs/lasergrid3.png)">
+
+        <!-- kPPS & Points-->
+    	  <div><webaudio-param id="kpps/3" link="kpps/3" ></webaudio-param></div>
+       	<div><webaudio-param id="points/3" link="points/3"></webaudio-param></div>
+        <div class="lasertext">kPPS</div>
+    	  <div class="lasertext">Points</div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Offset X & Offset Y -->
+        <div><webaudio-knob id="loffset/X/3" diameter="60" min="-20" max="20" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="loffset/Y/3" diameter="60" min="-20" max="20" value="0"></webaudio-knob></div>
+       	<div class="lasertext">Offset X</div>
+        <div class="lasertext">Offset Y</div>
+        <div><webaudio-param link="loffset/X/3" value="0"></webaudio-param></div>
+       	<div><webaudio-param link="loffset/Y/3" value="0"></webaudio-param></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Scale X & Scale Y -->
+        <div><webaudio-knob id="scale/X/3" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="scale/Y/3" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+       	<div class="lasertext">Scale X</div>
+        <div class="lasertext">Scale Y</div>
+        <div><webaudio-param link="scale/X/3" value="0"></webaudio-param></div>
+       	<div><webaudio-param link="scale/Y/3" value="0"></webaudio-param></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Angle & Intensity -->
+    	  <div><webaudio-knob id="angle/2" diameter="60" min="-1" max="1" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="intens/3" diameter="60" min="0" max="127" value="127"></webaudio-knob></div>
+       	<div class="lasertext">Angle</div>
+    	  <div class="lasertext">Intens.</div>
+    </div>
+   </div>
+    <div>
+     <canvas id="aligncanvas" width="336" height="400" style="border-color: #445;border-style:groove;border-width:1px;"></canvas>
+    </div>
+
+  </div>
+
+  <!-- End of Align block -->

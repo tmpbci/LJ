@@ -1,0 +1,77 @@
+
+
+     <!-- simu right part : Planetarium Block -->
+
+     <div id ="planetUI" style = "display: none;justify-items: center;">
+        <!-- Stop and start switch -->
+        <div>
+            <div><webaudio-switch id="planet/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/planet.png"></webaudio-switch>
+            </div>
+            <!-- Virtual client destination -->
+            <div>
+              <span  class="lasertext">Virtual</span>
+              <select onclick="buttonClicked(this.value)">
+                <option value="planet/ljclient 0" selected >0</option>
+                <option value="planet/ljclient 1">1</option>
+                <option value="planet/ljclient 2">2</option>
+                <option value="planet/ljclient 3">3</option>
+              </select>
+            </div>
+        </div>
+      
+      <!-- Observer position -->
+      <form onsubmit="onSubmit(); return false;">
+        <span class="lasertext">Country (FR)</span>
+        <input class = "submitsmall" onchange = "onSubmit(this.id)" type="text" id="planet/country">
+        <span class="lasertext">City</span>
+        <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="planet/city">
+      </form>
+
+      <!-- Observer time -->
+      <form>
+        <span class="lasertext">Date/Time (2012-7-12 23:00:00) </span>
+        <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="planet/time">
+      </form>
+
+      <!-- Laser 0 Sky -->
+      <form onsubmit="onSubmit(); return false;">
+        <span class="lasertext">Laser 0 : Alt</span>
+        <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="planet/alt/0">
+        <span class="lasertext">Az</span>
+        <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="planet/az/0">
+        <span class="lasertext">Angle</span>
+        <input class = "submitsmall" onchange = "onSubmit(this.id)" type="text" id="planet/angle/0">
+      </form>
+
+      <!-- Laser 1 Sky -->
+      <form onsubmit="onSubmit(); return false;">
+        <span class="lasertext">Laser 1 : Alt</span>
+        <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="planet/alt/1">
+        <span class="lasertext">Az</span>
+        <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="planet/az/1">
+        <span class="lasertext">Angle</span>
+        <input class = "submitsmall" onchange = "onSubmit(this.id)" type="text" id="planet/angle/1">
+      </form>
+
+      <!-- Laser 2 Sky -->
+      <form onsubmit="onSubmit(); return false;">
+        <span class="lasertext">Laser 2 : Alt</span>
+        <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="planet/alt/2">
+        <span class="lasertext">Az</span>
+        <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="planet/az/2">
+        <span class="lasertext">Angle</span>
+        <input class = "submitsmall" onchange = "onSubmit(this.id)" type="text" id="planet/angle/2">
+      </form>
+
+      <!-- Laser 3 Sky -->
+      <form onsubmit="onSubmit(); return false;">
+        <span class="lasertext">Laser 3 : Alt</span>
+        <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="planet/alt/3">
+        <span class="lasertext">Az</span>
+        <input class = "submit" onchange = "onSubmit(this.id)" type="text" id="planet/az/3">
+        <span class="lasertext">Angle</span>
+        <input class = "submitsmall" onchange = "onSubmit(this.id)" type="text" id="planet/angle/3">
+      </form>
+     </div>
+
+    <!-- End of planetarium block -->

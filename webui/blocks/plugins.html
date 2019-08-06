@@ -1,0 +1,277 @@
+   <!-- simu right part : plugins UI Block-->
+
+    <div id ="pluginsUI" style = "display: grid;justify-items: center;">
+    <!-- Plugins choice Interface -->
+
+      <div>
+        <webaudio-switch id="simu/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/pysimu.png"></webaudio-switch>
+        <webaudio-switch id="pose/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/pose.png"></webaudio-switch>
+        <webaudio-switch id="bank0/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/bank0.png"></webaudio-switch>
+        <webaudio-switch id="cycl/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/cycl.png"></webaudio-switch>
+
+      </div>
+
+      <div>
+        <webaudio-switch id="midigen/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/midigen.png"></webaudio-switch>
+        <webaudio-switch id="audiogen/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/audiogen.png"></webaudio-switch>
+        <webaudio-switch id="viewgen/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/viewgen.png"></webaudio-switch>
+        <webaudio-switch id="/artnet/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/artnet.png"></webaudio-switch>
+      </div>  
+
+      <div>
+       <!-- Glyph destination LJ client Selection -->
+       <span class="lasertext">Scene</span>
+       <select onclick="buttonClicked(this.value)" id="virtual" value="0">
+         <option value="glyph/ljclient 0">0</option>
+         <option value="glyph/ljclient 1">1</option>
+         <option value="glyph/ljclient 2">2</option>
+         <option value="glyph/ljclient 3">3</option>
+       </select>
+
+        <!-- Cycl destination LJ client Selection -->
+       <span class="lasertext">Scene</span>
+       <select onclick="buttonClicked(this.value)" id="virtual" value="0">
+         <option value="cycl/ljclient 0">0</option>
+         <option value="cycl/ljclient 1">1</option>
+         <option value="cycl/ljclient 2">2</option>
+         <option value="cycl/ljclient 3">3</option>
+       </select>
+     </div>
+
+     <div>
+       <!-- Glyph Point List destination -->
+       <span class="lasertext">PL</span>
+       <select onclick="buttonClicked(this.value)">
+         <option value="glyph/pl 0">0</option>
+         <option value="glyph/pl 1">1</option>
+         <option value="glyph/pl 2">2</option>
+         <option value="glyph/pl 3">3</option>
+       </select>
+
+
+       <!-- Cycl Point List destination -->
+       <span class="lasertext">PL</span>
+       <select onclick="buttonClicked(this.value)">
+         <option value="cycl/pl 0">0</option>
+         <option value="cycl/pl 1">1</option>
+         <option value="cycl/pl 2">2</option>
+         <option value="cycl/pl 3">3</option>
+       </select>
+     </div>
+
+     <!-- LJPong & LJwars -->
+      <div>
+        <webaudio-switch id="ljpong/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/ljpong.png"></webaudio-switch>
+        <webaudio-switch id="ljwars/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/ljwars.png"></webaudio-switch>
+        <webaudio-switch id="maxw/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/maxw.png"></webaudio-switch>
+        <webaudio-switch id="square/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/square.png"></webaudio-switch>
+      </div>
+      <div>
+
+       <!-- LJ Pong destination LJ client Selection -->
+       <span class="lasertext">Scene</span>
+       <select onclick="buttonClicked(this.value)" id="virtual" value="0">
+         <option value="ljpong/ljclient 0">0</option>
+         <option value="ljpong/ljclient 1">1</option>
+         <option value="ljpong/ljclient 2">2</option>
+         <option value="ljpong/ljclient 3">3</option>
+       </select>
+
+       <!-- LJ Wars destination LJ client Selection -->
+       <span class="lasertext">Scene</span>
+       <select onclick="buttonClicked(this.value)" id="virtual" value="0">
+         <option value="ljwars/ljclient 0">0</option>
+         <option value="ljwars/ljclient 1">1</option>
+         <option value="ljwars/ljclient 2">2</option>
+         <option value="ljwars/ljclient 3">3</option>
+       </select>
+     </div>
+     <div>
+
+       <!-- LJ Pong Point List destination -->
+       <span class="lasertext">PL</span>
+       <select onclick="buttonClicked(this.value)">
+         <option value="ljpong/pl 0">0</option>
+         <option value="ljpong/pl 1">1</option>
+         <option value="ljpong/pl 2">2</option>
+         <option value="ljpong/pl 3">3</option>
+       </select>
+     </div>
+
+     <div class = "destmatrix">
+    
+      <!-- First line Scene 0 -->
+        <div>
+          <webaudio-switch id="scene/0/start" value="1" height="27" width="75" tooltip="Switch-B" src="knobs/scene0.png"></webaudio-switch>   
+        </div>   
+
+         <!-- /pluginame/dest PL, scene, laser  -->
+        <div>
+            <!-- scene 0, laser 0 -->
+            <select class="selector-instance" data-type="search-selector" name="third-selector" id="second" onclick="buttonClicked(this.value)">
+                <option value="fft/dest 1 1 0" data-sublocale="HELLO" selected>EXT</option>
+                <option value="viewgen/dest 0 0 0">FFT</option>
+                <option value="viewgen/dest 1 0 0">Lissa</option>
+                <option value="viewgen/dest 2 0 0">Osci</option>
+                <option value="glyph/dest 0 0 0">Glyph</option>
+                <option value="nozoid/dest 0 0 0">Nozoids</option>
+                <option value="pose/dest 0 0 0">IdiotIA</option>
+                <option value="pose/dest 1 0 0">Starfield</option>
+                <option value="cycl/dest 0 0 0">Cycl</option>
+                <option value="planet/dest 0 0 0">Planet</option>
+                <option value="words/dest 0 0 0">Words</option>
+                <option value="ljpong/dest 0 0 0">Pong</option>
+                <option value="ljwars/dest 0 0 0">Wars</option>
+                <option value="maxw/dest 0 0 0">Maxw</option>
+                <option value="square/dest 0 0 0">Square</option>
+            </select>
+        </div>  
+
+        <div>
+          <!-- scene 0, laser 1 -->
+              <select class="selector-instance" data-type="search-selector" name="third-selector" id="second" onclick="buttonClicked(this.value)">
+                <option value="fft/dest 1 0 0" data-sublocale="HELLO" selected>EXT</option>
+                <option value="viewgen/dest 0 0 1">FFT</option>
+                <option value="viewgen/dest 1 0 1">Lissa</option>
+                <option value="viewgen/dest 2 0 1">Osci</option>
+                <option value="glyph/dest 0 0 1">Glyph</option>
+                <option value="nozoid/dest 0 0 1">Nozoids</option>
+                <option value="pose/dest 0 0 1">IdiotIA</option>
+                <option value="pose/dest 1 0 1">Starfield</option>
+                <option value="cycl/dest 0 0 1">Cycl</option>
+                <option value="planet/dest 0 0 1">Planet</option>
+                <option value="words/dest 0 0 1">Words</option>
+                <option value="ljpong/dest 0 0 1">Pong</option>
+                <option value="ljwars/dest 0 0 1">Wars</option>
+                <option value="maxw/dest 0 0 1">Maxw</option>
+                <option value="square/dest 0 0 1">Square</option>
+            </select>
+        </div> 
+
+        <div>  
+        <!-- scene 0, laser 2 -->
+          <select onclick="buttonClicked(this.value)">
+            <option value="ext 0 1">EXT</option>
+            <option value="fft/dest 0 1 0">FFT 0</option>
+            <option value="fft/dest 1 1 0">FFT 1</option>
+            <option value="fft/dest 2 1 0">FFT 2</option>
+            <option value="fft/dest 3 1 0">FFT 3</option>
+          </select>
+        </div> 
+
+        <div>
+            <!-- scene 0, laser 3 -->    
+        </div>   
+
+      <!-- Second line Scene 1 -->
+        <div>
+          <webaudio-switch id="scene/1/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/scene1.png"></webaudio-switch>
+        </div>   
+
+        <!-- /pluginame/dest PL, scene, laser  -->
+        <div>  
+            <!-- scene 1, laser 0 -->
+            <select class="selector-instance" data-type="search-selector" name="third-selector" id="second" onclick="buttonClicked(this.value)">
+                <option value="fft/dest 1 1 0" data-sublocale="HELLO" selected>EXT</option>
+                <option value="viewgen/dest 0 1 0">FFT</option>
+                <option value="viewgen/dest 1 1 0">Lissa</option>
+                <option value="viewgen/dest 2 1 0">Osci</option>
+                <option value="glyph/dest 0 1 0">Glyph</option>
+                <option value="nozoid/dest 0 1 0">Nozoids</option>
+                <option value="pose/dest 0 1 0">IdiotIA</option>
+                <option value="pose/dest 1 1 0">Starfield</option>
+                <option value="cycl/dest 0 1 0">Cycl</option>
+                <option value="planet/dest 0 1 0">Planet</option>
+                <option value="words/dest 0 1 0">Words</option>
+                <option value="ljpong/dest 0 1 0">Pong</option>
+                <option value="ljwars/dest 0 1 0">Wars</option>
+                <option value="maxw/dest 0 1 0">Maxw</option>
+                <option value="square/dest 0 1 0">Square</option>
+            </select>
+        </div>  
+        
+        <div>
+            <!-- scene 1 , laser 1 -->
+              <select class="selector-instance" data-type="search-selector" name="third-selector" id="second" onclick="buttonClicked(this.value)">
+                <option value="fft/dest 1 0 0" data-sublocale="HELLO" selected>EXT</option>
+                <option value="viewgen/dest 0 1 1">FFT</option>
+                <option value="viewgen/dest 1 1 1">Lissa</option>
+                <option value="viewgen/dest 2 1 1">Osci</option>
+                <option value="glyph/dest 0 1 1">Glyph</option>
+                <option value="nozoid/dest 0 1 1">Nozoids</option>
+                <option value="pose/dest 0 1 1">IdiotIA</option>
+                <option value="pose/dest 1 1 1">Starfield</option>
+                <option value="cycl/dest 0 1 1">Cycl</option>
+                <option value="planet/dest 0 1 1">Planet</option>
+                <option value="words/dest 0 1 1">Words</option>
+                <option value="ljpong/dest 0 1 1">Pong</option>
+                <option value="ljwars/dest 0 1 1">Wars</option>
+                <option value="maxw/dest 0 1 1">Maxw</option>
+                <option value="square/dest 0 1 1">Square</option>
+            </select>
+        </div> 
+        <div>
+          <!-- scene 1 , laser 2 -->
+        </div> 
+        <div>
+          <!-- scene 1 , laser 3 -->
+        </div>  
+
+      <!-- Third line Scene 2 -->
+        <div>
+          <webaudio-switch id="scene/2/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/scene2.png"></webaudio-switch>
+        </div>   
+        <div>
+          <!-- scene 2 , laser 0 -->
+          
+        </div>  
+        <div>
+          <!-- scene 2 , laser 1 -->
+        </div> 
+        <div>
+          <!-- scene 2 , laser 2 -->
+        </div> 
+        <div>
+          <!-- scene 2 , laser 3 -->
+        </div>  
+
+   <!-- Fourth line Scene 3 -->
+      <div>
+           <webaudio-switch id="scene/3/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/scene3.png"></webaudio-switch>
+        </div>   
+        <div>
+          <!-- scene 3 , laser 0 -->
+        </div>  
+        <div>
+          <!-- scene 3 , laser 1 -->
+        </div> 
+        <div>
+          <!-- scene 3 , laser 2 -->
+        </div> 
+        <div>
+          <!-- scene 3 , laser 3 -->
+        </div>    
+
+      <!-- Fifth line -->
+  
+
+      <div><span class="lasertext">Selection</span></div>
+        <div>
+          <webaudio-switch id="laser0/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/laser0.png"></webaudio-switch>
+        </div>
+        <div>
+           <webaudio-switch id="laser1/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/laser1.png"></webaudio-switch>
+        </div>
+        <div>
+          <webaudio-switch id="laser2/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/laser2.png"></webaudio-switch>
+        </div>
+        <div>
+         <webaudio-switch id="laser3/start" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/laser3.png"></webaudio-switch>
+        </div>
+
+     </div>
+  </div>
+     <script>
+        new Selector();
+    </script>
+   <!-- End of PLuginUI block -->

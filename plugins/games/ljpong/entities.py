@@ -76,7 +76,7 @@ BALL_MAX = 4
 BALL_SIZE_X = 3
 BALL_SIZE_Y = 3
 LASER_ANGLE = 0
-
+plnumber = 0
 
 
 GRAVITY = 0.0001
@@ -122,6 +122,7 @@ def LogoDraw(plnumber):
 		for xy in pl_color[0]:
 			xy_list.append((LOGO_OFFSET_X + xy[0], LOGO_OFFSET_Y + xy[1]))
 		#print xy_list
+		#print plnumber
 		lj.PolyLineOneColor(xy_list, c, plnumber, False)
 
 

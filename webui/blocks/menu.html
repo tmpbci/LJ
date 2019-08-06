@@ -1,0 +1,67 @@
+
+  <!--
+    Menu Block : buttons and Status display 
+  -->
+
+  <div id="mgstatus" class="mgstatus">
+		<div>
+      <!-- Horizontal menu buttons -->
+      <webaudio-switch id="align" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/align.png"></webaudio-switch>
+      <webaudio-switch id="simu" value="1" height="27" width="75" tooltip="Switch-B" src="knobs/simu.png"></webaudio-switch>
+      <webaudio-switch id="live" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/live.png"></webaudio-switch>
+      <webaudio-switch id="run" value="0" height="27" width="75" tooltip="Switch-B" src="knobs/run.png"></webaudio-switch>
+      <!--
+			<button class="button" id="showrun"  onclick="showRun()">Run</button>
+      <button class="button" id="shownozoid"  onclick="showNozoid()">Nozoid</button>
+		  -->
+    </div>
+		<div>
+       <!-- Client actually drawn Selection -->
+       <span class="lasertext">Scene</span>
+       <select onclick="buttonClicked(this.value)" id="virtual" value="0">
+         <option value="noteon 0">0</option>
+         <option value="noteon 1">1</option>
+         <option value="noteon 2">2</option>
+         <option value="noteon 3">3</option>
+       </select>
+
+       <!-- Point List drawn in simulator -->
+       <span class="lasertext">PL</span>
+       <select onclick="buttonClicked(this.value)">
+         <option value="noteon 24">0</option>
+         <option value="noteon 25">1</option>
+         <option value="noteon 26">2</option>
+         <option value="noteon 27">3</option>
+       </select>
+    </div>
+      
+    <div>
+     <div>
+
+        <!-- Plugins selection menu -->
+        <button class="info" id="showstatus">OFFLINE</button>
+          <select onclick="buttonClicked(this.value)"  value="lj/pluginsUI">
+            <option value="lj/pluginsUI">Plugins</option>
+            <option value="planet/planetUI">Planetarium</option>
+            <option value="nozoid/nozoidUI">Nozoid</option>
+            <option value="bank0/vjUI">VJing</option>
+            <option value="pose/poseUI">Pose</option>
+            <option value="words/wordsUI">Words</option>
+            <option value="ai/aiUI">AI</option>
+            <option value="lissa/lissaUI">Lissa</option>
+          </select>
+           <!--
+          <span class="lasertext">Laser</span>
+          <select onclick="buttonClicked(this.value)">
+          <option value="noteon 24" selected >0</option>
+          <option value="noteon 25">1</option>
+          <option value="noteon 26">2</option>
+          <option value="noteon 27">3</option>
+          </select>
+          -->
+     </div>
+    </div>
+
+   </div>
+
+  <!-- End of Menu block -->

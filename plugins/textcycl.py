@@ -8,11 +8,13 @@ Cycling text on one LJ laser.
 LICENCE : CC
 
 '''
-
+import sys,time
+sys.path.append('../libs')
 import redis
 import lj3
-import sys,time
+
 import argparse
+import traceback
 
 from osc4py3.as_eventloop import *
 from osc4py3 import oscbuildparse
@@ -23,6 +25,8 @@ OSCinPort = 8007
 
 duration = 300
 lasertext = ["TEAMLASER","FANFAN","LOLOSTER","SAM"]
+
+PL = 0
 
 '''
 is_py2 = sys.version[0] == '2'
@@ -73,9 +77,10 @@ else:
 	myIP = '127.0.0.1'
 
 
-lj3.Config(redisIP,ljclient)
+lj3.Config(redisIP,ljclient,"cycl")
 #r = redis.StrictRedis(host=redisIP, port=6379, db=0)
 
+oscrun = True
 
 # If you want to use rgb for color :
 def rgb2int(r,g,b):
@@ -93,29 +98,38 @@ def OSCljclient(value):
 	ljclient = value
 	lj3.LjClient(ljclient)
 
+
 def OSCpl(value):
+	global PL
 
 	print("Cycl got /cycl/pl with value", value)
 	lj3.WebStatus("Cycl to pl "+ str(value))
-	lj3.LjPl(value)
+	PL = int(value)
+	lj3.LjPl(PL)
 
 
+# /quit dummyvalue
+def quit(value):
+	global oscrun
+
+	lj3.ClosePlugin()
+	oscrun = False
+	
+'''
 # /ping
 def OSCping():
 
 	lj3.OSCping("cycl")
 
-# /quit
-def OSCquit():
-
-	lj3.OSCquit("cycl")
+'''
 
 print("Cycl starting its OSC server at", myIP, "port",OSCinPort,"...")
 osc_startup()
 osc_udp_server(myIP, OSCinPort, "InPort")
-
-osc_method("/ping*", OSCping)
-osc_method("/quit", OSCquit)
+osc_method("/ping*", lj3.OSCping)
+osc_method("/quit", quit)
+#osc_method("/ping*", OSCping)
+#osc_method("/quit", OSCquit)
 osc_method("/cycl/ljclient*", OSCljclient)
 osc_method("/cycl/pl*", OSCpl)
 
@@ -130,12 +144,13 @@ def Run():
 	color = rgb2int(255,255,255)
 
 	try:
-		while 1:
+		while oscrun:
 		
 			if timing == duration or timing == -1:
 				message = lasertext[step]
-				lj3.Text(message, color, PL = 0, xpos = 300, ypos = 300, resize = 1, rotx =0, roty =0 , rotz=0)
-				lj3.DrawPL(0)
+				#print ('PL',PL)
+				lj3.Text(message, color, PL = PL, xpos = 300, ypos = 300, resize = 1, rotx =0, roty =0 , rotz=0)
+				lj3.DrawPL(PL)
 				timing = 0
 	
 			else:
@@ -143,7 +158,11 @@ def Run():
 				if step >3:
 					step =0	
 			timing += 1
+			lj3.OSCframe()
 			time.sleep(0.01)
+
+	except Exception:
+		traceback.print_exc()
 	except KeyboardInterrupt:
 		pass
 
@@ -151,13 +170,7 @@ def Run():
 
 	finally:
 
-		WebStatus("Textcycl stop")
-		print("Stopping OSC...")
-		lj3.OSCstop()
-
-	print ("Textcycl Stopped.")
-
-
+		quit()
 
 Run()
 

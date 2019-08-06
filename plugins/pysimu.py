@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 # -*- mode: Python -*-
 
@@ -15,21 +15,42 @@ OSC server with :
 /simu/quit
 /simu/newpl      new pl number to draw
 /simu/newclient  new client number to draw
+/ping
 
 '''
+
 #from __future__ import print_function 
 import time 
 import math
 import random
 import itertools
+import traceback
 import sys
 import os
 #import thread
 import redis
-import pygame
+
 import pdb
-import types, ast, argparse
-from OSC import OSCServer, OSCClient, OSCMessage
+import types, ast, argparse, struct
+import numpy as np
+
+sys.path.append('../libs')
+
+# import from LJ
+ljpath = r'%s' % os.getcwd().replace('\\','/')
+sys.path.append(ljpath +'/libs/')
+#print ljpath+'/libs/'
+
+import lj23 as lj
+
+is_py2 = sys.version[0] == '2'
+if is_py2:
+    from OSC import OSCServer, OSCClient, OSCMessage
+    #print ("Importing lj23 and OSC from libs...")
+else:
+    from OSC3 import OSCServer, OSCClient, OSCMessage
+
+
 
 screen_size = [750,750]
 pl = [[],[],[],[]]
@@ -38,7 +59,10 @@ pl = [[],[],[],[]]
 print ("")
 print ("LJ v0.8.0 : Pygame simulator")
 print ("")
+import pygame
 print ("Arguments parsing if needed...")
+
+
 
 #
 # Arguments parsing
@@ -77,7 +101,7 @@ else:
     redisIP = '127.0.0.1'
 
 r = redis.StrictRedis(host=redisIP, port=6379, db=0)
-
+lj.Config(redisIP,0,"simu")
 
 # myIP
 if args.myIP  != None:
@@ -101,7 +125,7 @@ print ("")
 print ("Receiving on ", oscIPin, ":",str(oscPORTin))
 oscserver = OSCServer( (oscIPin, oscPORTin) )
 oscserver.timeout = 0
-OSCRunning = True
+oscrun = True
 
 def handle_timeout(self):
     self.timed_out = True
@@ -109,10 +133,10 @@ def handle_timeout(self):
 oscserver.handle_timeout = types.MethodType(handle_timeout, oscserver)
 
 
-def sendLJ(address, args):
+def SendLJ(address, args):
     
     if debug >0:
-            print "Sending to LJ...", address, args
+            print("Sending to LJ...", address, args)
     
     osclientlj = OSCClient()
     osclientlj.connect((ljIP, ljPort)) 
@@ -127,8 +151,12 @@ def sendLJ(address, args):
         return True
 
     except:
-        print 'Connection to LJ IP', ljIP,'port', ljPort, 'refused : died ?'
+        print('Connection to LJ IP', ljIP,'port', ljPort, 'refused : died ?')
         return False
+
+def WebStatus(message):
+
+    SendLJ("/status",message)
 
 
 # RAW OSC Frame available ? 
@@ -142,52 +170,42 @@ def osc_frame():
 
 # /quit
 def quit(path, tags, args, source):
+    global oscrun
 
+    oscrun = False
     pygame.quit()
-    print "pySimu Stopped by /quit."
-    sys.exit()
-
-# /start : 0 exit
-def start(path, tags, args, source):
-
-    print args, type(args)
-    if args[0] == 0:
-        pygame.quit()
-        print "pySimu stopped by /start 0"
-        sys.exit()
-
-# Answer to LJ pings
-def ping(path, tags, args, source):
-    # Will receive message address, and message data flattened in s, x, y
-    print "Simu got /ping with value", args[0]
-    print "Simu replied with /pong simu"
-    sendLJ("/pong","simu")
-
-
+    lj.ClosePlugin()
+    
 
 # /newPL pointlistnumber
 def newPL(path, tags, args, source):
 
     user = ''.join(path.split("/"))
-    print ""
-    print user,path,args
-    print "Simulator got a new point list number :", args[0]
+    print ("")
+    print (user,path,args)
+    print ("Simulator got a new point list number :", args[0])
     simuPL = args[0]
 
 # /newClient clientnumber
 def newClient(path, tags, args, source):
 
     user = ''.join(path.split("/"))
-    print ""
-    print user,path,args
-    print "Simulator got a new client number : ", args[0]
+    print ("")
+    print (user,path,args)
+    print ("Simulator got a new client number : ", args[0])
     ljclient = args[0]
 
-oscserver.addMsgHandler( "/quit", quit )
-oscserver.addMsgHandler( "/ping", ping )
-oscserver.addMsgHandler( "/pysimu/start", start )
-oscserver.addMsgHandler( "/pysimu/newpl", newPL )
-oscserver.addMsgHandler( "/pysimu/newclient", newClient )
+
+# Redis key 'n' -> numpy array a
+# array 2 dimensions is also store in redis key : h time w values
+def fromRedis(n):
+
+   print ("get key", n)
+   encoded = r.get(n)
+   h, w = struct.unpack('>II',encoded[:8])
+   print(h,w)
+   a = np.frombuffer(encoded, dtype=np.int16, offset=8).reshape(h,w)
+   return a
 
 
 #
@@ -205,15 +223,26 @@ def RenderScreen(surface):
             c = int(xyc[2])
             if c: pygame.draw.line(surface,c,xyc_prev[:2],xyc[:2],3)
             xyc_prev = xyc
+#
+# Startup
+#
 
-
+SendLJ("/simu/start",1)
+WebStatus("pysimu startup...")
 pygame.init()
 screen = pygame.display.set_mode(screen_size)
 pygame.display.set_caption("LJ Simulator")
 clock = pygame.time.Clock()
 update_screen = False
 
+oscserver.addMsgHandler( "/quit", lj.OSCquit )
+oscserver.addMsgHandler( "/ping", lj.OSCping )
+#oscserver.addMsgHandler( "/simu/start", start )
+oscserver.addMsgHandler( "/simu/newpl", newPL )
+oscserver.addMsgHandler( "/simu/newclient", newClient )
+
 print ("Simulator displays client", ljclient, "point list", str(simuPL))
+WebStatus("pySimu "+ str(ljclient) + " " + str(simuPL))
 
 #
 # Main
@@ -221,7 +250,7 @@ print ("Simulator displays client", ljclient, "point list", str(simuPL))
 
 try:
 
-    while True:
+    while lj.oscrun:
     
         # pending osc message ?
         osc_frame()
@@ -232,8 +261,15 @@ try:
                 break
     
         screen.fill(0)
-        pl[simuPL] = ast.literal_eval(r.get("/pl/"+ str(ljclient) + "/" + str(simuPL)))
-    
+        #print("/pl/"+ str(ljclient) + "/" + str(simuPL))
+        #print r.get("/pl/"+ str(ljclient) + "/" + str(simuPL))
+        if is_py2:
+            pl[simuPL] = ast.literal_eval(r.get("/pl/"+ str(ljclient) + "/" + str(simuPL)))
+        else:
+            pl[simuPL] = eval(r.get("/pl/"+ str(ljclient) + "/" + str(simuPL)))
+
+        #pl[simuPL] = fromRedis("/pl/"+ str(ljclient) + "/" + str(simuPL))
+
         if update_screen:
         	update_screen = False
         	RenderScreen(screen)
@@ -242,14 +278,19 @@ try:
         	update_screen = True
     
         clock.tick(30)
-        # time.sleep(0.001)
+        time.sleep(0.001)
 
 except KeyboardInterrupt:
     pass
 
+except Exception:
+    traceback.print_exc()
+
+
 finally:
     pygame.quit()
-    print "pySimu Stopped."
+    lj.ClosePlugin()
+
 
 
 

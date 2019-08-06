@@ -1,3 +1,11 @@
+
+
+main {
+  max-width: 38rem;
+  padding: 1.5rem;
+  margin: auto;
+}
+
 .maingrid {
   display: grid;
   grid-template-columns: 900px;
@@ -74,7 +82,39 @@
   height: 400px;
   width: 400px;
   grid-template-columns: 66px 66px 66px 66px 66px 66px;
-  grid-template-rows: 30px 67px 67px 67px 30px 30px;
+  grid-template-rows: 67px 67px 67px 30px 30px;
+  background-color: #000;
+  justify-items: center;
+  align-items: center;
+  border-color: #445;
+  border-style: groove;
+  border-width: 1px;
+  grid-gap: 1px;
+  transition: all .3s ease;
+  background-color: #151515;
+}
+.nozoidbuttons {
+  display: none;
+  height: 400px;
+  width: 400px;
+  grid-template-columns: 195px 195px;
+  grid-template-rows: 70px 40px 120px 40px 1fr;
+  background-color: #000;
+  justify-items: center;
+  align-items: center;
+  border-color: #445;
+  border-style: groove;
+  border-width: 1px;
+  grid-gap: 1px;
+  transition: all .3s ease;
+  background-color: #151515;
+}
+.destmatrix {
+  display: grid;
+  height: 250px;
+  width: 400px;
+  grid-template-columns: 76px 76px 76px 76px 76px;
+  grid-template-rows: 30px 30px 30px 30px 30px 1Fr;
   background-color: #000;
   justify-items: center;
   align-items: center;
@@ -146,7 +186,7 @@
 .topgrid {
   display: grid;
   height: 80px;
-  grid-template-columns: 60px 75px 40px 60px 75px 60px 75px 60px 75px;
+  grid-template-columns: 80px 80px 80px 80px 60px 75px 60px 75px;
   background-color: #000;
   justify-items: center;
   align-items: center;
