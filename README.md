@@ -16,23 +16,24 @@ LJ has 5 main components :
 - "Plugins" are points generators (to one or more lasers). Lot examples comes with LJ : planetarium, 3D anaglyph animations,... See plugins directory.
 - A "tracer" per etherdream/laser that take its given point list, correct geometry, recompute in laser controller coordinates, send it to its controller and report its status to the "manager".
 - A "manager" that talk to all tracers (which client number point lists to draw, new geometry correction,...), handle IOs (webui functions, OSC commands,...) and plugins.
-- A web GUI in html, css, and vanilla js. No html server or js framework here : it's complex enough. This GUI has a (currently slow) simulator, but one can used an etherdream/laser emulator (from nannou) to work without physical lasers !! 
+- A web GUI in html, css, and vanilla js. No html server or js framework here : it's complex enough. This GUI has a (currently slow) simulator, but one can also use an etherdream/laser emulator (from nannou) to work without physical lasers !! 
 - A network available database (redis). "Plugins" can send directly their pointlists to redis and each "tracer" is instructed to get one of the avalaible pointlist in redis.
 
 
-More details :
-
 ![Scenes](http://www.teamlaser.tk/lj/images/scenes.png)
 
-LJ accept up to 4 groups = virtual "scenes" of 4 "pointlists" each, so up to 16 pointlists can be sent to redis at anytime from anywhere in the network. You select in WebUI (Simu/plugins matrix) wich "scene" should be used by tracers/lasers. The all point is to easily share actual lasers. Imagine in demo party :
+LJ accept up to 4 groups = virtual "scenes" of 4 "pointlists" each (= one pointlist per laser), so up to 16 pointlists can be sent to redis at anytime from anywhere in the network. The idea behind this is to easily share actual lasers. Imagine in demo party :
 
-Erica needs 4 lasers, that's the 4 pointlists of a "scene".
-Paula and Jennifer use only 2 lasers each, so they can share a "scene".
+Erica needs 4 lasers, that's the 4 pointlists of "scene" 0.
+Paula and Jennifer use only 2 lasers each, so they can share "scene" 1.
 And so on..
 
 The server/network/webUI idea allows to spread cpu intensive tasks on different cpu cores and especially give tracers enough cpu to feed etherdreams DACs smoothly. Of course all this can happen in one computer. There is no real limits : 4 everything is tested and works smoothly if *you have enough cpu/computers/network ressources*. 
 
-It's obviously overkill for one laser in a garage, but for several laserS games events, laserS art, laserS competition, laserS planetarium,... LJ will handle the complexity. Content providers like artists, demomakers,... just need create plugin in whatever langage, send the points to redis. Then use the webui to select the "scene". 
+It's obviously overkill for one laser in a garage, but for several laserS games events, laserS art, laserS competition, laserS planetarium,... LJ will handle the complexity. Content providers like artists, demomakers,... just need create plugin in whatever langage, send the points to redis. 
+
+To change current scene used by lasers/tracers use the command : /scene/scenenumber/start 1 
+
 
 Registering the plugin in LJ.conf is absolutely not mandatory. 
 
@@ -161,18 +162,13 @@ redis-cli -h redisserverIP monitor
 
 
 #
-# Plugins 
+# Plugin
 #
 
 A "plugin" is a software that send any number of pointlist(s). LJ comes with different plugins in python 3 :
 
-- LiveWords 	: Fill the input form and it's displayed. One word / laser.
-- Textcycl		: Cycle some words with adjustable length on one laser.
-- Anaglyph  	: A green/red rotating cube. Try it with green/red 3D glasses !
-- fft3          : Example how to make LJ audio reactive
-- maxwell 		: A laser synth inspired by bluefang great work.
-- square		: The basic plugin. 
-- custom1		: A copy of square.py for your experiments. Start here.
+- artnet receiver : port 6454
+- Aurora : Fill the input form and it's displayed. One word / laser.
 
 #
 # Client Side : Program your own "plugin" 
@@ -184,6 +180,7 @@ The server approach is based on redis, so you can write and run your laser clien
 - Generate at least one pointlist array (say a square) with *enough points*, one point is likely to fail for buffering reason. See command reference below for more.
 - Feed your point list array in string format to redis server. i.e use "/pl/0/1" redis key to feed scene 0, laser 1.
 - Tell LJ.conf your plugin configuration : OSC port and command line to start it.
+- At least a plugin must reply /pong to OSC request /ping.
 
 Currently the WebUI (www/index.html) is static. 
 
@@ -215,11 +212,13 @@ Say because of too much points you want Left element drawn by scene 0, laser 0 a
 First define a different object/layer for each drawn element :
 
 Leftsquare = lj.FixedObject('Leftsquare', True, 255, [], red, 255, 0, 0, 0 , True)		 # Left goes to layer 0
+
 Rightsquare = lj.FixedObject('Rightsquare', True, 255, [], green, 0, 255, 0, 1 , True)	 # Right goes to layer 1
 
 Define 2 destinations :
 
 Dest0 = lj.DestObject('0', 0, True, 0 , 0, 0) 	# Dest0 will send layer 0 points to scene 0, laser 0 
+
 Dest1 = lj.DestObject('1', 1, True, 1 , 0, 1)	# Dest1 will send layer 1 points to scene 0, laser 1 
 
 
@@ -259,7 +258,7 @@ DrawDests() will take care of all your declared drawn elements/"objects" and Des
 # Nannou etherdeam simulator
 #
 
-(Doc in Progress)
+2 compiled nannou visualisers are included, one for Linux, one for macOS. It's pretty old version but much more compatible with "old" builtin processors GPU. 
 
 
 #
@@ -301,7 +300,24 @@ You need to update LJ.conf to your network/etherdreams IPs and be sure to check 
 
 The need for a dedicated computer to act as "laser server" usually depends on how many lasers you want to control and your main computer load. If you seen flickering with small point lists, try the dedicated computer idea and/or stop process interfering like redis monitoring,...
 
+# 
+# Glitch art 
+#
 
+For nice lines and angles all user pointlists are automatically resampled by tracers. There is 2 cases defined for resampling strategy : short and long distance between 2 points.
+
+
+short distance : has one step : (1.0, number repetition at destination position). 1.0 = 100% = end of the line between the 2 points. For example : (1.0, 8) means the end point will be repeated 8 times.
+
+long distance has 3 steps : (0.25, 3), (0.75, 3), (1.0, 10) : means an extra point at 25% is created and repeated 3 times, another at 75% repeated also 3 times and destination point is repeated 10 times. 
+
+For glitching experience you can change resampling strategy live with "resampler" command. See command reference. [short distance, long distance] = [(1.0, 8),(0.25, 3), (0.75, 3), (1.0, 10)]
+
+# 
+# Colors
+#
+
+LJ is compatible with TLL and analog modulation. Each point color if an int value, wich is simply the hex color in decimal. Example : white #fffff will be 65535.
 
 # 
 # Ether dream configuration
@@ -328,12 +344,15 @@ About hardware setup, especially if you have several lasers : ILDA cables are in
 # LJ commands reference
 #
 
+All commands are available via OSC or websocket.
+
 8002 OSC incoming
+
 9001 Websocket 
 
-redis key 
-/pl/scenenumber/lasernumber value : value is the pointlist to draw as string type :
-"[(150.0, 230.0, 65280), (170.0, 170.0, 65280), (230.0, 170.0, 65280), (210.0, 230.0, 65280), (150.0, 230.0, 65280)]"
+
+/pl/scenenumber/lasernumber value : value is the pointlist to draw as string. Example : 
+/pl/0/0 "[(150.0, 230.0, 65280), (170.0, 170.0, 65280), (230.0, 170.0, 65280), (210.0, 230.0, 65280), (150.0, 230.0, 65280)]"
 
 
 /scale/X/lasernumber value   
@@ -351,8 +370,8 @@ redis key
 /loffset/Y/lasernumber value : change Y offset of given laser by value
 
 
-/kpps/lasernumber value : Live change of kpps is not implemented in newdac.py. Change will effect next startup.
-/intens/lasernumber value : increase/decrease intensity for given laser by value 
+/kpps/lasernumber value : live change of kpps
+/intens/lasernumber value : increase/decrease intensity for given laser by value. Needs analog modulation laser
 
 
 /client or note on < 8 : change client displayed for Current Laser
@@ -364,18 +383,18 @@ redis key
 
 /ip/lasernumber value : change given laser IP i.e '192.168.1.1'
 
-/resampler/lasernumber lsteps : change resampling strategy (glitch art) for given laser
+/resampler/lasernumber lsteps : change resampling strategy (see glitch art), for given laser
 lsteps is a string like "[ (1.0, 8),(0.25, 3), (0.75, 3), (1.0, 10)]"
  
-
-/planet will be forwarded to planetarium client.
-/nozoid will be forwarded to nozoid client.
-
-/scene/scenenumber/start 0 or 1
+/scene/scenenumber/start 0 or 1 : tell all tracers to use given scene
 
 /regen : regen webui index html page.
 
-/scim 
+/scim : change webui simulated laser.
+
+
+All command beginning with a declared plugin name are forwarded automatically to given plugin : "/nozoid whatever" will be forwarded to nozoid client.
+
 
 /forwardui "uicommand arg" : display *one* word on webui. There is 2 lines, first line (/status or /redstatus)
 and second line (/line1 or /redline1). Examples of "uicommand arg" :
@@ -384,7 +403,7 @@ and second line (/line1 or /redline1). Examples of "uicommand arg" :
 /redline1 Error
 /laser 0
 
-![LJ Display](https://www.teamlaser.tk/images/display.png)
+![LJ Display](https://www.teamlaser.tk/lj/images/display.png)
 
 Leds colors for each DACs
 
