@@ -5,7 +5,7 @@ By Sam Neurohack, Loloster, Cocoa
 LICENCE : CC BY
 
 
-![LJ](http://www.teamlaser.tk/lj/images/calig.png)
+![LJ](http://www.teamlaser.tk/lj/images/lj2.png)
 
 A software laser framework with GUI, for up to 4 lasers live actions with ethedreams DACs. Think creative like Laser "battles", planetarium, sharing available lasers in demoparties for competition, ... 
 
@@ -95,7 +95,7 @@ For Linux and OS X :
 
 You probably want redis bound to all network interfaces : comment the bind line in /etc/redis/redis.conf and restart it.
 
-In www/index.html change the websocket (ws) ip adress to the server IP if needed.
+WebUI pages needs to know the LJ IP address. So you need to change the line wwwIP = "192.168.2.43" in updateUI.py then run python updateUI.py 
 
 Using the same idea check all ip address in LJ.conf.
 
@@ -374,7 +374,7 @@ All commands are available via OSC or websocket.
 /intens/lasernumber value : increase/decrease intensity for given laser by value. Needs analog modulation laser
 
 
-/client or note on < 8 : change client displayed for Current Laser
+/client or /noteon < 8 : change client displayed for Current Laser
 23 < /noteon < 32 : PL number displayed on webUI simulator    
 
 /grid/lasernumber value (0 or 1) : switch given laser with grid display on or off
@@ -419,3 +419,5 @@ replied FULL -> orange
 replied INVALID -> yellow
 
 no connection to dac -> leds are red (6)
+
+![LJ](http://www.teamlaser.tk/lj/images/calig.png)
