@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Simu Rack</title>
+        <meta charset="utf-8" />
+        <meta name="apple-mobile-web-app-title" content="LJ">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="apple-touch-startup-image" href="/launch.png">
+        <link rel="apple-touch-icon" href="touch-icon-iphone.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="touch-icon-ipad.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-iphone-retina.png">
+        <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-ipad-retina.png">
+        
+        
+        <!-- Page specific styles -->
+        <style>
+
+        </style>
+
+        <!-- Web audio buttons defaults -->
+        <script  type="application/javascript" src="webcomponents-lite.js"></script>
+        <script>
+        WebAudioControlsOptions={
+          useMidi:1,
+          knobSrc:"knobs/simplegray.png",
+          knobSprites:100,
+          switchSrc:"knobs/switch_toggle.png",
+          sliderSrc:"knobs/vsliderbody.png",
+          sliderKnobsrc:"knobs/vsliderknob.png",
+        }
+        </script>
+        <script src="webaudio-controls.js"></script>
+        <link rel="stylesheet" type="text/css" href="selector.min.css">
+        <script type="application/javascript" src="selector.min.js"></script>
+
+        <link rel="stylesheet" href="css/common.css" />
+    </head>
+
+    <body style="background-color:#222;">
+
+ 
+  <!--
+     Navigation Rack
+  -->
+    <div class="Rackcontent">
+
+   <div class="content">
+    <div class="buttons-7container">
+
+        <a href="index.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Index
+          </div>
+        </div>
+      </a>
+
+        <a href="align.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Align
+          </div>
+        </div>
+        </a>
+
+        <a href="auralls.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Aurora
+          </div>
+        </div>
+        </a>
+
+        <a href="trckr/trckrcam1.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Lasercam
+          </div>
+        </div>
+        </a>
+          
+        <a href="simu.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Simu
+          </div>
+        </div>
+        </a>
+
+
+        <div class="webaudiobut">
+          <button type="button" class="navled" style="border : #222222 1px;"  onclick="onSubmit(this.id)" id="settings/restart lj" >
+            rstrt LJ
+          </button>
+        </div>
+
+        <div class="webaudiobut">
+          <button type="button" class="navled" style="border : #222222 1px;"  onclick="onSubmit(this.id)" id="settings/restart aurora" >
+            rstrt AU
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+
+
+    <!--
+    Display Rack
+    -->
+
+    <div class="content">
+      <div class="TopRackGrid"> 
+        <div>
+          <h2>
+          /TL Simu
+          <span class="shade">&nbsp;</span>
+          </h2>
+          <webaudio-switch id="on" value="1" tooltip="Switch-B" height="35" width="85" src="knobs/switch1.png">
+          </webaudio-switch>
+        </div>
+        <div class="webaudiobut" style="background-image: linear-gradient(174deg,  #111,#030303);">
+          <div align="center" id="line1" class="busled"> 
+          Simu Rack
+          </div>
+          <div align="center" id="status" class="busled"> 
+          /team/laser
+          </div>
+        </div>
+            <div class="etherled" style="margin-left: 30px;margin-top: 1px;">
+              Stt
+              <webaudio-knob id="lstt/0" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+              <webaudio-knob id="lstt/1" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+              <webaudio-knob id="lstt/2" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+              <webaudio-knob id="lstt/3" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+            </div>
+            <div class="etherled" style="margin-left: 30px;margin-top: 1px;">
+              Ack
+              <webaudio-knob id="lack/0" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+              <webaudio-knob id="lack/1" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+              <webaudio-knob id="lack/2" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+              <webaudio-knob id="lack/3" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+            </div>
+
+      </div>
+    </div>
+
+    <!--
+    Laser Rack
+    -->
+    <div class="content">
+      <div class="Rackgrid"> 
+        <div>
+        <h2>Lasers</h2>
+        </div>
+        <div></div>
+
+          <div class="webaudiobut"><webaudio-switch id="noteon 24" value="1" tooltip="Switch-B" height="64" width="64" src="knobs/big0.png"></webaudio-switch></div>
+          <div class="webaudiobut"><webaudio-switch id="noteon 25" value="0" tooltip="Switch-B" height="64" width="64" src=" knobs/big1.png"></webaudio-switch></div>
+          <div class="webaudiobut"><webaudio-switch id="noteon 26" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/big2.png"></webaudio-switch></div>
+          <div class="webaudiobut"><webaudio-switch id="noteon 27" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/big3.png"></webaudio-switch></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div> </div>
+        <div></div>
+      </div>
+    </div>
+
+
+    <!--
+    Simu Rack
+    -->
+   <div class="content" style="background-image: linear-gradient(174deg,  #111,#030303);"> 
+    <canvas id="canvas" width="400" height="400"  style="margin-left: 200px;margin-top : 20px;background-image:">canvas>
+   </div>
+
+
+        <!--
+        Encoders Line
+
+          # /aurora/radius       layernumber radius [0-1] 
+          # /aurora/rotdirec layer axe direc
+          # /aurora/linesize layer value
+          # /aurora/rotdirec layer axe direc
+          # /aurora/rotspeed layernumber axe speed
+          # /aurora/transpeed layernumber axe transpeed
+          # /aurora/transamt layernumber axe maxposition
+
+        -->
+
+        <!--
+        JS 
+        -->
+        
+        <!-- LJ style WS : A nettoyer ! -->
+
+        <script type="text/javascript">
+
+      var LJ = 'ws://192.168.2.43:9001/'
+
+
+            var  pl = "";
+            var  pl2 = new Array();
+
+            var _WS = {
+            uri: LJ,
+            ws: null,
+
+        
+            init : function (e) {
+              _WS.s = new WebSocket(_WS.uri);
+              _WS.s.onopen = function (e) { _WS.onOpen(e); };
+              _WS.s.onclose = function (e) { _WS.onClose(e); };
+              _WS.s.onmessage = function (e) { _WS.onMessage(e); };
+              _WS.s.onerror = function (e) { _WS.onError(e); };
+              },
+
+
+            onClose: function () {
+            _WS.showstatus('DISCONNECTED');
+            document.getElementById("on").value = 0;
+            document.getElementById("lstt/0").value = 0;
+            document.getElementById("lstt/1").value = 0;
+            document.getElementById("lstt/2").value = 0;
+            document.getElementById("lstt/3").value = 0;
+            document.getElementById("lack/0").value = 0;
+            document.getElementById("lack/1").value = 0;
+            document.getElementById("lack/2").value = 0;
+            document.getElementById("lack/3").value = 0;
+            },
+
+
+            onOpen: function () {
+            var divtext = document.getElementById('status');
+                divtext.innerHTML="";
+                divtext.innerHTML= "Connected to "+LJ;
+            document.getElementById("on").value = 1;
+
+              },
+        
+
+            onMessage: function (e) {
+              var res = e.data.split(" ");
+              //console.log(e.data)
+              //console.log(res[0].substring(0,6))
+              //console.log(res)
+              //console.log(res[0].slice(1))
+              var divtext = document.getElementById('status');
+              var divtextp = document.getElementById('players');
+
+
+              switch (res[0].substring(0,6)) {
+                
+                case "/statu":
+                      _WS.showline1("connected to "+LJ);
+                      if (res[2]==="Disconnected"){
+                         _WS.showstatus(res[1]+" "+'<span style="color: red;">'+ res[2]+'</span> ');
+                        }
+                      else{
+                        _WS.showstatus(res[1]+" "+res[2]);
+                        }
+                      break;
+
+
+                case "/redst":
+                      //console.log("red"+res[1]+" "+res[2]);
+                      _WS.showstatus('<span style="color: red;">'+res[1]+" "+ res[2]+'</span> ');
+                      break;
+
+                case "/simul":
+                    pl = e.data.slice(7);
+                    //console.log(pl)
+                    pl2 = eval(pl.replace(/[()]/g, ''));
+                    break;
+
+                case "/line1":
+                      //divtext.innerHTML="connected to "+LJ;
+                      divtext1.innerHTML=res[1]+" "+res[2];
+                      break;
+
+                case "/redline1":
+                      //divtext.innerHTML="connected to "+LJ;
+                      divtext1.innerHTML='<span style="color: red;">'+ res[1]+" "+res[2]+'</span>';
+                      break;
+                      
+                case "/plpoi":
+                    //console.log("plpoint");
+                    break;
+                default:
+                    //console.log("test "+res[0].slice(1)+" "+res[1]);
+                    document.getElementById(res[0].slice(1)).value = res[1];
+                    //_WS.showstatus(e.data);
+                    break
+                }
+              },
+        
+            onError: function (e) {
+              _WS.showstatus('<span style="color: red;">ERROR:</span> ' + e.data);
+              },
+        
+            showin: function (message) {
+                var divtext = document.getElementById('status');
+                divtext.innerHTML="";
+                divtext.innerHTML= message.toString();
+              },
+        
+            showout: function (message) {
+                var divtext = document.getElementById('status');
+                divtext.innerHTML="";
+                divtext.innerHTML= message.toString();
+              },
+        
+            showstatus: function (message) {
+                var divtext = document.getElementById('status');
+                divtext.innerHTML="";
+                divtext.innerHTML= message.toString();
+              },
+        
+            showline1: function (message) {
+                var divtext = document.getElementById('line1');
+                divtext.innerHTML="";
+                divtext.innerHTML= message.toString();
+              },
+
+            send: function (message) {
+              if (!message.length) {
+                alert('Empty message not allowed !');
+              } else {
+                _WS.showstatus(message);
+                _WS.s.send(message);
+              }
+            },
+        
+            close: function () {
+              _WS.showstatus('GOODBYE !');
+              _WS.s.close();
+            }
+          };
+        
+          window.addEventListener('load', _WS.init, false);    
+        //
+        // Forms submits
+        //
+        
+          function onSubmit(clicked_id) {
+            var input = document.getElementById(clicked_id);
+            //console.log("/" + clicked_id + " " + input.value);
+            _WS.send("/" + clicked_id + " " + input.value);
+            }
+        
+        </script>
+
+      <!-- 
+        web audio encoders scripts 
+      -->
+      
+      <script type="text/javascript">
+        var message="";
+        var log=[];
+        var knobs = document.getElementsByTagName('webaudio-knob');
+        
+        for(var i = 0; i < knobs.length; i++){
+            knobs[i].addEventListener("input",Dump,false);
+            knobs[i].addEventListener("change",Dump,false);
+        }
+        var sliders = document.getElementsByTagName('webaudio-slider');
+        
+        for(var i = 0; i < sliders.length; i++){
+            sliders[i].addEventListener("input",Dump,false);
+            sliders[i].addEventListener("change",Dump,false);
+        }
+        var switches = document.getElementsByTagName('webaudio-switch');
+        
+        for(var i = 0; i < switches.length; i++) {
+            switches[i].addEventListener("change",Dump,false);
+        }
+
+        function newlaser(id) {
+
+          console.log("newlaser " +id)
+          var laserid = 24+ parseInt(id,10);
+          laser = "noteon "+laserid;
+          console.log("laser "+laser);
+          nolaser();
+          nofx();
+
+          var x = document.getElementById(laser);
+          x.value = 1 ;
+          }
+
+        function nolaser() {
+          console.log("nolaser")
+          var x = document.getElementById("noteon 24");
+            x.value = 0 ;
+          var x = document.getElementById("noteon 25");
+            x.value = 0 ;
+          var x = document.getElementById("noteon 26");
+            x.value = 0 ;
+          var x = document.getElementById("noteon 27");
+            x.value = 0 ;
+          }
+
+        function nofx0() {
+          console.log("nofx0")
+          var x = document.getElementById("aurora/fx/0 ScanH");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/fx/0 ScanV");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/fx/0 Wave");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/fx/0 Circle");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/fx/0 Starfield");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/fx/0 Word");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/fx/0 Trckr");
+            x.value = 0 ;
+          }
+          
+      
+        function nocolor0() {
+          console.log("nocolor0")
+          var x = document.getElementById("aurora/color/0 red");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/color/0 yellow");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/color/0 green");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/color/0 blue");
+           x.value = 0 ;
+          var x = document.getElementById("aurora/color/0 cyan");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/color/0 white");
+            x.value = 0 ;
+          }
+
+
+        function Dump(e) {
+            var str="";
+            str=e.type + " : " + e.target.id + " : " + e.target.value + " ";
+            console.log(str);
+            log.unshift(str);
+            log.length=1;
+            str="";
+            
+            for(var i=19;i>=0;--i) {
+                if(log[i])
+                    str+=log[i]+"<br/>";
+            }
+
+            _WS.send("/" + e.target.id + " " +  e.target.value);
+
+          var res = e.target.id.split(" "); 
+
+          // on off
+          if (e.target.id === "on" && e.type === "change") {   
+            window.location.reload();
+            }
+
+          // Go to index
+          if (e.target.id === "index" && e.type === "change") {   
+            window.location.assign("index.html");
+            }
+
+          // Fx
+          if (res[0].substring(7,9) === "fx" && e.type === "change") {   
+
+            var layer = res[0].substring(10,12);  
+            nofx0();  
+            var x = document.getElementById(e.target.id);
+            x.value = 1 ;
+            _WS.showstatus(e.target.id);
+            
+            }
+
+          // Colors
+          if (res[0].substring(7,9) === "co" && e.type === "change") {  
+
+              var layer = res[0].substring(13,14);  
+              console.log(layer)
+              nocolor0();
+              var x = document.getElementById(e.target.id);
+              x.value = 1 ;
+              _WS.showstatus(e.target.id);
+              }
+
+      
+          // Lasers
+          if (res[0] === "noteon" && e.type === "change") {  
+              //console.log(e.target.id)
+              nolaser();
+              var x = document.getElementById(e.target.id);
+              x.value = 1 ;
+              _WS.showstatus(e.target.id);
+              }
+
+        }
+    </script>
+
+
+    <!-- 
+      Simulator Point lists drawing scripts 
+    -->
+    
+    <script type="text/javascript">
+    
+      //
+      // Simulator canvas : store Reference To The Canvas & Set Context
+      //
+    
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      var lastpoint = { x: 0, y: 0, color: 0};
+      ctx.clearRect(0,0,400,400);
+      var zoom = 0.5;
+      //ctx.save
+    
+    
+      // Todo : laser point will have black points to go from a polyline to another. Need to discard those black points.
+      function draw() {
+    
+    
+          // Clear Canvas At The Start Of Every Frame
+          //ctx.restore
+          
+          if (pl2.length > 0)
+            {
+    
+            // Begin a new path
+            // 0.7 reduces max coordinates in a more browser compatible resolution.
+            ctx.clearRect(0,0,400,400);
+            ctx.beginPath();
+           
+            ctx.moveTo(pl2[0]*zoom, pl2[1]*zoom);
+            lastpoint.color = pl2[2];
+    
+            // Draw n Lines
+            for (var i = 0; i < pl2.length/3; i++) 
+              {
+              
+              // New point has the same color -> add a new line to the new point
+              if (pl2[2+(i*3)] === lastpoint.color)
+                {
+                ctx.lineTo(pl2[i*3]*zoom, pl2[1+(i*3)]*zoom);
+                }
+    
+              // New point has different color -> stroke with previous color
+              if (pl2[2+(i*3)] != lastpoint.color) 
+                {
+                ctx.strokeStyle = "#"+(lastpoint.color + Math.pow(16, 6)).toString(16).slice(-6);
+                ctx.stroke();
+                ctx.closePath()
+                //ctx.restore
+                ctx.beginPath();
+                //ctx.clearRect(0,0,400,400);
+                
+                ctx.moveTo(pl2[i*3]*zoom, pl2[1+(i*3)]*zoom);
+                }
+    
+              // Last point -> stroke with current color
+              if (i === (pl2.length/3)-1 ) 
+                {
+                ctx.moveTo(pl2[i*3]*zoom, pl2[1+(i*3)]*zoom);
+                ctx.strokeStyle = "#"+((pl2[2+(i*3)]) + Math.pow(16, 6)).toString(16).slice(-6);
+                ctx.stroke();
+                
+                ctx.closePath()
+                //ctx.restore
+                //ctx.clearRect(0,0,400,400);
+                }
+    
+              // store point for comparison
+              lastpoint.x = pl2[i*3];
+              lastpoint.y = pl2[1+(i*3)];
+              lastpoint.color = pl2[2+(i*3)];
+              }
+    
+          } 
+          // Call Draw Function Again To Create Animation
+          window.requestAnimationFrame(draw);
+        }
+          
+      // Initialize The Draw Function
+      draw();
+    </script>
+</body>
+
+</html>

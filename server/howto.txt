@@ -1,0 +1,24 @@
+ 
+create /etc/supervisor/conf.d/syncthing.conf
+
+[program:syncthing]
+autorestart = True
+directory = /home/toto/
+user = toto
+command = /usr/bin/syncthing -no-browser -home="/home/toto/.config/syncthing"
+environment = STNORESTART="1", HOME="/home/toto"
+
+
+
+
+sudo supervisorctl reload
+
+
+supervisorctl start syncthing
+
+
+supervisorctl status syncthing
+
+
+supervisorctl tail syncthing
+

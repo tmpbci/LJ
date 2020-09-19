@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>LASERCam 1</title>
+		<meta charset="utf-8">
+		<link href="./styles/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <meta name="apple-mobile-web-app-title" content="Tracker">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="apple-touch-startup-image" href="../launch.png">
+        <link rel="apple-touch-icon" href="../touch-icon-iphone.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="../touch-icon-ipad.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="../touch-icon-iphone-retina.png">
+        <link rel="apple-touch-icon" sizes="167x167" href="../touch-icon-ipad-retina.png">
+        
+		<style>
+
+
+		</style>
+		<script>
+			// getUserMedia only works over https in Chrome 47+, so we redirect to https. Also notify user if running from file.
+			if (window.location.protocol == "file:") {
+				alert("You seem to be running this example directly from a file. Note that these examples only work when served from a server or localhost due to canvas cross-domain restrictions.");
+			} else if (window.location.hostname !== "localhost" && window.location.protocol !== "https:"){
+				window.location.protocol = "http";
+				//window.location.protocol = "https";
+			}
+		</script>
+		<!-- 
+		<script type="text/javascript">
+
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-32642923-1']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+
+		</script>
+		 -->
+		<!-- Web audio buttons defaults -->
+        <script  type="application/javascript" src="../webcomponents-lite.js"></script>
+        <script>
+        WebAudioControlsOptions={
+          useMidi:1,
+          knobSrc:"knobs/simplegray.png",
+          knobSprites:100,
+          switchSrc:"knobs/switch_toggle.png",
+          sliderSrc:"knobs/vsliderbody.png",
+          sliderKnobsrc:"knobs/vsliderknob.png",
+        }
+        </script>
+        <script src="../webaudio-controls.js"></script>
+        <!-- link rel="stylesheet" href="LJgrid.css" / -->
+        <link rel="stylesheet" type="text/css" href="../selector.min.css">
+        <script type="application/javascript" src="../selector.min.js"></script>
+
+        <link rel="stylesheet" href="../css/common.css" />
+
+	</head>
+	<body style="background-color:#222;">
+		<script src="./js/libs/utils.js"></script>
+		<script src="../build/clmtrackr.js"></script>
+		<script src="./js/libs/Stats.js"></script>
+
+    <!--
+    Top Rack
+
+
+    <div align="center">
+    <a href="index.html"><img height="25" width="21" src="../knobs/indexs.png"></a>
+    </div>
+    -->
+
+    <div class="Rackcontent">
+
+
+  <!--
+     Navigation Rack
+  -->
+
+   <div class="content">
+    <div class="buttons-7container">
+
+        <a href="../index.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Index
+          </div>
+        </div>
+      </a>
+
+        <a href="../align.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Align
+          </div>
+        </div>
+        </a>
+
+        <a href="../auralls.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Aurora
+          </div>
+        </div>
+        </a>
+
+        <a href="trckrcam1.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Lasercam
+          </div>
+        </div>
+        </a>
+          
+        <a href="../simu.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Simu
+          </div>
+        </div>
+        </a>
+
+
+        <div class="webaudiobut">
+          <button type="button" class="navled" style="border : #222222 1px;"  onclick="onSubmit(this.id)" id="settings/restart lj" >
+            rstrt LJ
+          </button>
+        </div>
+
+        <div class="webaudiobut">
+          <button type="button" class="navled" style="border : #222222 1px;"  onclick="onSubmit(this.id)" id="settings/restart aurora" >
+            rstrt AU
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  <!--
+     Lasers & colors Rack
+  -->
+
+
+    <div class="content">
+      <div class="TopRackGrid"> 
+        <div>
+         <h2>
+          /TL RGY 1
+          <span class="shade">&nbsp;</span>
+         </h2>
+          <webaudio-switch id="on" value="1" tooltip="Switch-B" height="35" width="85" src="../knobs/switch1.png">
+          </webaudio-switch>
+        </div>
+        <div style="border : #242424 1px solid;background: #000;">
+         <div align="center" id="line1" class="busled"> 
+          LASERcam 1 : Allow to use your webcam + start
+         </div>
+         <div align="center" id="status" class="busled"> 
+          /team/laser
+         </div>
+        </div>
+        <div></div>
+        <div>
+			<div style="margin-top : 30px;">
+			</div>
+			<div>
+      		</div>
+      </div>
+    </div>
+    </div>
+
+   
+    <!--
+    Colors Rack
+    -->
+    <div class="content">
+      <div class="Rackgrid"> 
+        <div>
+        <h2>
+          Colors 
+          
+        </h2>
+        </div>
+        
+          <div class="webaudiobut"><webaudio-switch id="noteon 24" value="1" tooltip="Switch-B" height="64" width="64" src="../knobs/big0.png"></webaudio-switch></div>
+          <div class="webaudiobut"><webaudio-switch id="noteon 25" value="0" tooltip="Switch-B" height="64" width="64" src=" ../knobs/big1.png"></webaudio-switch></div>
+          <div class="webaudiobut"><webaudio-switch id="noteon 26" value="0" tooltip="Switch-B" height="64" width="64" src="../knobs/big2.png"></webaudio-switch></div>
+          <div class="webaudiobut"><webaudio-switch id="noteon 27" value="0" tooltip="Switch-B" height="64" width="64" src="../knobs/big3.png"></webaudio-switch></div>
+          <div></div>
+        <div class="webaudiobut"><webaudio-switch id="aurora/color/0 red" value="1" tooltip="Switch-B" height="64" width="64" src="knobs/red.png"></webaudio-switch></div>
+        <div class="webaudiobut"><webaudio-switch id="aurora/color/0 yellow" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/yellow.png"></webaudio-switch></div>
+        <div class="webaudiobut"><webaudio-switch id="aurora/color/0 green" value="0" tooltip="Switch-B" height="64" width="64" src="knobs/green.png"></webaudio-switch></div>
+        <div></div>
+
+      </div>
+    </div>
+
+
+  <!--
+      Webcam Rack
+	-->
+	 <div class="content" style="background-image: linear-gradient(174deg,  #111,#030303);">
+		<video id="videoel"  class="webaudiobut" width="400" height="300" preload="auto" loop playsinline autoplay>
+		</video>
+		<canvas id="overlay" width="400" height="300"></canvas>
+		<input class="btn" type="button" value="wait" style="margin-left: 150px;" disabled="disabled" onclick="startVideo()" id="startbutton"></input>
+	</div>
+
+  <!--
+     Big Display Rack
+  -->
+
+	 <div class="content">
+		<div id="text" class="busled" style="font-size:1.5em;border : #242424 1px solid;background: #000;-webkit-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);-moz-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);">
+			<div id="gum" class="gum">
+				<p>To try it out:
+					<ol>
+						<li>Allow the page to use your webcamera</li>
+						<li>Make sure that your face is clearly visible in the video, and click start</li>
+						<li>See the model fitted to your face</li>
+					<ol>
+				</p>
+			</div>
+			<div id="nogum" class="nogum">
+			</div>
+		</div>
+	</div>
+	</div>
+
+
+  <!--
+  JS 
+  -->
+        
+		<script>
+			var vid = document.getElementById('videoel');
+			var vid_width = vid.width;
+			var vid_height = vid.height;
+			var overlay = document.getElementById('overlay');
+			var overlayCC = overlay.getContext('2d');
+
+			/*********** Setup of video/webcam and checking for webGL support *********/
+
+			function enablestart() {
+				var startbutton = document.getElementById('startbutton');
+				startbutton.value = "start";
+				startbutton.disabled = null;
+			}
+
+			var insertAltVideo = function(video) {
+				// insert alternate video if getUserMedia not available
+				if (supports_video()) {
+					if (supports_webm_video()) {
+						video.src = "./media/cap12_edit.webm";
+					} else if (supports_h264_baseline_video()) {
+						video.src = "./media/cap12_edit.mp4";
+					} else {
+						return false;
+					}
+					return true;
+				} else return false;
+			}
+
+			function adjustVideoProportions() {
+				// resize overlay and video if proportions of video are not 4:3
+				// keep same height, just change width
+				var proportion = vid.videoWidth/vid.videoHeight;
+				vid_width = Math.round(vid_height * proportion);
+				vid.width = vid_width;
+				overlay.width = vid_width;
+			}
+
+			function gumSuccess( stream ) {
+				// add camera stream if getUserMedia succeeded
+				if ("srcObject" in vid) {
+					vid.srcObject = stream;
+				} else {
+					vid.src = (window.URL && window.URL.createObjectURL(stream));
+				}
+				vid.onloadedmetadata = function() {
+					adjustVideoProportions();
+					vid.play();
+				}
+				vid.onresize = function() {
+					adjustVideoProportions();
+					if (trackingStarted) {
+						ctrack.stop();
+						ctrack.reset();
+						ctrack.start(vid);
+					}
+				}
+			}
+
+			function gumFail() {
+				// fall back to video if getUserMedia failed
+				insertAltVideo(vid);
+				document.getElementById('gum').className = "hide";
+				document.getElementById('nogum').className = "nohide";
+			}
+
+			navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+			window.URL = window.URL || window.webkitURL || window.msURL || window.mozURL;
+
+			// set up video
+			if (navigator.mediaDevices) {
+				navigator.mediaDevices.getUserMedia({video : true}).then(gumSuccess).catch(gumFail);
+			} else if (navigator.getUserMedia) {
+				navigator.getUserMedia({video : true}, gumSuccess, gumFail);
+			} else {
+				insertAltVideo(vid);
+				document.getElementById('gum').className = "hide";
+				document.getElementById('nogum').className = "nohide";
+				alert("Your browser does not seem to support getUserMedia, using a fallback video instead.");
+			}
+
+			vid.addEventListener('canplay', enablestart, false);
+
+			/*********** Code for face tracking *********/
+
+			var ctrack = new clm.tracker();
+			ctrack.init();
+			var trackingStarted = false;
+			var counter = 0;
+			var layer = 0;
+
+			function startVideo() {
+				// start video
+				vid.play();
+				// start tracking
+				ctrack.start(vid);
+				trackingStarted = true;
+				// start loop to draw face
+				drawLoop();
+			}
+
+			function drawLoop() {
+				requestAnimFrame(drawLoop);
+				overlayCC.clearRect(0, 0, vid_width, vid_height);
+				//psrElement.innerHTML = "score :" + ctrack.getScore().toFixed(4);
+				var positions = ctrack.getCurrentPosition();
+				// do something with the positions ...
+				// print the positions
+				var positionString = "";
+				var positionFace = 'aurora/trckr/frame '+layer+" "+counter+" ";
+				if (positions) {
+					ctrack.draw(overlay);
+					for (var p = 0;p < 71;p++) {
+						positionString += "featurepoint "+p+" : ["+positions[p][0].toFixed(2)+","+positions[p][1].toFixed(2)+"]<br/>";
+						positionFace += positions[p][0].toFixed(2)+" "+positions[p][1].toFixed(2)+" ";
+						}
+
+					//document.getElementById('positions').innerHTML = positionString;
+					_WS.s.send(positionFace);
+					counter +=1;
+
+					}
+				}
+
+			/*********** Code for stats **********/
+
+			stats = new Stats();
+			stats.domElement.style.position = 'absolute';
+			stats.domElement.style.top = '0px';
+			document.getElementById('container').appendChild( stats.domElement );
+
+			// update stats on every iteration
+			document.addEventListener('clmtrackrIteration', function(event) {
+				stats.update();
+			}, false);
+
+		 </script>
+
+      <!-- LJ style WS : A nettoyer ! -->
+
+      <script type="text/javascript">
+
+      var LJ = 'ws://192.168.2.43:9001/'
+      var LJ = 'ws://192.168.2.43:9001/'
+
+            var _WS = {
+            uri: LJ,
+            ws: null,
+        
+            init : function (e) {
+              _WS.s = new WebSocket(_WS.uri);
+              _WS.s.onopen = function (e) { _WS.onOpen(e); };
+              _WS.s.onclose = function (e) { _WS.onClose(e); };
+              _WS.s.onmessage = function (e) { _WS.onMessage(e); };
+              _WS.s.onerror = function (e) { _WS.onError(e); };
+              },
+        
+            onOpen: function () {
+            _WS.showstatus("Connected to "+LJ);
+              document.getElementById("on").value = 1;
+              },
+        
+            onClose: function () {
+              _WS.showline1('<span style="color: red;">LJ2 DISCONNECTED</span> ');
+
+              },
+        
+            onMessage: function (e) {
+              var res = e.data.split(" ");
+              //console.log(e.data)
+              //console.log(res[0].substring(0,6))
+              //console.log(res)
+              //console.log(res[0].slice(1))
+              var divtext = document.getElementById('status');
+              var divtextp = document.getElementById('players');
+
+
+              switch (res[0].substring(0,6)) {
+                
+                case "/statu":
+
+                      if (res[2]==="Disconnected"){
+                         _WS.showstatus(res[1]+" "+'<span style="color: red;">'+ res[2]+'</span> ');
+                        }
+                      else{
+                        _WS.showstatus(res[1]+" "+res[2]);
+                        }
+                      break;
+
+                case "/redst":
+                      //console.log("red"+res[1]+" "+res[2]);
+                      _WS.showstatus('<span style="color: red;">'+res[1]+" "+ res[2]+'</span> ');
+                      break;
+
+                case "/line1":
+                      //divtext.innerHTML="connected to "+LJ;
+                      divtext1.innerHTML=res[1]+" "+res[2];
+                      break;
+
+                case "/redline1":
+                      //divtext.innerHTML="connected to "+LJ;
+                      divtext1.innerHTML='<span style="color: red;">'+ res[1]+" "+res[2]+'</span>';
+                      break;
+
+                case "/laser":
+                      console.log("/laser "+res[1])
+                      newlaser(res[1])
+                      break;
+
+                default:
+                    //console.log("test "+res[0].slice(1)+" "+res[1]);
+                    document.getElementById(res[0].slice(1)).value = res[1];
+                    //_WS.showstatus(e.data);
+                }
+              },
+    
+
+            showline1: function (message) {
+                var divtext = document.getElementById('line1');
+                divtext.innerHTML="";
+                divtext.innerHTML= message.toString();
+              },
+
+
+            onError: function (e) {
+              _WS.showstatus('<span style="color: red;">ERROR:</span> ' + e.data);
+              },
+        
+            showin: function (message) {
+                var divtext = document.getElementById('status');
+                divtext.innerHTML="";
+                divtext.innerHTML= message.toString();
+              },
+        
+            showout: function (message) {
+                var divtext = document.getElementById('status');
+                divtext.innerHTML="";
+                divtext.innerHTML= message.toString();
+              },
+        
+            showstatus: function (message) {
+                var divtext = document.getElementById('status');
+                divtext.innerHTML="";
+                divtext.innerHTML= message.toString();
+              },
+
+        
+            send: function (message) {
+              if (!message.length) {
+                alert('Empty message not allowed !');
+              } else {
+                _WS.showstatus(message);
+                _WS.s.send(message);
+              }
+            },
+        
+            close: function () {
+              _WS.showstatus('GOODBYE !');
+              _WS.s.close();
+            }
+          };
+        
+          window.addEventListener('load', _WS.init, false);   
+
+        //
+        // Forms submits
+        //
+        
+          function onSubmit(clicked_id) {
+            var input = document.getElementById(clicked_id);
+            console.log("/" + clicked_id + " " + input.value);
+            _WS.send("/" + clicked_id + " " + input.value);
+            }
+        
+        </script>
+
+      <!-- 
+        web audio encoders scripts 
+      -->
+      
+      <script type="text/javascript">
+        var message="";
+        var log=[];
+        var knobs = document.getElementsByTagName('webaudio-knob');
+        
+        for(var i = 0; i < knobs.length; i++){
+            knobs[i].addEventListener("input",Dump,false);
+            knobs[i].addEventListener("change",Dump,false);
+        }
+        var sliders = document.getElementsByTagName('webaudio-slider');
+        
+        for(var i = 0; i < sliders.length; i++){
+            sliders[i].addEventListener("input",Dump,false);
+            sliders[i].addEventListener("change",Dump,false);
+        }
+        var switches = document.getElementsByTagName('webaudio-switch');
+        
+        for(var i = 0; i < switches.length; i++) {
+            switches[i].addEventListener("change",Dump,false);
+        }
+
+
+        function newlaser(id) {
+
+          console.log("newlaser " +id)
+          var laserid = 24+ parseInt(id,10);
+          laser = "noteon "+laserid;
+          console.log("laser "+laser);
+          nolaser();
+          nofx();
+
+          var x = document.getElementById(laser);
+          x.value = 1 ;
+          }
+
+
+        function nolaser() {
+          //console.log("nolaser")
+          var x = document.getElementById("noteon 24");
+            x.value = 0 ;
+          var x = document.getElementById("noteon 25");
+            x.value = 0 ;
+          var x = document.getElementById("noteon 26");
+            x.value = 0 ;
+          var x = document.getElementById("noteon 27");
+            x.value = 0 ;
+          }
+
+
+          
+      
+        // RGB Colors
+        function nocolor() {
+          //console.log("nocolor0")
+          var x = document.getElementById("aurora/color/ red");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/color/ yellow");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/color/ green");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/color/ blue");
+           x.value = 0 ;
+          var x = document.getElementById("aurora/color/ cyan");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/color/ white");
+            x.value = 0 ;
+          }
+
+        // RGY Colors
+        //function nocolor() {
+          //var x = document.getElementById("aurora/color/ red");
+          //  x.value = 0 ;
+          //var x = document.getElementById("aurora/color/ yellow");
+          //  x.value = 0 ;
+          //var x = document.getElementById("aurora/color/ green");
+          //  x.value = 0 ;
+          //}
+
+
+        function Dump(e) {
+            var str="";
+            str=e.type + " : " + e.target.id + " : " + e.target.value + " ";
+            console.log(str);
+            log.unshift(str);
+            log.length=1;
+            str="";
+            
+            for(var i=19;i>=0;--i) {
+                if(log[i])
+                    str+=log[i]+"<br/>";
+            }
+
+            _WS.send("/" + e.target.id + " " +  e.target.value);
+
+          var res = e.target.id.split(" "); 
+
+
+          // on off
+          if (e.target.id === "on" && e.type === "change") {   
+            window.location.reload();
+            }
+
+          // Go to index
+          if (e.target.id === "index" && e.type === "change") {   
+            window.location.assign("../index.html");
+            }
+          // Fx
+          if (res[0].substring(7,9) === "fx" && e.type === "change") {   
+
+            var layer = res[0].substring(10,12);  
+            nofx0();  
+            var x = document.getElementById(e.target.id);
+            x.value = 1 ;
+            _WS.showstatus(e.target.id);
+            
+            }
+
+            // Colors
+            if (res[0].substring(7,9) === "co" && e.type === "change") {  
+  
+                nocolor();
+                _WS.send("/"+res[0]+laser+ " "+ res[1]+ " " +  e.target.value);
+                var x = document.getElementById(e.target.id);
+                x.value = 1 ;
+                //_WS.showstatus("Laser "+laser+ " "+ res[1]);
+                console.log("colors sending "+res[0]+laser+ " "+ res[1]+ " " +  e.target.value);
+                }
+
+
+
+            // Lasers
+            if (res[0] === "noteon" && e.type === "change") {  
+                //console.log(e.target.id);
+                //console.log(res);
+                //console.log(res[1] - 24)
+                newlaser(res[1] - 24);
+                _WS.send("/" + e.target.id + " " +  e.target.value);
+
+                //nolaser();
+                //nofx(); 
+                //_WS.send("/" + e.target.id + " " +  e.target.value);
+                //var x = document.getElementById(e.target.id);
+                //x.value = 1 ;
+                //laser = res[1] - 24;
+                //console.log("laser "+laser);
+
+
+          }
+    	</script>
+
+	</body>
+</html>

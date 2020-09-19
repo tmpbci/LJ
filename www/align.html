@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Align Rack</title>
+        <meta charset="utf-8" />
+        <meta name="apple-mobile-web-app-title" content="Align">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="apple-touch-startup-image" href="/launch.png">
+        <link rel="apple-touch-icon" href="touch-icon-iphone.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="touch-icon-ipad.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-iphone-retina.png">
+        <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-ipad-retina.png">
+        
+        <!-- Page specific styles -->
+
+        <style>
+
+        </style>
+
+        <!-- Web audio buttons defaults -->
+        <script  type="application/javascript" src="webcomponents-lite.js"></script>
+        <script>
+        WebAudioControlsOptions={
+          useMidi:1,
+          knobSrc:"knobs/simplegray.png",
+          knobSprites:100,
+          switchSrc:"knobs/switch_toggle.png",
+          sliderSrc:"knobs/vsliderbody.png",
+          sliderKnobsrc:"knobs/vsliderknob.png",
+        }
+        </script>
+        <script src="webaudio-controls.js"></script>
+        <!-- link rel="stylesheet" href="LJgrid.css" / -->
+        <link rel="stylesheet" type="text/css" href="selector.min.css">
+        <script type="application/javascript" src="selector.min.js"></script>
+
+        <link rel="stylesheet" href="css/common.css" />
+    </head>
+
+    <body style="background-color:#222;">
+    <div class="Rackcontent">
+  <!--
+     Navigation Rack
+  -->
+
+   <div class="content">
+    <div class="buttons-7container">
+
+        <a href="index.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Index
+          </div>
+        </div>
+      </a>
+
+        <a href="align.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Align
+          </div>
+        </div>
+        </a>
+
+        <a href="auralls.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Aurora
+          </div>
+        </div>
+        </a>
+
+        <a href="trckr/trckrcam1.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Lasercam
+          </div>
+        </div>
+        </a>
+          
+        <a href="simu.html">
+        <div class="webaudiobut">
+          <div align="center" class="navled"> 
+          Simu
+          </div>
+        </div>
+        </a>
+
+        <div class="webaudiobut">
+          <button type="button" class="navled" style="border : #222222 1px;"  onclick="onSubmit(this.id)" id="settings/restart lj" >
+            restrt LJ
+          </button>
+        </div>
+
+        <div class="webaudiobut">
+          <button type="button" class="navled" style="border : #222222 1px;"  onclick="onSubmit(this.id)" id="settings/restart aurora" >
+            restrt AU
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!--
+    Display Rack
+    -->
+
+
+    <div class="content">
+      <div class="TopRackGrid"> 
+        <div>
+          <h2>
+          /TL Align
+          <span class="shade">&nbsp;</span>
+          </h2>
+          <webaudio-switch id="on" value="1" tooltip="Switch-B" height="35" width="85" src="knobs/switch1.png">
+          </webaudio-switch>
+        </div>
+        <div class="webaudiobut">
+          <div align="center" id="line1" class="busled"> 
+          Align Rack
+          </div>
+          <div align="center" id="status" class="busled"> 
+          /team/laser
+          </div>
+        </div>
+            <div class="etherled" style="margin-left: 30px;margin-top: 1px;">
+              Stt
+              <webaudio-knob id="lstt/0" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+              <webaudio-knob id="lstt/1" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+              <webaudio-knob id="lstt/2" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+              <webaudio-knob id="lstt/3" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+            </div>
+            <div class="etherled" style="margin-left: 30px;margin-top: 1px;">
+              Ack
+              <webaudio-knob id="lack/0" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+              <webaudio-knob id="lack/1" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+              <webaudio-knob id="lack/2" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+              <webaudio-knob id="lack/3" src="knobs/leds.png" height="17" width="17" diameter="17" min="0" max="6" value="0" sprites="6"></webaudio-knob>
+            </div>
+
+      </div>
+</div>
+
+
+    <!--
+    Settings Rack
+    -->
+    <div class="content">
+      <div class="Settingrid"> 
+
+        <div>
+        <h2>Settings</h2>
+        </div>
+
+
+
+        <div class="webaudiobut">
+          <div align="center" class="navled" style="border: 1px solid #222;"> 
+          Lasers
+          </div>
+        </div>
+
+
+        <div>
+             <form onsubmit="onSubmit(); return false;">
+                <select name="settings/lasers" class = "submitalign" onchange = "onSubmit(this.id)" type="text" id="settings/lasers">
+                  <option value="1" selected>1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+            </form>
+        </div>
+        <div class="webaudiobut" align="center" style="width: 83px;">
+          <button type="button" class="navled" style="border: 1px solid #002020; text-align: middle;"  onclick="onSubmit(this.id)" id="settings/rescan" >
+            Rescan
+          </button>
+        </div>
+
+
+        
+        <div>
+             <form onsubmit="onSubmit(); return false;">
+                <select name="settings/debug" class = "submitalign" onchange = "onSubmit(this.id)" type="text" id="settings/debug">
+                  <option value="0" selected>0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                </select>
+            </form>
+        </div>
+
+        <div class="webaudiobut">
+          <div align="center" class="navled" style="border: 1px solid #222;"> 
+          Debug
+          </div>
+        </div>
+
+
+      <div>
+        <form onsubmit="onSubmit(); return false;">
+          <input class = "submite" onchange = "onSubmit(this.id)" type="text" id="settings/IP">
+        </form>
+      </div>
+
+        <div class="webaudiobut" align="center"  style="width: 73px;">
+          <button type="button" class="navled" style="border: 1px solid #002020;"  onclick="onSubmit(this.id)" id="settings/regen" >
+            Regen
+          </button>
+        </div>
+
+        
+        <div></div>
+        <div></div>
+        <div></div>
+        <div> </div>
+        <div></div>
+      </div>
+    </div>
+
+
+
+    <!--
+    Align Rack
+    -->
+    <div class="content" style="height: 500px">
+
+    <div class="TextGrid">
+
+    <div class="mgalign" style="margin-left:0px;">
+      
+   <!-- 
+    Laser 0 
+  -->
+   <div class="laserbox" align="center">
+    <!-- IP laser 0 -->
+    <div>
+      <form onsubmit="onSubmit(); return false;">
+      <input class = "submite" onchange = "onSubmit(this.id)" type="text" id="ip/0">
+      </form>
+    </div>
+    
+
+     <!-- Laser type 
+      <div class="spacer" style="height: 10px;"></div>
+    <div >
+       
+          <form onsubmit="onSubmit(); return false;">
+            <select name="lasertype" class = "submite" onchange = "onSubmit(this.id)" type="text" id="lasertype/0">
+              <option value="DS1000" selected>DS1000</option>
+              <option value="Luke400">Luke400</option>
+              <option value="Spectra">Spectra</option>
+              <option value="Fire500">Fire500</option>
+            </select>
+          </form>
+    </div>
+    -->
+    <div class="spacer" style="height: 8px;"></div>
+
+        <div>
+      <!-- Align Icons -->
+        <webaudio-switch id="grid/0" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/grid.png"></webaudio-switch>
+        <webaudio-switch id="mouse/0" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/mouse.png"></webaudio-switch>
+        <!-- Blackout icon -->
+        <webaudio-switch id="black/0" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/blackout.png"></webaudio-switch>
+        <!-- Swap Icons -->
+        <webaudio-switch id="swap/X/0" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/swapx.png"></webaudio-switch>
+        <webaudio-switch id="swap/Y/0" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
+    </div>
+
+
+    <div class="spacer" style="height: 6px;"></div>
+
+    <!-- kpps knob -->
+    <div><webaudio-knob id="kpps/0" diameter="60" min="0" max="55000" value="25000"></webaudio-knob></div>
+
+
+    <!-- Lasergrid 0 -->
+    <div class="lasergrid" style="background-image: url(knobs/lasergrid0.png);">
+       <!-- kPPS & Points-->
+       <div></div>
+        <div><webaudio-param id="kpps/0" link="kpps/0" ></webaudio-param></div>
+        <div><webaudio-param id="points/0" link="points/0"></webaudio-param></div>
+
+        <div></div>
+        <div class="lasertext">kPPS</div>
+        <div class="lasertext">Buffer</div>
+        <div></div>
+        <div class="spacer" style="height: 5px;"></div>
+        <div class="spacer" style="height: 5px;"></div>
+
+        <!-- Angle, Offset X, Offset Y -->
+        <div><webaudio-knob id="angle/0" diameter="60" min="0" max="360" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="loffset/X/0" diameter="60" min="-320" max="320" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="loffset/Y/0" diameter="60" min="-320" max="320" value="0"></webaudio-knob></div>
+        <div class="lasertext">Angle</div>
+        <div class="lasertext">Offset X</div>
+        <div class="lasertext">Offset Y</div>
+        <div><webaudio-param link="angle/0" value="0"></webaudio-param></div>
+        <div><webaudio-param link="loffset/X/0" value="0"></webaudio-param></div>
+        <div><webaudio-param link="loffset/Y/0" value="0"></webaudio-param></div>
+        <div class="spacer" style="height: 5px;"></div>
+        <div class="spacer" style="height: 5px;"></div>
+        <div class="spacer" style="height: 5px;"></div>
+
+        <!-- Max global intensity, Scale X, Scale Y -->
+        <div><webaudio-knob id="intens/0" diameter="60" min="0" max="255" value="255"></webaudio-knob></div>
+        <div><webaudio-knob id="scale/X/0" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="scale/Y/0" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+        <div class="lasertext"style="color: #ddd;">Intens</div>
+        <div class="lasertext">Scale X</div>
+        <div class="lasertext">Scale X</div>
+         <div><webaudio-param link="intens/0" value="255"></webaudio-param></div>
+        <div><webaudio-param link="scale/X/0" value="0"></webaudio-param></div>
+        <div><webaudio-param link="scale/Y/0" value="0"></webaudio-param></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Red green blue % Intensity for color balancing -->
+        <div><webaudio-knob id="red/0" diameter="60" min="0" max="100" value="100"></webaudio-knob></div>
+        <div><webaudio-knob id="green/0" diameter="60" min="0" max="100" value="100"></webaudio-knob></div>
+        <div><webaudio-knob id="blue/0" diameter="60" min="0" max="100" value="100"></webaudio-knob></div>
+        <div class="lasertext" style="color: #cbb;">Red</div>
+        <div class="lasertext" style="color: #bcb;">Green</div>
+        <div class="lasertext" style="color: #bbc;">Blue</div>
+    </div>
+   </div>
+
+
+   <!-- 
+    Laser 1 
+  -->
+   <div class="laserbox" align="center">
+    <!-- IP laser 1 -->
+    <div>
+      <form onsubmit="onSubmit(); return false;">
+      <input class = "submite" onchange = "onSubmit(this.id)" type="text" id="ip/1">
+      </form>
+     </div>
+      <div class="spacer" style="height: 8px;"></div>
+    <div >
+
+      <!-- Align Icons -->
+        <webaudio-switch id="grid/1" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/grid.png"></webaudio-switch>
+        <webaudio-switch id="mouse/1" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/mouse.png"></webaudio-switch>
+      
+        <!-- Blackout icon -->
+        <webaudio-switch id="black/1" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/blackout.png"></webaudio-switch>
+      
+        <!-- Swap Icons -->
+        <webaudio-switch id="swap/X/1" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/swapx.png"></webaudio-switch>
+        <webaudio-switch id="swap/Y/1" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
+    </div>
+     <div class="spacer" style="height: 6px;"></div>
+
+    <!-- kpps knob -->
+    <div><webaudio-knob id="kpps/1" diameter="60" min="0" max="55000" value="25000"></webaudio-knob></div>
+
+
+
+    <!-- Lasergrid 1 -->
+    <div class="lasergrid" style="background-image: url(knobs/lasergrid1.png);">
+
+       <!-- kPPS & Points-->
+        <div></div>
+        <div><webaudio-param id="kpps/1" link="kpps/1"></webaudio-param></div>
+        <div><webaudio-param id="points/1" link="points/1"></webaudio-param></div>
+        <div></div>
+        <div class="lasertext">kPPS</div>
+        <div class="lasertext">Buffer</div>
+        <div></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Angle, Offset X, Offset Y -->
+        <div><webaudio-knob id="angle/1" diameter="60" min="-1" max="1" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="loffset/X/1" diameter="60" min="-320" max="320" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="loffset/Y/1" diameter="60" min="-320" max="320" value="0"></webaudio-knob></div>
+        <div class="lasertext">Angle</div>
+        <div class="lasertext">Offset X</div>
+        <div class="lasertext">Offset Y</div>
+        <div><webaudio-param link="angle/1" value="0"></webaudio-param></div>
+        <div><webaudio-param link="loffset/X/1" value="0"></webaudio-param></div>
+        <div><webaudio-param link="loffset/Y/1" value="0"></webaudio-param></div>
+        <div class="spacer" style="height: 5px;"></div>
+        <div class="spacer" style="height: 5px;"></div>
+        <div class="spacer" style="height: 5px;"></div>
+
+        <!-- Max global intensity, Scale X, Scale Y -->
+        <div><webaudio-knob id="intens/1" diameter="60" min="0" max="255" value="255"></webaudio-knob></div>
+        <div><webaudio-knob id="scale/X/1" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="scale/Y/1" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+        <div class="lasertext"style="color: #ddd;">Intens</div>
+        <div class="lasertext">Scale X</div>
+        <div class="lasertext">Scale X</div>
+         <div><webaudio-param link="intens/1" value="255"></webaudio-param></div>
+        <div><webaudio-param link="scale/X/1" value="0"></webaudio-param></div>
+        <div><webaudio-param link="scale/Y/1" value="0"></webaudio-param></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Red green blue % Intensity for color balancing -->
+        <div><webaudio-knob id="red/1" diameter="60" min="0" max="100" value="100"></webaudio-knob></div>
+        <div><webaudio-knob id="green/1" diameter="60" min="0" max="100" value="100"></webaudio-knob></div>
+        <div><webaudio-knob id="blue/1" diameter="60" min="0" max="100" value="100"></webaudio-knob></div>
+        <div class="lasertext" style="color: #cbb;">Red</div>
+        <div class="lasertext" style="color: #bcb;">Green</div>
+        <div class="lasertext" style="color: #bbc;">Blue</div>
+    </div>
+   </div>
+
+
+   <!-- 
+    Laser 2 
+  -->
+   <div class="laserbox" align="center">
+    <!-- IP laser 2 -->
+    <div>
+      <form onsubmit="onSubmit(); return false;">
+      <input class = "submite" onchange = "onSubmit(this.id)" type="text" id="ip/2">
+      </form>
+    </div>
+     <div class="spacer" style="height: 8px;"></div>
+    <div>
+      
+      <!-- Align Icons -->
+        <webaudio-switch id="grid/2" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/grid.png"></webaudio-switch>
+        <webaudio-switch id="mouse/2" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/mouse.png"></webaudio-switch>
+      
+        <!-- Blackout icon -->
+        <webaudio-switch id="black/2" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/blackout.png"></webaudio-switch>
+      
+        <!-- Swap Icons -->
+        <webaudio-switch id="swap/X/2" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/swapx.png"></webaudio-switch>
+        <webaudio-switch id="swap/Y/2" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
+    </div>
+    <div class="spacer" style="height: 6px;"></div>
+        <!-- kpps knob -->
+
+    <div><webaudio-knob id="kpps/2" diameter="60" min="0" max="55000" value="25000"></webaudio-knob></div>
+
+    <!-- Laser 2 grid -->
+    <div class="lasergrid" style="background-image: url(knobs/lasergrid2.png)">
+        
+        <!-- kPPS & Points-->
+        <div></div>
+        <div><webaudio-param id="kpps/2" link="kpps/2"></webaudio-param></div>
+        <div><webaudio-param id="points/2" link="points/2"></webaudio-param></div>
+        <div></div>
+        <div class="lasertext">kPPS</div>
+        <div class="lasertext">Buffer</div>
+        <div></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Angle, Offset X, Offset Y -->
+        <div><webaudio-knob id="angle/2" diameter="60" min="-1" max="1" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="loffset/X/2" diameter="60" min="-320" max="320" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="loffset/Y/2" diameter="60" min="-320" max="320" value="0"></webaudio-knob></div>
+        <div class="lasertext">Angle</div>
+        <div class="lasertext">Offset X</div>
+        <div class="lasertext">Offset Y</div>
+        <div><webaudio-param link="angle/2" value="0"></webaudio-param></div>
+        <div><webaudio-param link="loffset/X/2" value="0"></webaudio-param></div>
+        <div><webaudio-param link="loffset/Y/2" value="0"></webaudio-param></div>
+        <div class="spacer" style="height: 5px;"></div>
+        <div class="spacer" style="height: 5px;"></div>
+        <div class="spacer" style="height: 5px;"></div>
+
+        <!-- Max global intensity, Scale X, Scale Y -->
+        <div><webaudio-knob id="intens/2" diameter="60" min="0" max="255" value="255"></webaudio-knob></div>
+        <div><webaudio-knob id="scale/X/2" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="scale/Y/2" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+        <div class="lasertext"style="color: #ddd;">Intens</div>
+        <div class="lasertext">Scale X</div>
+        <div class="lasertext">Scale X</div>
+         <div><webaudio-param link="intens/2" value="255"></webaudio-param></div>
+        <div><webaudio-param link="scale/X/2" value="0"></webaudio-param></div>
+        <div><webaudio-param link="scale/Y/2" value="0"></webaudio-param></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Red green blue % Intensity for color balancing -->
+        <div><webaudio-knob id="red/2" diameter="60" min="0" max="100" value="100"></webaudio-knob></div>
+        <div><webaudio-knob id="green/2" diameter="60" min="0" max="100" value="100"></webaudio-knob></div>
+        <div><webaudio-knob id="blue/2" diameter="60" min="0" max="100" value="100"></webaudio-knob></div>
+        <div class="lasertext" style="color: #cbb;">Red</div>
+        <div class="lasertext" style="color: #bcb;">Green</div>
+        <div class="lasertext" style="color: #bbc;">Blue</div>
+    </div>
+   </div>
+
+
+   <!-- 
+    Laser 3 
+  -->
+   <div class="laserbox" align="center">
+    <!-- IP laser 3 -->
+    <div>
+      <form onsubmit="onSubmit(); return false;">
+      <input class = "submite" onchange = "onSubmit(this.id)" type="text" id="ip/3">
+      </form>
+    </div>
+    <div class="spacer" style="height: 8px;"></div>
+    <div>
+      
+      <!-- Align Icons -->
+        <webaudio-switch id="grid/3" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/grid.png"></webaudio-switch>
+        <webaudio-switch id="mouse/3" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/mouse.png"></webaudio-switch>
+        
+        <!-- Blackout icon -->
+        <webaudio-switch id="black/3" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/blackout.png"></webaudio-switch>
+        
+        <!-- Swap Icons -->
+        <webaudio-switch id="swap/X/3" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/swapx.png"></webaudio-switch>
+        <webaudio-switch id="swap/Y/3" value="0" height="25" width="25" tooltip="Switch-B" src="knobs/swapy.png"></webaudio-switch>
+    </div>
+    <div class="spacer" style="height: 6px;"></div>
+
+    <!-- kpps knob -->
+    <div><webaudio-knob id="kpps/3" diameter="60" min="0" max="55000" value="25000"></webaudio-knob></div>
+
+
+    <!-- Laser 3 grid -->
+    <div class="lasergrid" style="background-image: url(knobs/lasergrid3.png)">
+
+        <!-- kPPS & Points-->
+        <div></div>
+        <div><webaudio-param id="kpps/3" link="kpps/3" ></webaudio-param></div>
+        <div><webaudio-param id="points/3" link="points/3"></webaudio-param></div>
+        <div></div>
+        <div class="lasertext">kPPS</div>
+        <div class="lasertext">Buffer</div>
+        <div></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Angle, Offset X, Offset Y -->
+        <div><webaudio-knob id="angle/3" diameter="60" min="-1" max="1" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="loffset/X/3" diameter="60" min="-320" max="320" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="loffset/Y/3" diameter="60" min="-320" max="320" value="0"></webaudio-knob></div>
+        <div class="lasertext">Angle</div>
+        <div class="lasertext">Offset X</div>
+        <div class="lasertext">Offset Y</div>
+        <div><webaudio-param link="angle/3" value="0"></webaudio-param></div>
+        <div><webaudio-param link="loffset/X/3" value="0"></webaudio-param></div>
+        <div><webaudio-param link="loffset/Y/3" value="0"></webaudio-param></div>
+        <div class="spacer" style="height: 5px;"></div>
+        <div class="spacer" style="height: 5px;"></div>
+        <div class="spacer" style="height: 5px;"></div>
+
+        <!-- Max global intensity, Scale X, Scale Y -->
+        <div><webaudio-knob id="intens/3" diameter="60" min="0" max="255" value="255"></webaudio-knob></div>
+        <div><webaudio-knob id="scale/X/3" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+        <div><webaudio-knob id="scale/Y/3" diameter="60" min="-10" max="10" value="0"></webaudio-knob></div>
+        <div class="lasertext"style="color: #ddd;">Intens</div>
+        <div class="lasertext">Scale X</div>
+        <div class="lasertext">Scale X</div>
+         <div><webaudio-param link="intens/3" value="255"></webaudio-param></div>
+        <div><webaudio-param link="scale/X/3" value="0"></webaudio-param></div>
+        <div><webaudio-param link="scale/Y/3" value="0"></webaudio-param></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+
+        <!-- Red green blue % Intensity for color balancing -->
+        <div><webaudio-knob id="red/3" diameter="60" min="0" max="100" value="100"></webaudio-knob></div>
+        <div><webaudio-knob id="green/3" diameter="60" min="0" max="100" value="100"></webaudio-knob></div>
+        <div><webaudio-knob id="blue/3" diameter="60" min="0" max="100" value="100"></webaudio-knob></div>
+        <div class="lasertext" style="color: #cbb;">Red</div>
+        <div class="lasertext" style="color: #bcb;">Green</div>
+        <div class="lasertext" style="color: #bbc;">Blue</div>
+    </div>
+   </div>
+
+
+   </div>  
+
+   </div>  
+
+   </div>  
+
+
+    <!--
+    Encoders Line
+  
+      # /aurora/radius       layernumber radius [0-1] 
+      # /aurora/rotdirec layer axe direc
+      # /aurora/linesize layer value
+      # /aurora/rotdirec layer axe direc
+      # /aurora/rotspeed layernumber axe speed
+      # /aurora/transpeed layernumber axe transpeed
+      # /aurora/transamt layernumber axe maxposition
+    -->
+
+  <!--
+  JS 
+  -->
+  
+    <!-- LJ style WS : A nettoyer ! -->
+
+      <script type="text/javascript">
+
+      var LJ = 'ws://192.168.2.43:9001/'
+      var LJ = 'ws://192.168.2.43:9001/'
+
+            var _WS = {
+            uri: LJ,
+            ws: null,
+        
+            init : function (e) {
+              _WS.s = new WebSocket(_WS.uri);
+              _WS.s.onopen = function (e) { _WS.onOpen(e); };
+              _WS.s.onclose = function (e) { _WS.onClose(e); };
+              _WS.s.onmessage = function (e) { _WS.onMessage(e); };
+              _WS.s.onerror = function (e) { _WS.onError(e); };
+              },
+        
+            onOpen: function () {
+            _WS.showstatus("Connected to "+LJ);
+            document.getElementById("on").value = 1;
+              },
+        
+            onClose: function () {
+              _WS.showline1('<span style="color: red;">LJ2 DISCONNECTED</span> ');
+              document.getElementById("on").value = 0;
+              document.getElementById("lstt/0").value = 0;
+              document.getElementById("lstt/1").value = 0;
+              document.getElementById("lstt/2").value = 0;
+              document.getElementById("lstt/3").value = 0;
+              document.getElementById("lack/0").value = 0;
+              document.getElementById("lack/1").value = 0;
+              document.getElementById("lack/2").value = 0;
+              document.getElementById("lack/3").value = 0;
+              },
+        
+            onMessage: function (e) {
+              var res = e.data.split(" ");
+              //console.log(e.data)
+              //console.log(res[0].substring(0,6))
+              //console.log(res)
+              //console.log(res[0].slice(1))
+              var divtext = document.getElementById('status');
+              var divtextp = document.getElementById('players');
+
+
+              switch (res[0].substring(0,6)) {
+                
+                case "/statu":
+                        _WS.showline1("connected to "+LJ);
+                      if (res[2]==="Disconnected"){
+                         _WS.showstatus(res[1]+" "+'<span style="color: red;">'+ res[2]+'</span> ');
+                        }
+                      else{
+                        _WS.showstatus(res[1]+" "+res[2]);
+                        }
+                      break;
+                
+                case "/redst":
+                      //console.log("red"+res[1]+" "+res[2]);
+                      _WS.showstatus('<span style="color: red;">'+res[1]+" "+ res[2]+'</span> ');
+                      break;
+
+                case "/line1":
+                      //divtext.innerHTML="connected to "+LJ;
+                      divtext1.innerHTML=res[1]+" "+res[2];
+                      break;
+
+                case "/redline1":
+                      //divtext.innerHTML="connected to "+LJ;
+                      divtext1.innerHTML='<span style="color: red;">'+ res[1]+" "+res[2]+'</span>';
+                      break;
+      
+
+                default:
+                    //console.log("test "+res[0].slice(1)+" "+res[1]);
+                    document.getElementById(res[0].slice(1)).value = res[1];
+                    //_WS.showstatus(e.data);
+                    break
+                }
+              },
+        
+            onError: function (e) {
+              _WS.showstatus('<span style="color: red;">ERROR:</span> ' + e.data);
+              },
+        
+            showin: function (message) {
+                var divtext = document.getElementById('status');
+                divtext.innerHTML="";
+                divtext.innerHTML= message.toString();
+              },
+        
+            showout: function (message) {
+                var divtext = document.getElementById('status');
+                divtext.innerHTML="";
+                divtext.innerHTML= message.toString();
+              },
+        
+            showstatus: function (message) {
+                var divtext = document.getElementById('status');
+                divtext.innerHTML="";
+                divtext.innerHTML= message.toString();
+              },
+        
+            showline1: function (message) {
+                var divtext = document.getElementById('line1');
+                divtext.innerHTML="";
+                divtext.innerHTML= message.toString();
+              },
+
+
+            send: function (message) {
+              if (!message.length) {
+                alert('Empty message not allowed !');
+              } else {
+                _WS.showstatus(message);
+                _WS.s.send(message);
+              }
+            },
+        
+            close: function () {
+              _WS.showstatus('GOODBYE !');
+              _WS.s.close();
+            }
+          };
+        
+          window.addEventListener('load', _WS.init, false);    
+          
+        //
+        // Forms submits
+        //
+        
+          function onSubmit(clicked_id) {
+            var input = document.getElementById(clicked_id);
+            console.log("/" + clicked_id + " " + input.value);
+            _WS.send("/" + clicked_id + " " + input.value);
+            }
+        
+        </script>
+
+      <!-- 
+        web audio encoders scripts 
+      -->
+      
+      <script type="text/javascript">
+        var message="";
+        var log=[];
+        var knobs = document.getElementsByTagName('webaudio-knob');
+        
+        for(var i = 0; i < knobs.length; i++){
+            knobs[i].addEventListener("input",Dump,false);
+            knobs[i].addEventListener("change",Dump,false);
+        }
+        var sliders = document.getElementsByTagName('webaudio-slider');
+        
+        for(var i = 0; i < sliders.length; i++){
+            sliders[i].addEventListener("input",Dump,false);
+            sliders[i].addEventListener("change",Dump,false);
+        }
+        var switches = document.getElementsByTagName('webaudio-switch');
+        
+        for(var i = 0; i < switches.length; i++) {
+            switches[i].addEventListener("change",Dump,false);
+        }
+
+
+        function newlaser(id) {
+
+          console.log("newlaser")
+          nolaser();
+          nofx();
+
+          laserid = "noteon "+(24-id);
+          console.log("laserid "+laserid);
+        
+          var x = document.getElementById(laserid);
+          x.value = 1 ;
+          console.log("laser "+id);
+          }
+
+          
+        function nofx0() {
+          console.log("nofx0")
+          var x = document.getElementById("aurora/fx/0 ScanH");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/fx/0 ScanV");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/fx/0 Wave");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/fx/0 Circle");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/fx/0 Starfield");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/fx/0 Word");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/fx/0 Trckr");
+            x.value = 0 ;
+          }
+          
+      
+        function nocolor0() {
+          console.log("nocolor0")
+          var x = document.getElementById("aurora/color/0 red");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/color/0 yellow");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/color/0 green");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/color/0 blue");
+           x.value = 0 ;
+          var x = document.getElementById("aurora/color/0 cyan");
+            x.value = 0 ;
+          var x = document.getElementById("aurora/color/0 white");
+            x.value = 0 ;
+          }
+
+
+        function Dump(e) {
+            var str="";
+            str=e.type + " : " + e.target.id + " : " + e.target.value + " ";
+            console.log(str);
+            log.unshift(str);
+            log.length=1;
+            str="";
+            
+            for(var i=19;i>=0;--i) {
+                if(log[i])
+                    str+=log[i]+"<br/>";
+            }
+
+            _WS.send("/" + e.target.id + " " +  e.target.value);
+
+          var res = e.target.id.split(" "); 
+
+          // on off
+          if (e.target.id === "on" && e.type === "change") {   
+            window.location.reload();
+            }
+
+          // Go to index
+          if (e.target.id === "index" && e.type === "change") {   
+            window.location.assign("index.html");
+            }
+
+          // Fx
+          if (res[0].substring(7,9) === "fx" && e.type === "change") {   
+
+            var layer = res[0].substring(10,12);  
+            nofx0();  
+            var x = document.getElementById(e.target.id);
+            x.value = 1 ;
+            _WS.showstatus(e.target.id);
+            
+            }
+
+          // Colors
+          if (res[0].substring(7,9) === "co" && e.type === "change") {  
+
+              var layer = res[0].substring(13,14);  
+              console.log(layer)
+              nocolor0();
+              var x = document.getElementById(e.target.id);
+              x.value = 1 ;
+              _WS.showstatus(e.target.id);
+              }
+      
+        }
+    </script>
+
+    </body>
+</html>

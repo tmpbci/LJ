@@ -1,0 +1,377 @@
+        .grid-container {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-rows: 0.8fr 47px 0.7fr 2.8fr;
+          grid-template-areas: ". . ." ". . ." ". . ." ". . .";
+        }
+        .buttons-container {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-rows: 1fr;
+          grid-template-areas: ". . ." ". . ." ". . ." ". . .";
+        }
+        .buttons-6container {
+          display: grid;
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+          grid-template-rows: 1fr;
+          gap: 1px 1px;
+          grid-template-areas: ". . . . . .";
+        }
+        .buttons-7container {
+          display: grid;
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+          grid-template-rows: 1fr;
+          gap: 1px 1px;
+          grid-template-areas: ". . . . . . .";
+        }
+        #title{
+            font-family: "Lucida Grande", Verdana, Arial, sans-serif;
+            text-align: center;
+            color: #ddd;
+            font-size: 4ex;
+        }
+        #text{
+            font-family: "Lucida Grande", Verdana, Arial, sans-serif;
+            text-align: center;
+            color: #ccc;
+            font-size: 2ex;
+        }
+        .encoders{
+            margin: 0 auto;
+        }
+        .mainGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr;
+            gap: 1px 1px;
+            grid-template-areas: ". . . . . . . .";
+        }
+        .buttonsGrid {
+            display: grid;
+            grid-template-columns: 70px 70px 70px 70px 70px 70px 70px 70px 70px 70px 70px 70px;
+            grid-template-rows: 1fr;
+            gap: 1px 1px;
+            grid-template-areas: ". . . . ." ". . . . ." ". . . . .";
+            }
+        .FxGrid {
+            display: grid;
+            grid-template-columns: 70px 70px 70px 70px 70px 70px 70px;
+            grid-template-rows: 1fr;
+            gap: 1px 1px;
+            align-items: stretch;
+            background-color: #020202;
+            grid-template-areas: ". . . . . . ,";
+            }
+        .RGYGrid {
+            display: grid;
+            grid-template-columns: 70px 70px 70px;
+            grid-template-rows: 1fr;
+            background-color: #020202;
+            gap: 1px 1px;
+            grid-template-areas: ". . .";
+            }
+        .RGBGrid {
+            display: grid;
+            grid-template-columns: 70px 70px 70px 70px 70px 70px;
+            grid-template-rows: 1fr;
+            gap: 1px 1px;
+            background-color: #020202;
+            grid-template-areas: ". . . . . .";
+            }
+        .TopRackGrid {
+          display: grid;
+          grid-template-columns: 120px 600px 30px 30px;
+          grid-template-rows: 1fr;
+          gap: 1px 1px;
+          grid-template-areas: ". . . .";
+        }
+        .TextGrid {
+          display: grid;
+          grid-template-columns: 250px 370px;
+          grid-template-rows: 1fr;
+          gap: 1px 1px;
+          grid-template-areas: ". .";
+        }
+        .Rackgrid {
+          display: grid;
+          grid-template-columns: 170px 70px 70px 70px 70px 70px 70px 70px 70px 70px;
+          grid-template-rows: 1fr;
+          gap: 1px 1px;
+          grid-template-areas: ". . . . . . . . . .";
+          }
+        .Settingrid {
+          display: grid;
+          grid-template-columns: 110px 80px 80px 100px 80px 80px 140px 40px;
+          grid-template-rows: 1fr;
+          gap: 1px 1px;
+          grid-template-areas: ". . . . . . . . .";
+          }
+        .ColorRackGrid {
+          display: grid;
+          grid-template-columns: 170px 70px 70px 70px 70px 70px 70px 70px 70px 70px;
+          grid-template-rows: 1fr;
+          gap: 1px 1px;
+          grid-template-areas: ". . . . . . . . . .";
+          }
+        .grid3 {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-rows: 1fr;
+          gap: 1px 1px;
+          grid-template-areas: ". . .";
+          }
+        .encodersGrid {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+            gap: 1px 1px;
+            grid-template-areas: "." "." "." "." ".";
+            }
+       .webaudiobut{
+          border-radius: 4px; 
+          border : #002020 1px solid;
+          -webkit-box-shadow: 2px 4px 8px -1px rgba(0,0,0,0.72);
+          -moz-box-shadow: 2px 4px 8px -1px rgba(0,0,0,0.72);
+          box-shadow: 2px 4px 8px -1px rgba(0,0,0,0.72);
+          background-image: linear-gradient(174deg,  #111,#030303);
+          }
+        .content{
+          width : 800px;
+          padding : 10px 20px;
+          margin : 5px auto;
+          border-radius: 10px; 
+          border : #212121 2px solid;
+          background-color: #000000;
+          background-image: linear-gradient(174deg,  #222,#111);
+          -webkit-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+          -moz-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+          box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+            }
+        .Rackcontent{
+          width : 845px;
+          border-radius: 3px; 
+          margin : 1px auto;
+          border : #111 2px solid;
+          background-color: #111;
+          -webkit-box-shadow: 4px 6px 44px -1px rgba(0,0,0,0.72);
+          -moz-box-shadow: 4px 6px 44px -1px rgba(0,0,0,0.72);
+          box-shadow: 4px 6px 44px -1px rgba(0,0,0,0.72);
+            }
+        .content-title {
+            color : #ddd;
+            border : none;
+            margin-top : 15px;
+            padding-bottom : 0;
+            margin-bottom : 0;
+            background-color : inherit;
+            }
+            
+        .content-names {
+            padding : 10px;
+            padding-top : 0;
+            border : none;
+            box-shadow : none;
+            background-color : inherit;
+            }
+        .etherled {
+            color: #666;
+            font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
+            font-size: 1.5ex;
+            text-align: middle;
+            margin-left: 20px
+            margin-top: 10px
+            }
+
+         a { text-decoration: none; 
+          border: none;
+          outline: none;
+         }
+         a:hover, a:focus {
+          border: none;
+          outline: none;
+          color: #fff;
+          }
+
+        h2 {
+        position: relative;
+        line-height: 3ex;
+        color: #666;
+        text-align: middle;
+        font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
+        font-size: 1.7ex;
+        margin-top : 1px;
+        text-shadow: 2px 3px #000;
+        }
+        @font-face {
+
+        font-family: "Bus Led Display Small";
+        src: url("7f37946c45abf5482c243bf326f82628.eot"); /* IE9*/
+        src: url("7f37946c45abf5482c243bf326f82628.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+        url("7f37946c45abf5482c243bf326f82628.woff2") format("woff2"), /* chrome、firefox */
+        url("7f37946c45abf5482c243bf326f82628.woff") format("woff"), /* chrome、firefox */
+        url("7f37946c45abf5482c243bf326f82628.ttf") format("truetype"), /* chrome、firefox、opera、Safari, Android,      iOS 4.2+*/
+        url("7f37946c45abf5482c243bf326f82628.svg#Bus Led Display Small") format("svg"); /* iOS 4.1- */
+      }
+
+      .busled{
+        color: #ccc;
+        background: #000;
+        font-family:"Bus Led Display Small" !important;
+        font-size:2em;
+        font-style:normal;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-stroke-width: 0.7px;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .navled{
+        color: #ccc;
+        background: #000;
+        font-family:"Bus Led Display Small" !important;
+        font-size:1.5em;
+        margin-left: 2px;
+        font-style:normal;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-stroke-width: 0.7px;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .submit {
+          background: #000;
+          color: #f0f0f0;
+          width: 90px;
+          height: 20px;
+          text-align: center;
+          margin-left: 15px;
+          vertical-align: middle;
+          font-family:"Bus Led Display Small" !important;
+          font-size:1.1em;
+          font-style:normal;
+          border: 1px solid #445;
+          -webkit-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+          -moz-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+           box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+      }
+      .submite {
+          background: #000;
+          color: #f0f0f0;
+          width: 120px;
+          height: 25px;
+          text-align: center;
+          margin-left: 15px;
+          vertical-align: middle;
+          font-family:"Bus Led Display Small" !important;
+          font-size:1.3em;
+          font-style:normal;
+          border: 1px solid #033;
+          -webkit-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+          -moz-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+           box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+      }
+      .submitalign {
+          background: #000;
+          color: #f0f0f0;
+          width: 60px;
+          height: 30px;
+          text-align: center;
+          margin-left: 15px;
+          vertical-align: middle;
+          font-family:"Bus Led Display Small" !important;
+          font-size:1.4em;
+          font-style:normal;
+          border: 1px solid #001515;
+          -webkit-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+          -moz-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+           box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+      }
+      .submites {
+          background: #000;
+          color: #f0f0f0;
+          width: 30px;
+          height: 35px;
+          text-align: center;
+          margin-left: 15px;
+          vertical-align: middle;
+          font-family:"Bus Led Display Small" !important;
+          font-size:1.3em;
+          font-style:normal;
+          border: 1px solid #445;
+          -webkit-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+          -moz-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+           box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+      }
+      .submitext{
+        font-family: 'Bus Led Display Small';
+        color: #fff;
+        background: #000;
+        font-size: 5ex;"
+        border-radius: 5px; 
+        border : #222222 2px solid;
+        -webkit-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+        -moz-box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+        box-shadow: 4px 6px 10px -1px rgba(0,0,0,0.72);
+
+      }
+      #overlay {
+        position: absolute;
+        top: 200px;
+        left: 650px;
+        -o-transform : scaleX(-1);
+        -webkit-transform : scaleX(-1);
+        transform : scaleX(-1);
+        -ms-filter : fliph; /*IE*/
+        filter : fliph; /*IE*/
+        }
+
+      #videoel {
+        -o-transform : scaleX(-1);
+        -webkit-transform : scaleX(-1);
+        transform : scaleX(-1);
+        -ms-filter : fliph; /*IE*/
+        filter : fliph; /*IE*/
+        }
+      .lasertext {
+          font-size: small;
+          font-family: Helvetica, Verdana, Arial, sans-serif;
+          color: #bbb;
+        }
+      .mgalign {
+        color: #aaa;
+        text-align: middle;
+        font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
+        display: grid;
+        height: 400px;
+        grid-template-columns: 200px 200px 200px 200px;
+        grid-template-rows: 1Fr;
+      
+        border-width: 1px solid #445;
+         gap: 1px 1px;
+        grid-template-areas: ". . . . . . . . . .";
+      }
+        .lasergrid {
+        display: grid;
+        height: 323px;
+        width: 200px;
+        grid-template-columns: 62px 62px 62px;
+        grid-template-rows: 30px 19px 10px 55px 19px 20px  16px 55px 19px 25px 16px 55px 19px;
+        line-height: 1;
+        justify-items: center;
+        align-items: center;
+        color:#88c;
+      }
+      .lissabox {
+        display: grid;
+        height: 353px;
+        width: 126px;
+        grid-template-columns: 124px;
+        grid-template-rows: 15px 338px;
+        background-color: #000000;
+        background-image: linear-gradient(147deg, #000000 0%, #434343 374%);
+        line-height: 1;
+        padding: 6px;
+        justify-items: center;
+        align-items: center;
+        border-color: #334;
+        border-style: groove;
+        border-width: 1px;
+      }
