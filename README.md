@@ -8,7 +8,6 @@ LICENCE : CC BY
 ![LJ](http://www.teamlaser.tk/lj/images/lj2.png)
 
 A software laser framework with GUI, for up to 4 lasers live actions with ethedreams DACs. Think creative like Laser "battles", planetarium, sharing available lasers in demoparties for competition, ... 
-
  
 
 LJ has 5 main components : 
@@ -16,40 +15,14 @@ LJ has 5 main components :
 - "Plugins" are points generators (to one or more lasers). Lot examples comes with LJ : planetarium, 3D anaglyph animations,... See plugins directory.
 - A "tracer" per etherdream/laser that take its given point list, correct geometry, recompute in laser controller coordinates, send it to its controller and report its status to the "manager".
 - A "manager" that talk to all tracers (which client number point lists to draw, new geometry correction,...), handle IOs (webui functions, OSC commands,...) and plugins.
-- A web GUI in html, css, and vanilla js. No html server or js framework here : it's complex enough. This GUI has a (currently slow) simulator, but one can also use an etherdream/laser emulator (from nannou) to work without physical lasers !! 
-- A network available database (redis). "Plugins" can send directly their pointlists to redis and each "tracer" is instructed to get one of the avalaible pointlist in redis.
+- A web GUI in html, css, and vanilla js. This UI can be used in a tablet, computer, whatever. LJ does not come with an html server but absolutely can . This GUI has a (currently slow) simulator, but one can also use an etherdream/laser emulator (see nannou simulator below) to work without physical lasers !! 
+- A network available database (redis). "Plugins" can send directly their pointlists to redis. Each "tracer" is instructed to get one of the avalaible pointlist in redis.
 
-
-![Scenes](http://www.teamlaser.tk/lj/images/scenes.png)
-
-LJ accept up to 4 groups = virtual "scenes" of 4 "pointlists" each (= one pointlist per laser), so up to 16 pointlists can be sent to redis at anytime from anywhere in the network. The idea behind this is to easily share actual lasers. Imagine in demo party :
-
-Erica needs 4 lasers, that's the 4 pointlists of "scene" 0.
-Paula and Jennifer use only 2 lasers each, so they can share "scene" 1.
-And so on..
-
-The server/network/webUI idea allows to spread cpu intensive tasks on different cpu cores and especially give tracers enough cpu to feed etherdreams DACs smoothly. Of course all this can happen in one computer. There is no real limits : 4 everything is tested and works smoothly if *you have enough cpu/computers/network ressources*. 
-
-It's obviously overkill for one laser in a garage, but for several laserS games events, laserS art, laserS competition, laserS planetarium,... LJ will handle the complexity. Content providers like artists, demomakers,... just need create plugin in whatever langage, send the points to redis. 
-
-To change current scene used by lasers/tracers use the command : /scene/scenenumber/start 1 
-
-
-Registering the plugin in LJ.conf is absolutely not mandatory. 
-
-Needs at least : an etherdream DAC connected to an ILDA laser, RJ 45 IP network (gigabits only !! wifi and wired 100 mpbs doesn't work well with several lasers). Seriously : if you experience frame drops you need to upgrade your network and use a dedicated computer to run seperately main program from plugins, youtube,...
-
-LJ is tested with Firefox, supports Linux and OS X. Windows is unkown but welcome, if someone want to jump in. 
-
-LJ is in dev : versions in this repository will always be core functionnal : accept and draw pointlists. New features can be not fully implemented, wait for the next commit. Any feedback is welcome at any time.
-
-
+Important : for best performance LJ is meant to run in a dedicated computer especially with multiple lasers and highly multitasked load : if you watch video, use live webcam face recognition, webui simulator,... and run LJ on the same computer, well you need a bunch of cores. If you don't, spread the load : you can use webui on a tablet, the livecam on a phone, run pointlists generators on another computer,...
 
 #
 # Features among many others.
 # 
-
-(Doc in progress)
 
 - Intensity and kpps live modification.
 - Some Lasermapping ('alignment') like in videomapping.
@@ -70,6 +43,34 @@ LJ is in dev : versions in this repository will always be core functionnal : acc
 - Maxwell laser synth emulation plugin. Work in progress
 - Plugins list auto start, see line in LJ.conf : autostart = artnet
 - user.py plugin code example
+
+#
+# Scenes and pointlists.
+# 
+
+![Scenes](http://www.teamlaser.tk/lj/images/scenes.png)
+
+LJ accept up to 4 groups = virtual "scenes" of 4 "pointlists" each (= one pointlist per laser), so up to 16 pointlists can be sent to redis at anytime from anywhere in the network. The idea behind this is to easily share actual lasers. Imagine in demo party :
+
+Erica needs 4 lasers, that's the 4 pointlists of "scene" 0.
+Paula and Jennifer use only 2 lasers each, so they can share "scene" 1.
+And so on..
+
+The server/network/webUI idea allows to spread cpu intensive tasks on different cpu cores and especially give tracers enough cpu to feed etherdreams DACs smoothly. Of course all this can happen in one computer if *you have enough cpu/computers/network ressources*. 
+
+It's obviously overkill for one laser in a garage, but for several laserS games events, laserS art, laserS competition, laserS planetarium,... LJ will handle the complexity. Content providers like artists, demomakers,... just need create plugin in whatever langage, send the points to redis. 
+
+To change current scene used by lasers/tracers use the command : /scene/scenenumber/start 1 
+
+
+Registering the plugin in LJ.conf is absolutely not mandatory. 
+
+Needs at least : an etherdream DAC connected to an ILDA laser, RJ 45 IP network (gigabits only !! wifi and wired 100 mpbs doesn't work well with several lasers). Seriously : if you experience frame drops you need to upgrade your network and use a dedicated computer to run seperately main program from plugins, youtube,...
+
+LJ is tested with Firefox, supports Linux and OS X. Windows is unkown but welcome, if someone want to jump in. 
+
+LJ is in dev : versions in this repository will always be core functionnal : accept and draw pointlists. New features can be not fully implemented, wait for the next commit. Any feedback is welcome at any time.
+
 
 
 #
@@ -113,14 +114,14 @@ Correct launch order is :
 - Redis server, usually automatically start at boot if redis is a service or you launched manually : redis-server &
 - This program. see below.
 - Load/reload webUI page from disk in a browser (www/index.html). Javascript must be enabled. 
-- Run a builtin plugin or your generator, to send pointlists in redis. See in clients/plugins folder for examples.
+- Run a builtin plugin or your generator, to send pointlists in redis.
 
 
 A typical LJ start is :
 
 python3 main.py -L numberoflasers. 
 
-Use also -h to display all possible arguments, like -v for debug informations. 
+Use also -h to display all possible arguments, like -v 1 (or 2) for debug informations. 
 
 
 CASE 1 : the laser server computer, where LJ runs, is the same that the computer running a generator/plugin :
@@ -198,10 +199,11 @@ First open square.py and learn how to declare different objects. square.py is a 
 
 1/ How to have another laser drawing the same thing ?
 
-That's a destination problem : just add another destination !
+That's a destination problem : just add another destination :  
 
-Dest1 = lj.DestObject('1', 1, True, 0 , 1, 1)	# Dest1 will also send layer 0 points to scene 1, laser 1 
+Dest1 = lj.DestObject('1', 1, True, 0 , 1, 1)
 
+Dest1 will also send layer 0 points to scene 1, laser 1 
 
 ![Layers](http://www.teamlaser.tk/lj/images/layer.png)
 
@@ -255,11 +257,12 @@ DrawDests() will take care of all your declared drawn elements/"objects" and Des
 
 
 #
-# Nannou etherdeam simulator
+# Nannou etherdeam simulator aka visualiser
 #
 
-2 compiled nannou visualisers are included, one for Linux, one for macOS. It's pretty old version but much more compatible with "old" builtin processors GPU. 
+2 compiled nannou visualisers are included, one for Linux, one for macOS. It's pretty old version but much more compatible with "old"  processors/computer. 
 
+To use this visualiser as one of LJ's lasers, in LJ.conf edit one of line ip = someipaddress with the IP of the computer running the visualiser. Relaunch LJ. One visualiser per computer. 
 
 #
 # Todo
@@ -317,10 +320,10 @@ For glitching experience you can change resampling strategy live with "resampler
 # Colors
 #
 
-LJ is compatible with TLL and analog modulation. Each point color if an int value, wich is simply the hex color in decimal. Example : white #fffff will be 65535.
+LJ is compatible with TLL and analog modulation. Each point color is an int value, wich is simply the hex color in decimal. Example : white = #fffff = 65535.
 
 # 
-# Ether dream configuration
+# Ether dream DAC
 #
 
 ![Etherdream Laser DAC](https://www.ether-dream.com/ed2-external.jpg)
@@ -337,18 +340,40 @@ This program suppose that the ether dream is configured in a certain way especia
 
 /ilda/fps 25
 
-About hardware setup, especially if you have several lasers : ILDA cables are insanely expensive. You may consider the Power Over Ethernet 'POE' option. Buy a very small ILDA cable, a POE splitter and connect everything to the ether dream fixed near your laser. You can have then a simple and very long network cable and use a Power Over Ethernet injector or switch close to the driving computer. Beware some vendors use 24V POE Injector : POE injectors and splitters must match.
+See links section for great etherdream managing tools. 
 
+About hardware setup, especially if you have several lasers : ILDA cables are insanely expensive. For each DAC, buy a very small ILDA cable and RJ 45 cable, all DAC goes to a local switch and only one long cable to your 
+ You may also consider the Power Over Ethernet 'POE' option. Buy a POE splitter and connect everything to the ether dream fixed near your laser. You can have then a simple and very long network cable and use a Power Over Ethernet injector or switch close to the driving computer. Beware some vendors use 24V POE Injector : POE injectors and splitters must match.
+
+
+# 
+# Links
+#
+
+Tools :
+
+Display all connected etherdreams on the network : ![sitter](https://github.com/j4cbo/j4cDAC/tree/master/tools/sitter)
+python sitter.py
+
+Draw simple square : ![talk](https://github.com/j4cbo/j4cDAC/tree/master/tools/tester)
+
+python talk.py 
+
+
+Generic :
+
+
+![LJ website](https://www.teamlaser.tk/lj)
+
+![Interactive lasers](https://www.teamlaser.tk/lj/images/display.png)
+
+![Laser Faq](https://www.repairfaq.org/sam/lasersam.htm)
 
 # 
 # LJ commands reference
 #
 
-All commands are available via OSC or websocket.
-
-8002 OSC incoming
-
-9001 Websocket 
+All commands are available via OSC (port 8002) or websocket (port 9001)
 
 
 /pl/scenenumber/lasernumber value : value is the pointlist to draw as string. Example : 
@@ -400,24 +425,33 @@ All command beginning with a declared plugin name are forwarded automatically to
 and second line (/line1 or /redline1). Examples of "uicommand arg" :
 
 /status hello
+
 /redline1 Error
-/laser 0
+
 
 ![LJ Display](https://www.teamlaser.tk/lj/images/display.png)
 
 Leds colors for each DACs
 
 DAC state "stt" :
+
 Laser not requested -> led is not lit
+
 IDLE -> blue
+
 PREPARE -> cyan
+
 PLAYING  -> green
 
 DAC answers (ack) :
+
 replied ACK -> green
+
 replied FULL -> orange
+
 replied INVALID -> yellow
 
 no connection to dac -> leds are red (6)
+
 
 ![LJ](http://www.teamlaser.tk/lj/images/calig.png)

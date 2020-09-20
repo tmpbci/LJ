@@ -5,7 +5,7 @@
 Launchpad
 v0.7.0
 
-Maunchpad mini Handler.
+Launchpad mini Handler.
 Start a dedicated thread to handle incoming events from launchpad.
 
 Cls()

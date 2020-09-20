@@ -4,7 +4,7 @@
 '''
 LJ Laser Server v0.8.2
 
-Inspiration for new WebUI icon menu :
+Inspiration for a future WebUI icon menu :
 https://codepen.io/AlbertFeynman/pen/mjXeMV
 
 Laser server + webUI servers (ws + OSC)
