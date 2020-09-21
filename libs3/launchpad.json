@@ -1,0 +1,1082 @@
+{
+"OS": [
+  {
+  	"_comment": "OS Macros",
+  	"name": "m11",
+    "color": 3,
+    "type": "button",
+    "code": "subprocess.call(['/usr/bin/open','/Applications/iTerm.app'])"
+  },
+  {
+    "name": "m12",
+    "color": 3,
+    "type": "button",
+    "code": "subprocess.call(['/usr/bin/open','/Applications/Sublime Text.app'])"
+  },
+  {
+  	"name": "m13",
+    "color": 3,
+    "type": "button",
+    "code": "subprocess.call(['/usr/bin/open','/Applications/Firefox.app'])"
+  },
+  {
+    "name": "m14",
+    "color": 3,
+    "type": "button",
+    "code": "subprocess.call(['/usr/bin/open','/Applications/Firefox.app'])"
+  },
+ {
+    "name": "m15",
+    "color": 3,
+    "type": "button",
+    "code": "subprocess.call(['/usr/bin/open','/Applications/iTerm.app'])"
+  }
+],
+
+
+
+"Maxwell1": [
+  {
+    "_comment": "Maxwell1 First led line : Patchs ",
+    "name": "m11",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m12",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m13",
+    "color": 127,
+    "laser":   0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m14",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m15",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m16",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m17",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m18",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+
+
+  {
+    "_comment": "Maxwell1 Second led line : Patchs",
+    "name": "m21",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m22",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m23",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m24",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m25",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m26",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m27",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m28",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+
+
+  {
+    "_comment": "Maxwell1 Third led line : Patchs",
+    "name": "m31",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m32",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m33",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m34",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m35",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m36",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m37",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m38",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+
+
+  {
+    "_comment": "Maxwell1 Fourth led line : ",
+    "name": "m41",
+    "color": 3,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.PPatch"
+  },
+  {
+    "name": "m42",
+    "color": 3,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.NPatch"
+  },
+  {
+    "name": "m43",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Reload"
+  },
+  {
+    "name": "m44",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Load"
+  },
+  {
+    "name": "m45",
+    "color": 18,
+    "init":  0,
+    "choices": "m45,m46,m55,m56",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/X/curvetype"
+  },
+  {
+    "name": "m46",
+    "color": 18,
+    "init":  1,
+    "choices": "m45,m46,m55,m56",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/X/curvetype"
+  },
+  {
+    "name": "m47",
+    "color": 127,
+    "init":  0,
+    "choices": "m47,m48,m57,m58",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/X/curvetype"
+  },
+  {
+    "name": "m48",
+    "color": 127,
+    "init":  1,
+    "choices": "m47,m48,m57,m58",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/X/curvetype"
+  },
+
+
+  {
+    "_comment": "Maxwell1 5th led line",
+    "name": "m51",
+    "color": 21,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/translator/X/lfo/switch"
+  },
+  {
+    "name": "m52",
+    "color": 21,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/rotator/X/lfo/switch"
+    
+  },
+  {
+    "name": "m53",
+    "color": 19,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "maxwellccs.L"   
+  },
+  {
+    "name": "m54",
+    "color": 19,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "maxwellccs.R"
+    
+  },
+  {
+    "name": "m55",
+    "color": 18,
+    "init":  2,
+    "choices": "m45,m46,m55,m56",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/X/curvetype"
+  },
+  {
+    "name": "m56",
+    "color": 18,
+    "init":  3,
+    "choices": "m45,m46,m55,m56",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/X/curvetype"
+  },
+  {
+    "name": "m57",
+    "color": 127,
+    "init":  2,
+    "choices": "m47,m48,m57,m58",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/X/curvetype"
+  },
+  {
+    "name": "m58",
+    "color": 127,
+    "init":  3,
+    "choices": "m47,m48,m57,m58",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/X/curvetype"
+  },
+
+
+  {
+    "_comment": "Maxwell1 6th led line :  ",
+    "name": "m61",
+    "color": 21,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    
+    "code": "/translator/Y/lfo/switch"
+  },
+  {
+    "name": "m62",
+    "color": 21,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+     "code": "/rotator/Y/lfo/switch"
+  },
+  {
+    "name": "m63",
+    "color": 127,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/osc/left/X/inversion"
+  },
+  {
+    "name": "m64",
+    "color": 127,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/osc/right/X/inversion"
+  },
+  {
+    "name": "m65",
+    "color": 18,
+    "init":  0,
+    "choices": "m65,m66,m75,m76",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/Y/curvetype"
+  },
+  {
+    "name": "m66",
+    "color": 18,
+    "init":  1,
+    "choices": "m65,m66,m75,m76",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/Y/curvetype"
+  },
+  {
+    "name": "m67",
+    "color": 127,
+    "init":  0,
+    "choices": "m67,m68,m77,m78",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/Y/curvetype"
+  },
+  {
+    "name": "m68",
+    "color": 127,
+    "init":  1,
+    "choices": "m67,m68,m77,m78",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/Y/curvetype"
+  },
+
+
+  {
+    "_comment": "Maxwell1 7th led line ",
+    "name": "m71",
+    "color": 21,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/translator/Z/lfo/switch"
+  },
+  {
+    "name": "m72",
+    "color": 21,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/rotator/Z/lfo/switch"
+  },
+  {
+    "name": "m73",
+    "color": 127,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/osc/left/Y/inversion"
+  },
+  {
+    "name": "m74",
+    "color": 127,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/osc/right/Y/inversion"
+  },
+  {
+    "name": "m75",
+    "color": 18,
+    "init":  2,
+    "choices": "m65,m66,m75,m76",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/Y/curvetype"
+  },
+  {
+    "name": "m76",
+    "color": 18,
+    "init":  3,
+    "choices": "m65,m66,m75,m76",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/Y/curvetype"
+  },
+  {
+    "name": "m77",
+    "color": 127,
+    "init":  2,
+    "choices": "m67,m68,m77,m78",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/Y/curvetype"
+  },
+  {
+    "name": "m78",
+    "color": 127,
+    "init":  3,
+    "choices": "m67,m68,m77,m78",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/Y/curvetype"
+  },
+
+
+  {
+    "_comment": "Maxwell1 Last led line",
+  	"name": "m81",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Launchpad"
+  },
+  {
+    "name": "m82",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Bhoreal"
+  },
+  {
+    "name": "m83",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Beatstep"
+  },
+  {
+    "name": "m84",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.c4"
+  },
+  {
+    "name": "m85",
+    "color": 3,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.BPLayer"
+  },
+  {
+    "name": "m86",
+    "color": 3,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.BNLayer"
+  },
+  {
+    "name": "m87",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.PSong"
+  },
+  {
+    "name": "m88",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.NSong"
+  }
+
+],
+
+
+
+"Maxwell2": [
+  {
+    "_comment": "Maxwell2 First led line : Patchs ",
+    "name": "m11",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m12",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m13",
+    "color": 127,
+    "laser":   0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m14",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m15",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m16",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m17",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m18",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+
+
+  {
+    "_comment": "Maxwell2 Second led line : Patchs",
+    "name": "m21",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m22",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m23",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m24",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m25",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m26",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m27",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m28",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+
+
+  {
+    "_comment": "Maxwell2 Third led line : Patchs",
+    "name": "m31",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m32",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m33",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m34",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m35",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m36",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m37",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+  {
+    "name": "m38",
+    "color": 127,
+    "laser":  0,
+    "type": "button",
+    "code": "patch"
+  },
+
+
+  {
+    "_comment": "Maxwell2 Fourth led line : ",
+    "name": "m41",
+    "color": 3,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.PPatch"
+  },
+  {
+    "name": "m42",
+    "color": 3,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.NPatch"
+  },
+  {
+    "name": "m43",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Reload"
+  },
+  {
+    "name": "m44",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Load"
+  },
+  {
+    "name": "m45",
+    "color": 18,
+    "init":  0,
+    "choices": "m45,m46,m55,m56",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/X/curvetype"
+  },
+  {
+    "name": "m46",
+    "color": 18,
+    "init":  1,
+    "choices": "m45,m46,m55,m56",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/X/curvetype"
+  },
+  {
+    "name": "m47",
+    "color": 127,
+    "init":  0,
+    "choices": "m47,m48,m57,m58",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/X/curvetype"
+  },
+  {
+    "name": "m48",
+    "color": 127,
+    "init":  1,
+    "choices": "m47,m48,m57,m58",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/X/curvetype"
+  },
+
+
+  {
+    "_comment": "Maxwell2 5th led line",
+    "name": "m51",
+    "color": 19,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "maxwellccs.L"
+   
+  },
+  {
+    "name": "m52",
+    "color": 19,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "maxwellccs.R"
+  },
+  {
+    "name": "m53",
+    "color": 21,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/translator/X/lfo/switch"
+  },
+  {
+    "name": "m54",
+    "color": 21,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/rotator/X/lfo/switch"
+  },
+  {
+    "name": "m55",
+    "color": 18,
+    "init":  2,
+    "choices": "m45,m46,m55,m56",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/X/curvetype"
+  },
+  {
+    "name": "m56",
+    "color": 18,
+    "init":  3,
+    "choices": "m45,m46,m55,m56",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/X/curvetype"
+  },
+  {
+    "name": "m57",
+    "color": 127,
+    "init":  2,
+    "choices": "m47,m48,m57,m58",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/X/curvetype"
+  },
+  {
+    "name": "m58",
+    "color": 127,
+    "init":  3,
+    "choices": "m47,m48,m57,m58",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/X/curvetype"
+  },
+
+
+  {
+    "_comment": "Maxwell2 6th led line :  ",
+    "name": "m61",
+    "color": 127,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/osc/left/X/inversion"
+
+
+  },
+  {
+    "name": "m62",
+    "color": 127,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/osc/right/X/inversion"
+  },
+  {
+    "name": "m63",
+    "color": 21,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/translator/Y/lfo/switch"
+  },
+  {
+    "name": "m64",
+    "color": 21,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/rotator/Y/lfo/switch"
+  },
+  {
+    "name": "m65",
+    "color": 18,
+    "init":  0,
+    "choices": "m65,m66,m75,m76",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/Y/curvetype"
+  },
+  {
+    "name": "m66",
+    "color": 18,
+    "init":  1,
+    "choices": "m65,m66,m75,m76",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/Y/curvetype"
+  },
+  {
+    "name": "m67",
+    "color": 127,
+    "init":  0,
+    "choices": "m67,m68,m77,m78",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/Y/curvetype"
+  },
+  {
+    "name": "m68",
+    "color": 127,
+    "init":  1,
+    "choices": "m67,m68,m77,m78",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/Y/curvetype"
+  },
+
+
+  {
+    "_comment": "Maxwell2 7th led line ",
+    "name": "m71",
+    "color": 127,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/osc/left/Y/inversion"
+  },
+  {
+    "name": "m72",
+    "color": 127,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/osc/right/Y/inversion"
+  },
+  {
+    "name": "m73",
+    "color": 21,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/translator/Z/lfo/switch"
+  },
+  {
+    "name": "m74",
+    "color": 21,
+    "laser": 0,
+    "type": "buttontoggle",
+    "init": -2,
+    "code": "/rotator/Z/lfo/switch"
+  },
+  {
+    "name": "m75",
+    "color": 18,
+    "init":  2,
+    "choices": "m65,m66,m75,m76",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/Y/curvetype"
+  },
+  {
+    "name": "m76",
+    "color": 18,
+    "init":  3,
+    "choices": "m65,m66,m75,m76",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/left/Y/curvetype"
+  },
+  {
+    "name": "m77",
+    "color": 127,
+    "init":  2,
+    "choices": "m67,m68,m77,m78",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/Y/curvetype"
+  },
+  {
+    "name": "m78",
+    "color": 127,
+    "init":  3,
+    "choices": "m67,m68,m77,m78",
+    "laser": 0,
+    "type": "buttonmulti",
+    "code": "/osc/right/Y/curvetype"
+  },
+
+
+  {
+    "_comment": "Maxwell2 Last led line",
+    "name": "m81",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Launchpad"
+  },
+  {
+    "name": "m82",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Bhoreal"
+  },
+  {
+    "name": "m83",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Beatstep"
+  },
+  {
+    "name": "m84",
+    "color": 2,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.C4"
+  },
+  {
+    "name": "m85",
+    "color": 64,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Empty"
+  },
+  {
+    "name": "m86",
+    "color": 64,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Empty"
+  },
+  {
+    "name": "m87",
+    "color": 64,
+    "laser": 0,
+    "type": "button",
+    "code": "maxwellccs.Empty"
+  },
+  {
+    "name": "m88",
+    "color": 64,
+    "laser": 0,
+    "type": "button",
+   "code": "maxwellccs.Empty"
+  }
+
+]
+
+}

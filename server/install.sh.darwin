@@ -1,0 +1,66 @@
+#!/bin/bash
+brew upgrade
+brew install htop
+#brew install syncthing
+#brew install python-pip 
+brew install python3-pip 
+brew install git
+brew install redis
+brew install screen 
+brew install tmux
+#pip install numpy
+#pip install scipy
+#pip install python-rtmidi
+#pip install mido
+pip3 install scipy
+pip3 install numpy
+#pip install pygame==1.9.2
+#pip3 install pygame==1.9.2
+pip3 install redis
+pip3 install pysimpledmx 
+pip3 install DMXEnttecPro
+#brew install libasound2-dev
+#brew install libjack-dev
+pip3 install python-rtmidi 
+pip3 install mido
+#brew install nginx
+#brew install supervisor  
+
+#sudo cp syncthing.conf to /etc/supervisor/conf.d/
+git clone https://github.com/ptone/pyosc --depth 1 /tmp/pyosc && cd /tmp/pyosc && sudo ./setup.py install 
+cd /tmp
+brew install portaudio19-dev
+brew install cmake
+git clone https://github.com/Ableton/link.git
+cd link
+git submodule update --init --recursive
+mkdir build
+cd build
+cmake ..
+cmake --build .
+
+
+#
+# Ableton link 
+#
+
+
+cd /tmp/
+git clone --recursive https://github.com/gonzaloflirt/link-python.git
+cd link-python
+mkdir build
+cd build
+cmake ..
+
+# After cmake.. to build for non-apple python but brew style python :
+#
+# change in /tmp/link-python/build/CMakeCache.txt
+
+#//Path to a program.
+#PYTHON_EXECUTABLE:FILEPATH=/usr/local/bin/python3
+
+#//Path to a library.
+#PYTHON_LIBRARY:FILEPATH=/usr/local/opt/python@3.8/Frameworks/Python.framework/Versions/3.8/lib/libpython3.8.dylib
+
+
+cmake --build .

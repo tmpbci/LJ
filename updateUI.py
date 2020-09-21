@@ -7,11 +7,12 @@ LJ UI IP updater v0.8.1
 '''
 #wwwIP = "192.168.2.78"
 #wwwIP = "aurora.teamlaser.fr"
-wwwIP = "192.168.2.43"
+wwwIP = "192.168.1.48"
 
 import os, sys
 ljpath = r'%s' % os.getcwd().replace('\\','/')
 
+python2 = (2, 6) <= sys.version_info < (3, 0)
 
 def Updatewww(file_name):
 
@@ -22,24 +23,25 @@ def Updatewww(file_name):
 
     for line in a:
 
-        #print line
-        if (2, 6) <= sys.version_info < (3, 0) == True:
+        if python2 == True:
 
           # python2
           if "var LJ = " in line > -1:
             p=a.index(line)
             #so now we have the position of the line which to be modified
             a[p]="      var LJ = 'ws://"+wwwIP+":9001/'\n"
-            #print p, line, a[p]
+            #print(p, line, a[p])
 
         else:
 
           # python3
-          if "var LJ = " in line == True:
+          IPline = ("var LJ = " in line)
+          if IPline == True:
+
             p=a.index(line)
             #so now we have the position of the line which to be modified
             a[p]="      var LJ = 'ws://"+wwwIP+":9001/'\n"
-            #print p, line, a[p]
+            #print(p, line, a[p])
 
     f.seek(0)
     f.truncate() #ersing all data from the file
@@ -56,10 +58,5 @@ Updatewww(ljpath+"/www/LJ.js")
 Updatewww(ljpath+"/www/trckr/trckrcam1.html")
 Updatewww(ljpath+"/www/simu.html")
 Updatewww(ljpath+"/www/align.html")
-Updatewww(ljpath+"/www/gen0.html")
-Updatewww(ljpath+"/www/aur0.html")
-Updatewww(ljpath+"/www/aur0s.html")
-Updatewww(ljpath+"/www/aur1.html")
 Updatewww(ljpath+"/www/auralls.html")
 Updatewww(ljpath+"/www/index.html")
-

@@ -4,7 +4,7 @@
 
 // LJ websocket address. IP will be updated at LJ startup according to LJ.conf wwwIP
 
-      var LJ = 'ws://192.168.2.43:9001/'
+      var LJ = 'ws://192.168.1.48:9001/'
 
 
 //

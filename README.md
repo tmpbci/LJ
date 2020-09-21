@@ -33,11 +33,8 @@ Important : for best performance LJ is meant to run in a dedicated computer espe
 - Status update every 0.5 seconds : every etherdream DAC state, number of buffer points sent,...
 - "Optimisation" points automatically added, can be changed live for glitch art. Search "resampler" commands.
 - A compiled version for os x and linux of nannou.org etherdream+laser emulator is included. For more informations, like license see https://github.com/nannou-org/ether-dream
-- Some fancy examples are available : 3D anaglyph, Laser Pong,...
-- Midi and audio reactive, look midigen.py and fft3.py
-- Webcam live face display (trckr). Openpose skeletons animations laser player.
+- Webcam live face display (trckr).
 - Resolume OSC client.
-- Another project (bhorpad) has been merged in LJ : so if you have a led matrix, like Launchpad mini or bhoreal, plug it and you may define, launch macros as pushing on leds or use them to display informations.
 - Artnet receiver plugin, another possibity to script LJ.
 - Ableton link time synchro support.
 - Maxwell laser synth emulation plugin. Work in progress
@@ -431,11 +428,12 @@ and second line (/line1 or /redline1). Examples of "uicommand arg" :
 
 ![LJ Display](https://www.teamlaser.tk/lj/images/display.png)
 
-Leds colors for each DACs
+Leds colors for each DACs :
+
+
+DAC IP is in LJ.conf but no connection to dac -> leds are red 
 
 DAC state "stt" :
-
-Laser not requested -> led is not lit
 
 IDLE -> blue
 
@@ -445,13 +443,12 @@ PLAYING  -> green
 
 DAC answers (ack) :
 
-replied ACK -> green
+ACK -> green
 
-replied FULL -> orange
+FULL -> orange
 
-replied INVALID -> yellow
+INVALID -> yellow
 
-no connection to dac -> leds are red (6)
 
 
 ![LJ](http://www.teamlaser.tk/lj/images/calig.png)
