@@ -74,7 +74,7 @@ LJ is in dev : versions in this repository will always be core functionnal : acc
 # Install 
 #
 
-With Linux, in LJ directory, type in a terminal window :
+With Linux Buster, in LJ directory, type in a terminal window :
 
 cd server 
 ./install.sh
