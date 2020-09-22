@@ -74,7 +74,8 @@ LJ is in dev : versions in this repository will always be core functionnal : acc
 # Install 
 #
 
-With Linux Buster, in LJ directory, type in a terminal window :
+
+- Linux Buster : in LJ directory, type in a terminal window :
 
 cd server 
 ./install.sh
@@ -82,22 +83,23 @@ cd server
 Server directory also contains config files for optionnal nginx, supervisorctl and syncthing.
 
 
-For OS X, you need brew already installed, then :
+- OS X : you need brew already installed, then :
 
 brew update
 brew upgrade
 brew install redis
+cd server
 type all install.sh commands beginning line 4. An OS X install script soon !!
 
-For Linux and OS X :
+
+- KVM :
+an ISO is available here : https://www.tmplab.org/wp-content/lazer-iso.zip 
+
+- Postinstall for all :
 
 You probably want redis bound to all network interfaces : comment the bind line in /etc/redis/redis.conf and restart it.
 
-WebUI pages needs to know the LJ IP address. So you need to change the line wwwIP = "192.168.2.43" in updateUI.py then run python updateUI.py 
-
-Using the same idea check all ip address in LJ.conf.
-
-There is a nice websocket debug tool : websocat.
+You probably also want to run the configure script to enter your etherdreams IPs,... python3 configure.py 
 
 
 
@@ -342,19 +344,17 @@ See links section for great etherdream managing tools.
 About hardware setup, especially if you have several lasers : ILDA cables are insanely expensive. For each DAC, buy a very small ILDA cable and RJ 45 cable, all DAC goes to a local switch and only one long cable to your 
  You may also consider the Power Over Ethernet 'POE' option. Buy a POE splitter and connect everything to the ether dream fixed near your laser. You can have then a simple and very long network cable and use a Power Over Ethernet injector or switch close to the driving computer. Beware some vendors use 24V POE Injector : POE injectors and splitters must match.
 
+# 
+# Ethertools directory
+#
+
+2 useful and always working tools from j4cdac github repository : sitter and talk
+- Sitter will display all real etherdreams available on the network and their state (playing, idle,...). python sitter.py or use the compiled version (for macOS).
+- Talk : will draw a 4 colors square. python3 talk3.py
 
 # 
 # Links
 #
-
-Tools :
-
-Display all connected etherdreams on the network : ![sitter](https://github.com/j4cbo/j4cDAC/tree/master/tools/sitter)
-python sitter.py
-
-Draw simple square : ![talk](https://github.com/j4cbo/j4cDAC/tree/master/tools/tester)
-
-python talk.py 
 
 
 Generic :
@@ -365,6 +365,8 @@ Generic :
 ![Interactive lasers](https://www.teamlaser.tk/lj/images/display.png)
 
 ![Laser Faq](https://www.repairfaq.org/sam/lasersam.htm)
+
+There is a nice websocket debug tool : websocat.
 
 # 
 # LJ commands reference

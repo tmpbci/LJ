@@ -14,7 +14,7 @@ ljpath = r'%s' % os.getcwd().replace('\\','/')
 
 python2 = (2, 6) <= sys.version_info < (3, 0)
 
-def Updatewww(file_name):
+def Updatepage(file_name):
 
     print("updating", file_name)
     f=open(file_name,"r+")
@@ -53,10 +53,14 @@ def Updatewww(file_name):
     o.close()
     #now the modification is done in the file
 
-print("Updating www files...")
-Updatewww(ljpath+"/www/LJ.js")
-Updatewww(ljpath+"/www/trckr/trckrcam1.html")
-Updatewww(ljpath+"/www/simu.html")
-Updatewww(ljpath+"/www/align.html")
-Updatewww(ljpath+"/www/auralls.html")
-Updatewww(ljpath+"/www/index.html")
+def www(wwwip):
+    global wwwIP 
+
+    wwwIP = wwwip
+    print("Updating www files to use", wwwIP)
+    Updatepage(ljpath+"/www/LJ.js")
+    Updatepage(ljpath+"/www/trckr/trckrcam1.html")
+    Updatepage(ljpath+"/www/simu.html")
+    Updatepage(ljpath+"/www/align.html")
+    Updatepage(ljpath+"/www/auralls.html")
+    Updatepage(ljpath+"/www/index.html")
