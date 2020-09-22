@@ -172,18 +172,18 @@ A "plugin" is a software that send any number of pointlist(s). LJ comes with dif
 # Client Side : Program your own "plugin" 
 #
 
-The server approach is based on redis, so you can write and run your laser client software in any redis capable programming langage (50+ : https://redis.io/clients). An external program that just send pointlists is a "client". If you want some interactions from the webUI, like text status area support, crash detection, launch,... it's a "plugin" and some default code is needed. See custom1.py, a basic plugin you can modiffy. LJ and plugins signaling is mainly over OSC.
+The server approach is based on redis, so you can write and run your laser client software in any redis capable programming langage (50+ : https://redis.io/clients). An external program that just send pointlists to redis is a "client". If you want some interactions from the webUI, like text status area support, crash detection, autostart,... it's a "plugin" and some default code is needed. LJ and plugins signaling is over OSC.
 
 - Read all this readme ;-)
-- Generate at least one pointlist array (say a square) with *enough points*, one point is likely to fail for buffering reason. See command reference below for more.
-- Feed your point list array in string format to redis server. i.e use "/pl/0/1" redis key to feed scene 0, laser 1.
+- Generate at least one pointlist array (say a square) with *enough points*, one point is likely to fail for buffering reason. 
+- Feed your point list array in string format to redis server. i.e use "/pl/0/1" redis key to feed scene 0, laser 1. See /pl/ command in command reference below how to send your pointlist to i.e /pl/0/1 redis key.
 - Tell LJ.conf your plugin configuration : OSC port and command line to start it.
 - At least a plugin must reply /pong to OSC request /ping.
 
 Currently the WebUI (www/index.html) is static. 
 
 #
-# Client side dope mode : How to use lj23 (python3)
+# Client side dope mode for python 3 generators : How to use lj23 
 # 
 
 lj23 have many very useful functions to not reinvent the wheel for advanced points generation "client" side : layers, sprites, built in rotations,..
@@ -191,7 +191,7 @@ lj23 have many very useful functions to not reinvent the wheel for advanced poin
 
 4 Great TRICKS with lj23 :
 
-First open square.py and learn how to declare different objects. square.py is a 2D shape example in 3D rotation (red/green anaglyph rendering) that use 2 layers : one for left eye and one for right eye.
+First open custom1.py and learn how to declare different objects. custom1.py is a 2D shape example in 3D rotation (red/green anaglyph rendering) that use 2 layers : one for left eye and one for right eye. custom1 is a copy of square.py
 
 
 1/ How to have another laser drawing the same thing ?
@@ -370,11 +370,15 @@ Generic :
 # LJ commands reference
 #
 
-All commands are available via OSC (port 8002) or websocket (port 9001)
+All these commands are available via OSC (port 8002) or websocket (port 9001) 
 
 
 /pl/scenenumber/lasernumber value : value is the pointlist to draw as string. Example : 
 /pl/0/0 "[(150.0, 230.0, 65280), (170.0, 170.0, 65280), (230.0, 170.0, 65280), (210.0, 230.0, 65280), (150.0, 230.0, 65280)]"
+
+Use the same syntax if you send your pointlist directly in redis : "/pl/0/0" is the key and value is "[(150.0,..." 
+
+Every point must be : (x,y,color). Color is the hex color #FFFFFF in decimal.
 
 
 /scale/X/lasernumber value   
