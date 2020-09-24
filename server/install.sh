@@ -25,6 +25,8 @@ sudo apt install libjack-dev
 pip3 install python-rtmidi 
 pip3 install mido
 git clone https://github.com/ptone/pyosc --depth 1 /tmp/pyosc && cd /tmp/pyosc && sudo ./setup.py install 
+cd ..
+python3 configure.py
 # todo : ask for computer ip and run updateUI.py
 cd /tmp
 sudo apt install portaudio19-dev

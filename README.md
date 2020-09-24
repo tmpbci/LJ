@@ -80,8 +80,6 @@ LJ is in dev : versions in this repository will always be core functionnal : acc
 cd server 
 ./install.sh
 
-Server directory also contains config files for optionnal nginx, supervisorctl and syncthing.
-
 
 - OS X : you need brew already installed, then :
 
@@ -99,7 +97,11 @@ an ISO is available here : https://www.tmplab.org/wp-content/lazer-iso.zip
 
 You probably want redis bound to all network interfaces : comment the bind line in /etc/redis/redis.conf and restart it.
 
-You probably also want to run the configure script to enter your etherdreams IPs,... python3 configure.py 
+The configure script to enter your etherdreams IPs,... is launched during install. You can use anytime, i.e if your network/etherdream setup change : python3 configure.py
+
+- Webserver ?
+
+A webserver is useful if you want to use the webUI remotely. Bring Your Own Webserver. 
 
 
 
@@ -109,9 +111,9 @@ You probably also want to run the configure script to enter your etherdreams IPs
 
 Correct launch order is :
 
-- Switch on Dac/Laser (emulator or IRL)
-- Redis server, usually automatically start at boot if redis is a service or you launched manually : redis-server &
-- This program. see below.
+- Switch on Dacs/Lasers (emulator or IRL)
+- Redis server, usually automatically started at boot (if redis is a service) or you launched manually : redis-server &
+- LJ, see below.
 - Load/reload webUI page from disk in a browser (www/index.html). Javascript must be enabled. 
 - Run a builtin plugin or your generator, to send pointlists in redis.
 
@@ -143,14 +145,12 @@ redis-cli  then ask for the key you want like : get /pl/0/0
 CASE 2 : Server and Client computers are different :
 
 
-1/ Say the laser server computer (running LJ) IP is 192.138.1.13, the client computer is 192.168.1.52, First remember to check on the server computer, if the redis server is listening to the right IP :
-
-edit /etc/redis/redis.conf
+1/ Say the laser server computer (running LJ) IP is 192.138.1.13, the client computer is 192.168.1.52, First remember to check on the server computer, if the redis server is listening to the right IP : edit /etc/redis/redis.conf
 
 2/ Launch LJ with -r argument :
 python3 main.py -r 192.168.1.13 -L 1
 
-3/ If the webUI is launched on "client" computer, update uri line in LJ.js
+3/ If the webUI is launched on "client" computer, use the configure.py
 
 4/ run a client/plugin on client computer, like :
 
@@ -165,10 +165,11 @@ redis-cli -h redisserverIP monitor
 # Plugin
 #
 
-A "plugin" is a software that send any number of pointlist(s). LJ comes with different plugins in python 3 :
+A "plugin" is a software that send any number of pointlist(s) to redis and . LJ comes with different plugins in python 3 :
 
 - artnet receiver : port 6454
 - Aurora : Fill the input form and it's displayed. One word / laser.
+- custom1 and square.py. 
 
 #
 # Client Side : Program your own "plugin" 
@@ -180,7 +181,7 @@ The server approach is based on redis, so you can write and run your laser clien
 - Generate at least one pointlist array (say a square) with *enough points*, one point is likely to fail for buffering reason. 
 - Feed your point list array in string format to redis server. i.e use "/pl/0/1" redis key to feed scene 0, laser 1. See /pl/ command in command reference below how to send your pointlist to i.e /pl/0/1 redis key.
 - Tell LJ.conf your plugin configuration : OSC port and command line to start it.
-- At least a plugin must reply /pong to OSC request /ping.
+- At least a plugin must reply /pong to OSC request /ping and must quit after an OSC command /quit.
 
 Currently the WebUI (www/index.html) is static. 
 
@@ -309,7 +310,7 @@ The need for a dedicated computer to act as "laser server" usually depends on ho
 For nice lines and angles all user pointlists are automatically resampled by tracers. There is 2 cases defined for resampling strategy : short and long distance between 2 points.
 
 
-short distance : has one step : (1.0, number repetition at destination position). 1.0 = 100% = end of the line between the 2 points. For example : (1.0, 8) means the end point will be repeated 8 times.
+short distance : has one step : (1.0, number repetition at destination position). 1.0 = 100% = end point of the line between the 2 points. For example : (1.0, 8) means the end point will be repeated 8 times.
 
 long distance has 3 steps : (0.25, 3), (0.75, 3), (1.0, 10) : means an extra point at 25% is created and repeated 3 times, another at 75% repeated also 3 times and destination point is repeated 10 times. 
 
